@@ -1,0 +1,7 @@
+# HerbWire V2 project-scoped Codex configuration.
+#
+# Keep this file intentionally minimal.
+# Add a setting only after verifying it against:
+# https://developers.openai.com/codex/config-reference
+#
+# Project behavior and architecture rules belong in /AGENTS.md.
