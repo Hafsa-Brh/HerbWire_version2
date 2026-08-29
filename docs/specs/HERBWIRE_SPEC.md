@@ -1168,8 +1168,9 @@ herbwire-v2/
 │   │   └── LICENSING_MATRIX.md
 │   └── decisions/
 │       ├── ADR-0001-modular-monolith.md
-│       ├── ADR-0002-postgresql.md
-│       └── ADR-0003-deployment-platform.md
+│       ├── ADR-0002-postgresql-system-of-record.md
+│       ├── ADR-0003-human-reviewed-publishing.md
+│       └── ADR-0004-deployment-platform.md
 │
 ├── frontend/
 │   ├── public/
