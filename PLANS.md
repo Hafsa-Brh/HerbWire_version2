@@ -11,12 +11,14 @@
 
 ## Current status
 
-Project phase: Governance and repository baseline  
-Active milestone: Milestone 0  
-Deployment status: Heroku student approval pending  
-Zyte status: Student account activated  
-Production secrets configured: No  
-Application code authorized: Not yet  
+Project phase: Governance and repository baseline
+Active milestone: Milestone 0
+Deployment status: Heroku student approval pending
+Zyte status: Student account activated
+Production secrets configured: No
+Heroku resources authorized today: No
+Application implementation started: No
+Cleanup branch status: `chore/milestone-0-baseline` in progress
 
 ## Milestone 0 — Governance and repository baseline
 
@@ -27,19 +29,29 @@ without beginning application implementation.
 
 ### Deliverables
 
-- [ ] Git repository initialized
-- [ ] `docs/specs/HERBWIRE_SPEC.md`
-- [ ] Word specification stored under `docs/reference/`
-- [ ] Root `AGENTS.md`
-- [ ] Root `PLANS.md`
+- [x] Git repository initialized
+- [x] GitHub remote configured
+- [x] `docs/specs/HERBWIRE_SPEC.md`
+- [x] Word specification stored under `docs/reference/`
+- [x] Root `AGENTS.md`
+- [x] Root `PLANS.md`
 - [ ] `README.md`
 - [ ] `.gitignore`
 - [ ] `.env.example`
 - [ ] `docs/decisions/ADR-0001-modular-monolith.md`
 - [ ] `docs/decisions/ADR-0002-postgresql-system-of-record.md`
 - [ ] `docs/decisions/ADR-0003-human-reviewed-publishing.md`
-- [ ] Minimal `.codex/config.toml`, using only verified supported settings
+- [x] Minimal `.codex/config.toml`, using only verified supported settings
 - [ ] Baseline committed to Git
+
+### Current Milestone 0 progress
+
+- Specifications added and the Markdown specification is authoritative.
+- Governance cleanup is in progress on `chore/milestone-0-baseline`.
+- Heroku approval is pending.
+- No Heroku resources are authorized today.
+- Zyte account is activated but not integrated.
+- Application implementation has not started.
 
 ### Explicit exclusions
 
@@ -57,7 +69,7 @@ without beginning application implementation.
 - Repository structure matches the approved baseline.
 - Documentation contains no contradictions.
 - Codex reports no missing governance requirement.
-- `git status` is clean after the baseline commit.
+- Cleanup is reviewed, committed, pushed, and the final `main` branch is clean.
 
 ## Milestone 1 — Deployable walking skeleton
 
