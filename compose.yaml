@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: herbwire
+      POSTGRES_USER: herbwire
+      POSTGRES_PASSWORD: herbwire_dev # Local development only.
+    ports:
+      - "${HERBWIRE_POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - herbwire_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U herbwire -d herbwire"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  herbwire_postgres_data:

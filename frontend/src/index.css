@@ -1,0 +1,147 @@
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #173126;
+  background:
+    radial-gradient(circle at top, #eef7f0 0%, #f7fbf8 45%, #ffffff 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+code,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.page-shell {
+  width: min(960px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
+}
+
+.hero-card,
+.status-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d8e7db;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(36, 68, 54, 0.08);
+}
+
+.hero-card {
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-card {
+  padding: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: #4d705f;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.05;
+}
+
+.lede,
+.status-card__subtle {
+  color: #49665a;
+}
+
+.lede {
+  max-width: 42rem;
+  margin: 1rem 0 0;
+}
+
+.status-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.status-card__header code {
+  display: inline-block;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: #eff5f1;
+  color: #254638;
+}
+
+.status-banner {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  background: #f4f9f6;
+  border: 1px solid #dbe9df;
+}
+
+.status-banner p,
+.status-card__subtle {
+  margin: 0;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+.status-grid div {
+  padding: 1rem;
+  border-radius: 16px;
+  background: #fbfdfb;
+  border: 1px solid #e2ede5;
+}
+
+.status-grid dt {
+  font-weight: 600;
+  color: #3f6251;
+}
+
+.status-grid dd {
+  margin: 0.4rem 0 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 1rem, 960px);
+    padding-top: 1.5rem;
+  }
+
+  .hero-card,
+  .status-card {
+    border-radius: 18px;
+  }
+}
