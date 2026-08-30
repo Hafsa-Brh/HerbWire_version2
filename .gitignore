@@ -26,7 +26,7 @@ coverage.xml
 htmlcov/
 .tox/
 .nox/
-
+*.egg-info/
 # Node dependencies and build output
 node_modules/
 dist/
