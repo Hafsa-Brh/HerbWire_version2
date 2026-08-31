@@ -1,147 +1,40 @@
-:root {
-  color-scheme: light;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #173126;
-  background:
-    radial-gradient(circle at top, #eef7f0 0%, #f7fbf8 45%, #ffffff 100%);
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Source Serif 4', serif;
+  --color-forest: #173b2a;
+  --color-deep: #0d2d21;
+  --color-leaf: #3e7c57;
+  --color-sage: #a9c4a5;
+  --color-cream: #eeede3;
+  --color-paper: #f7f6f0;
+  --color-ink: #17201b;
+  --color-muted: #667269;
+  --color-gold: #c79e4e;
+  --color-rust: #a55f42;
+  --color-line: #d5d9ce;
 }
 
-* {
-  box-sizing: border-box;
+:root { color-scheme: light; font-family: 'DM Sans', sans-serif; color: #17201b; background: #f7f6f0; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: #f7f6f0; }
+body { margin: 0; min-width: 320px; background: #f7f6f0; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid #3e7c57; outline-offset: 3px; }
+::selection { background: #a9c4a5; color: #0d2d21; }
+
+@layer components {
+  .hw-container { width: min(100% - 2.5rem, 1180px); margin-inline: auto; }
+  .hw-eyebrow { color: #3e7c57; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+  .hw-rule { border-color: #d5d9ce; }
+  .hw-link { text-decoration: underline; text-decoration-color: #a9c4a5; text-underline-offset: 4px; transition: color .2s ease, text-decoration-color .2s ease; }
+  .hw-link:hover { color: #3e7c57; text-decoration-color: #3e7c57; }
+  .hw-image { filter: saturate(.86) contrast(.96); transition: transform .45s cubic-bezier(.2,.8,.2,1), filter .3s ease; }
+  .hw-image-wrap:hover .hw-image { transform: scale(1.035); filter: saturate(1) contrast(1); }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-button,
-code,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-#root {
-  min-height: 100vh;
-}
-
-.page-shell {
-  width: min(960px, calc(100% - 2rem));
-  margin: 0 auto;
-  padding: 3rem 0 4rem;
-}
-
-.hero-card,
-.status-card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #d8e7db;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(36, 68, 54, 0.08);
-}
-
-.hero-card {
-  padding: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.status-card {
-  padding: 1.5rem;
-}
-
-.eyebrow {
-  margin: 0 0 0.5rem;
-  color: #4d705f;
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-h1,
-h2 {
-  margin: 0;
-}
-
-h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1.05;
-}
-
-.lede,
-.status-card__subtle {
-  color: #49665a;
-}
-
-.lede {
-  max-width: 42rem;
-  margin: 1rem 0 0;
-}
-
-.status-card__header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.status-card__header code {
-  display: inline-block;
-  padding: 0.35rem 0.55rem;
-  border-radius: 999px;
-  background: #eff5f1;
-  color: #254638;
-}
-
-.status-banner {
-  margin: 1.25rem 0;
-  padding: 1rem 1.1rem;
-  border-radius: 16px;
-  background: #f4f9f6;
-  border: 1px solid #dbe9df;
-}
-
-.status-banner p,
-.status-card__subtle {
-  margin: 0;
-}
-
-.status-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: 1rem;
-  margin: 0;
-}
-
-.status-grid div {
-  padding: 1rem;
-  border-radius: 16px;
-  background: #fbfdfb;
-  border: 1px solid #e2ede5;
-}
-
-.status-grid dt {
-  font-weight: 600;
-  color: #3f6251;
-}
-
-.status-grid dd {
-  margin: 0.4rem 0 0;
-  font-size: 1.1rem;
-}
-
-@media (max-width: 640px) {
-  .page-shell {
-    width: min(100% - 1rem, 960px);
-    padding-top: 1.5rem;
-  }
-
-  .hero-card,
-  .status-card {
-    border-radius: 18px;
-  }
-}
+@media (max-width: 640px) { .hw-container { width: min(100% - 1.5rem, 1180px); } }

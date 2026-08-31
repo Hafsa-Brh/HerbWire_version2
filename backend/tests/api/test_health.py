@@ -60,3 +60,40 @@ def test_health_does_not_hide_non_database_programming_errors(
 
     with pytest.raises(ValueError, match="unexpected bug"):
         client.get("/api/v1/health")
+
+
+@pytest.mark.parametrize(
+    "origin",
+    ["http://localhost:5173", "http://127.0.0.1:5173"],
+)
+def test_cors_allows_public_frontend_loopback_origins(client, origin) -> None:
+    response = client.options(
+        "/api/v1/plants",
+        headers={
+            "Origin": origin,
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == origin
+
+
+@pytest.mark.parametrize(
+    "origin",
+    ["http://localhost:5173", "http://127.0.0.1:5173"],
+)
+def test_cors_allows_editorial_loopback_origins_with_credentials(
+    client, origin
+) -> None:
+    response = client.options(
+        "/api/v1/admin/reviews",
+        headers={
+            "Origin": origin,
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == origin
+    assert response.headers["access-control-allow-credentials"] == "true"

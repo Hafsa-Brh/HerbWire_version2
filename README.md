@@ -1,90 +1,98 @@
 # HerbWire V2
 
-HerbWire V2 is an English-only medicinal-plant encyclopedia and traditional-medicine discovery platform. It is intended to collect international source material, preserve provenance, produce structured English drafts, apply botanical, evidence, and safety checks, and require explicit human approval before any public publication.
+HerbWire V2 is an English-only medicinal-plant encyclopedia and traditional-medicine editorial platform. It preserves source provenance, keeps traditional-use documentation distinct from clinical efficacy, surfaces safety information, and requires explicit human approval before publication.
 
 HerbWire does not diagnose, prescribe, recommend personalized treatment, provide dosage guidance, or present traditional use as proven clinical efficacy.
 
-## Current status
+## Milestone 2 scope
 
-This repository has completed the Milestone 1 walking skeleton on `feat/milestone-1-walking-skeleton`.
+Milestone 2 provides:
 
-- No deployment exists.
-- Heroku approval is pending and untouched.
-- No Heroku resource has been created.
-- A Zyte student account is activated, but Zyte is not integrated into this repository.
-- Static checks, backend tests, frontend tests, frontend typecheck, frontend build, backend/frontend local process startup, and the final manual browser verification have been verified in this checkout.
-- PostgreSQL local development defaults to host port `5433`.
-- Vite's canonical repository development port remains `5173`.
-- The successful manual browser verification used a temporary explicit frontend override on port `4173` because `5173` was occupied at that time.
+- PostgreSQL-backed plant profiles, provenance records, editorial reviews, pipeline runs, and pipeline stage results.
+- Public homepage, plant index, published plant articles, and an honest New Discoveries empty state.
+- A backend-authenticated local editorial desk with review, approval, hold/reject, and publication gating.
+- Published-article Flashes and persisted pipeline-stage performance views.
+- An idempotent newsletter subscription endpoint and database table. No external email provider is connected.
+- A deterministic local fixture pipeline that never auto-publishes.
 
-## Verified commands
+Production authentication, deployment, RAG, live Zyte collection, and Milestone 2B work are not included.
 
-Run these from `C:\Users\PC\Documents\ChatGPT\HerbWire_version2` unless otherwise noted.
+## Local setup
 
-### Canonical local runtime setup
+Run commands from the repository root unless a command says otherwise.
 
-Backend, from the repo root:
+Create an ignored `.env` from `.env.example` and replace the placeholder database and local editorial authentication values. Never commit `.env`.
 
-```powershell
-$env:HERBWIRE_FRONTEND_ORIGIN='http://127.0.0.1:5173'
-.\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
-```
-
-Frontend, from `frontend/`:
-
-```powershell
-$env:VITE_HERBWIRE_API_BASE_URL='http://127.0.0.1:8000'
-npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
-```
-
-PostgreSQL, from the repo root:
+Start PostgreSQL and apply forward migrations:
 
 ```powershell
 docker compose config
 docker compose up -d postgres
 docker compose ps
+.\.venv\Scripts\python.exe -m alembic -c backend\alembic.ini upgrade head
 ```
 
-### Temporary manual verification override used successfully on Saturday, August 29, 2026
-
-Backend, from the repo root:
+Seed the curated review profiles only when the local database is missing them:
 
 ```powershell
-$env:HERBWIRE_FRONTEND_ORIGIN='http://127.0.0.1:4173'
+.\.venv\Scripts\python.exe -m backend.app.workers.seed_curated_plants
+```
+
+Start FastAPI:
+
+```powershell
 .\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Frontend, from `frontend/`:
+Start Vite from `frontend/`:
 
 ```powershell
-$env:VITE_HERBWIRE_API_BASE_URL='http://127.0.0.1:8000'
-npm run dev -- --host 127.0.0.1 --port 4173 --strictPort
+npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-### Regression commands
+The API client aligns local loopback hostnames, so both `http://127.0.0.1:5173` and `http://localhost:5173` can use the HttpOnly editorial session correctly.
+
+## Local URLs
+
+- Homepage: `http://127.0.0.1:5173/`
+- Plants: `http://127.0.0.1:5173/plants`
+- Peppermint article: `http://127.0.0.1:5173/plants/peppermint`
+- New Discoveries: `http://127.0.0.1:5173/discoveries`
+- Login: `http://127.0.0.1:5173/login`
+- Editorial dashboard: `http://127.0.0.1:5173/admin`
+- API documentation: `http://127.0.0.1:8000/docs`
+
+## Local editorial authentication
+
+The local owner account is configured only through ignored server environment variables:
+
+- `HERBWIRE_ADMIN_EMAIL`
+- `HERBWIRE_ADMIN_PASSWORD`
+- `HERBWIRE_SESSION_SECRET`
+
+FastAPI validates the credentials and issues a signed HttpOnly, SameSite session cookie. Editorial endpoints require that session. The frontend does not store credentials or session secrets and does not use a local-editor header bypass. This is a local Milestone 2 authentication boundary, not production user management.
+
+## Verification
 
 Backend checks:
 
 ```powershell
 .\.venv\Scripts\python.exe -m ruff check backend
 .\.venv\Scripts\python.exe -m ruff format --check backend
-.\.venv\Scripts\python.exe -m alembic -c backend/alembic.ini current
-.\.venv\Scripts\python.exe -m alembic -c backend/alembic.ini upgrade head
-.\.venv\Scripts\python.exe -m pytest backend/tests -q
-.\.venv\Scripts\python.exe -m alembic -c backend/alembic.ini downgrade base
-.\.venv\Scripts\python.exe -m alembic -c backend/alembic.ini upgrade head
+.\.venv\Scripts\python.exe -m pytest backend\tests -q
 ```
 
-Frontend checks, from `frontend/`:
+Frontend checks from `frontend/`:
 
 ```powershell
+npm ci
 npm run lint
 npm run test
 npm run typecheck
 npm run build
 ```
 
-Repository verification wrappers:
+The repository verification wrappers use only the disposable `herbwire_m2_migration_verify` database for destructive migration checks:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
@@ -94,32 +102,21 @@ powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
 ./scripts/verify.sh
 ```
 
-## Integration-test database requirement
+## API surface
 
-- Backend integration tests use the migrated PostgreSQL development or CI database.
-- They do not use `create_all` and rely on Alembic having created the `sources` table and its uniqueness constraint.
-- Local integration tests require PostgreSQL to be running on the configured local host port, which defaults to `5433` in this repository.
+Public and authentication endpoints:
 
-## Verified runtime behavior
+- `GET /api/v1/health`
+- `GET /api/v1/version`
+- `GET /api/v1/plants`
+- `GET /api/v1/plants/{slug}`
+- `POST /api/v1/newsletter/subscriptions`
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/logout`
+- `GET /api/v1/auth/session`
 
-- `GET /api/v1/version` returned HTTP `200` with JSON `{"service":"herbwire-api","version":"0.1.0"}`.
-- `GET /api/v1/health` returned HTTP `200` with JSON `{"status":"ok","service":"herbwire-api","version":"0.1.0","database":"connected"}` while PostgreSQL was connected.
-- `GET /api/v1/health` returned HTTP `503` with JSON `{"status":"degraded","service":"herbwire-api","version":"0.1.0","database":"disconnected"}` while PostgreSQL was stopped.
-- `GET /api/v1/health` recovered to HTTP `200` with `database="connected"` after PostgreSQL restarted.
-- CORS allowed the configured frontend origin.
-- The frontend runtime path targets the live backend health endpoint at `${getApiBaseUrl()}/api/v1/health` and does not use fake local health data.
-- Manual browser verification confirmed the UI rendered the expected connected, degraded, and recovered states without visible layout failure, blank rendering, React errors, CORS issues, or uncaught exceptions.
-- Opening `http://127.0.0.1:8000/` returned the expected FastAPI `404` because no root route is defined, and that behavior remains intentional.
+Authenticated editorial endpoints include review queue actions, approved-profile publication, pipeline runs, and agent-performance aggregation under `/api/v1/admin/`.
 
-## Milestone 1 acceptance
+## External services
 
-- All Milestone 1 acceptance checks passed, including the final manual browser verification.
-- The backend root path `/` intentionally remains undefined and returns HTTP `404`.
-
-## Authoritative documents
-
-- `docs/specs/HERBWIRE_SPEC.md`
-- `PLANS.md`
-- `AGENTS.md`
-- `docs/decisions/`
-- `docs/reference/HerbWire_V2_Functional_Technical_Specification_v1.0.docx`
+Zyte configuration names exist for a future approved integration, but ordinary Milestone 2 tests and runtime do not call Zyte. No Heroku or Zyte deployment is part of this milestone.
