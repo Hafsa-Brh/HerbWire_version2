@@ -36,6 +36,7 @@ class PlantListItemResponse(BaseModel):
     biome: str
     distribution_summary: str
     readiness_status: str
+    version: int
 
 
 class PlantPageResponse(BaseModel):
@@ -57,6 +58,25 @@ class PlantDetailResponse(PlantListItemResponse):
     evidence_notes: str
     last_reviewed_at: datetime | None
     sources: list[SourceRecordResponse]
+
+
+class PlantRevisionResponse(BaseModel):
+    id: UUID
+    plant_profile_id: UUID
+    slug: str
+    display_common_name: str
+    current_version: int
+    proposed_version: int
+    status: str
+    content_checksum: str
+    current_content: PlantDetailResponse
+    proposed_content: dict
+    proposed_sources: list[SourceRecordResponse]
+    reviewer_name: str | None
+    decision_reason: str | None
+    created_at: datetime
+    reviewed_at: datetime | None
+    promoted_at: datetime | None
 
 
 class ReviewResponse(BaseModel):
@@ -83,6 +103,9 @@ class SeedResponse(BaseModel):
     profiles_total: int
     source_records_total: int
     source_links_created: int
+    revisions_created: int = 0
+    revisions_unchanged: int = 0
+    older_versions_skipped: int = 0
 
 
 class PipelineStageResponse(BaseModel):

@@ -54,6 +54,7 @@ def plant_list_item(profile) -> PlantListItemResponse:
         biome=profile.biome,
         distribution_summary=profile.distribution_summary,
         readiness_status=profile.readiness_status,
+        version=profile.version,
     )
 
 

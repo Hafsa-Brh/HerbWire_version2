@@ -1,8 +1,8 @@
-import { Activity, Database, Eye, Filter, LayoutDashboard, LogOut, Menu, Search, ShieldCheck, Sprout, Workflow, X, Zap } from "lucide-react"
+import { Activity, Database, Eye, Filter, GitCompareArrows, LayoutDashboard, LogOut, Menu, Search, ShieldCheck, Sprout, Workflow, X, Zap } from "lucide-react"
 import { useCallback, useMemo, useState } from "react"
 import { Link, Navigate, NavLink, Route, Routes, useNavigate } from "react-router-dom"
 import { fetchSession, logout } from "../../api/auth"
-import { approveReview, fetchAgentPerformance, fetchPipelineRuns, fetchReviews, publishPlant, rejectReview, type ApiAgentPerformance, type ApiPipelineRun, type ApiReview } from "../../api/editorial"
+import { approvePlantRevision, approveReview, fetchAgentPerformance, fetchPipelineRuns, fetchPlantRevisions, fetchReviews, holdPlantRevision, promotePlantRevision, publishPlant, rejectReview, type ApiAgentPerformance, type ApiPipelineRun, type ApiPlantRevision, type ApiReview } from "../../api/editorial"
 import { fetchPlants, type ApiPlantDetail, type ApiPlantListItem } from "../../api/plants"
 import { BotanicalImage, PlantDistributionMap } from "../../components/plants/PlantPrimitives"
 import { useAsyncResource } from "../../hooks/useAsyncResource"
@@ -14,6 +14,7 @@ type NavItem = { label: string; path: string; icon: typeof Activity }
 const navItems: readonly NavItem[] = [
   { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { label: "Review Queue", path: "/admin/reviews", icon: ShieldCheck },
+  { label: "Profile Revisions", path: "/admin/revisions", icon: GitCompareArrows },
   { label: "Flashes", path: "/admin/flashes", icon: Zap },
   { label: "Agent Performance", path: "/admin/agents", icon: Activity },
   { label: "Pipeline Runs", path: "/admin/runs", icon: Workflow },
@@ -72,6 +73,7 @@ function AdminShell({ user }: { user: { initials: string; label: string; role: s
           <Routes>
             <Route index element={<Dashboard />} />
             <Route path="reviews" element={<ReviewQueue />} />
+            <Route path="revisions" element={<ProfileRevisions />} />
             <Route path="review" element={<Navigate to="/admin/reviews" replace />} />
             <Route path="flashes" element={<Flashes />} />
             <Route path="agents" element={<AgentPerformance />} />
@@ -170,6 +172,64 @@ function PlantReviewPreview({ plant }: { plant: ApiPlantDetail }) {
     </div>
   </div>
 }
+function ProfileRevisions() {
+  const revisions = useAsyncResource<ApiPlantRevision[]>(useCallback((signal: AbortSignal) => fetchPlantRevisions(signal), []))
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [reason, setReason] = useState("Needs additional editorial review.")
+  const [message, setMessage] = useState("")
+  const [busy, setBusy] = useState(false)
+  const items = useMemo(() => revisions.data ?? [], [revisions.data])
+  const selected = useMemo(() => items.find((revision) => revision.id === selectedId) ?? items[0] ?? null, [items, selectedId])
+
+  async function act(action: () => Promise<ApiPlantRevision>, success: string) {
+    setBusy(true)
+    setMessage("")
+    try {
+      await action()
+      setMessage(success)
+      revisions.reload()
+    } catch {
+      setMessage("The revision action failed. Refresh the data and try again.")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return <><PageHeader eyebrow="Editorial / revisions" title="Profile Revisions" description="Compare improved corpus content with the current canonical article. Published content remains public until an approved revision is explicitly promoted." action={<button type="button" onClick={revisions.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf">Refresh</button>} />
+    {revisions.isLoading ? <AdminStateCard title="Loading profile revisions" description="Retrieving current and proposed article versions." /> : null}
+    {revisions.error ? <AdminStateCard title="Profile revisions unavailable" description="The revision queue could not be loaded." action={<button type="button" onClick={revisions.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}
+    {revisions.data && !items.length ? <AdminStateCard title="No profile revisions" description="Newer manifest content will appear here without replacing canonical articles." /> : null}
+    {items.length ? <section aria-label="Profile revision workspace" className="grid gap-5 xl:grid-cols-[.48fr_1.52fr]">
+      <Panel eyebrow="Pending content" title="Revision queue"><div className="grid max-h-[44rem] gap-3 overflow-y-auto pr-1">{items.map((revision) => <button key={revision.id} type="button" onClick={() => setSelectedId(revision.id)} className={"border border-line p-4 text-left " + (selected?.id === revision.id ? "bg-sage/25" : "bg-paper hover:border-leaf")}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">v{revision.current_version} to v{revision.proposed_version}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{revision.display_common_name}</h2></button>)}</div></Panel>
+      <Panel eyebrow="Current / proposed" title={selected?.display_common_name ?? "Select a revision"}>{selected ? <RevisionComparison revision={selected} /> : null}
+        {message ? <p role="alert" className="mt-4 border border-gold/40 bg-gold/10 p-3 font-sans text-sm text-deep">{message}</p> : null}
+        {selected ? <div className="mt-5 flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" disabled={busy || !["needs_review", "held"].includes(selected.status)} onClick={() => act(() => approvePlantRevision(selected.id), "Revision approved. It remains private until promotion.")} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Approve revision</button><button type="button" disabled={busy || selected.status !== "approved"} onClick={() => act(() => promotePlantRevision(selected.id), "Approved revision promoted atomically.")} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Promote revision</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep" /></label><button type="button" disabled={busy || !reason.trim() || selected.status === "promoted" || selected.status === "superseded"} onClick={() => act(() => holdPlantRevision(selected.id, reason), "Revision held. Canonical public content is unchanged.")} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust disabled:opacity-40">Hold / reject</button></div> : null}
+      </Panel>
+    </section> : null}
+  </>
+}
+
+function RevisionComparison({ revision }: { revision: ApiPlantRevision }) {
+  const proposed = revision.proposed_content
+  return <div>
+    <div className="mb-5 flex flex-wrap items-center gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">Current v{revision.current_version}</span><GitCompareArrows size={15} className="text-leaf" /><span className="font-sans text-xs font-semibold text-forest">Proposed v{revision.proposed_version}</span></div>
+    <div className="grid gap-5 lg:grid-cols-2">
+      <RevisionColumn label={`Current version ${revision.current_version}`} plant={revision.current_content} sources={revision.current_content.sources} />
+      <RevisionColumn label={`Proposed version ${revision.proposed_version}`} plant={proposed} sources={revision.proposed_sources} />
+    </div>
+    {revision.decision_reason ? <p className="mt-4 border border-rust/30 bg-rust/10 p-3 font-sans text-sm text-deep"><strong>Editorial reason:</strong> {revision.decision_reason}</p> : null}
+  </div>
+}
+
+function RevisionColumn({ label, plant, sources }: { label: string; plant: ApiPlantRevision["current_content"] | ApiPlantRevision["proposed_content"]; sources: ApiPlantDetail["sources"] }) {
+  return <article className="min-w-0 border border-line bg-paper p-4">
+    <p className="hw-eyebrow">{label}</p><h3 className="mt-2 font-serif text-2xl font-semibold text-deep">{plant.display_common_name}</h3><p className="font-sans text-xs italic text-muted">{plant.accepted_scientific_name} {plant.botanical_author}</p>
+    <div className="mt-4"><BotanicalImage label={plant.display_common_name} image={plant.hero_image} /></div><p className="mt-2 font-sans text-xs text-muted">{plant.hero_image.attribution ?? "Attribution unavailable"} / {plant.hero_image.license ?? "License unavailable"}</p>
+    <div className="mt-5 grid gap-4 font-sans text-sm leading-relaxed text-muted"><RevisionField title="Overview" value={plant.introduction} /><RevisionField title="Taxonomy" value={`${plant.family_name ?? "Family unavailable"}. ${plant.botanical_description}`} /><RevisionField title="Parts traditionally used" value={plant.parts_used.join(", ")} /><RevisionField title="Traditional uses" value={plant.traditional_uses.map((use) => `${use.tradition}: ${use.statement} ${use.limitation}`).join(" ")} /><RevisionField title="Preparation" value={plant.preparation} /><RevisionField title="Safety" value={plant.safety_notes.map((note) => `${note.category}: ${note.statement}`).join(" ")} /><RevisionField title="Evidence limitations" value={plant.evidence_notes} /><RevisionField title="Distribution" value={`${plant.distribution_summary} ${plant.distribution.map((region) => `${region.status}: ${region.name}`).join("; ")}`} /><RevisionField title="Provenance" value={sources.map((source) => `${source.title} (${source.publisher})`).join("; ")} /></div>
+  </article>
+}
+
+function RevisionField({ title, value }: { title: string; value: string }) { return <section className="border-t border-line pt-3"><h4 className="font-serif text-lg font-semibold text-deep">{title}</h4><p className="mt-1">{value || "Not provided in this version."}</p></section> }
 function PipelineRuns() { const runs = useAsyncResource(useCallback((signal: AbortSignal) => fetchPipelineRuns(signal), [])); return <><PageHeader eyebrow="Operations / monitoring" title="Pipeline Runs" description="A clear record of every persisted HerbWire pipeline run and stage result." />{runs.isLoading ? <AdminStateCard title="Loading pipeline dashboard" description="Gathering run activity and stage history." /> : null}{runs.error ? <AdminStateCard title="Pipeline runs unavailable" description="The pipeline monitoring view could not be loaded." action={<button type="button" onClick={runs.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{runs.data ? <PipelinePanel runs={runs.data} /> : null}</> }
 
 function PipelinePanel({ runs }: { runs: ApiPipelineRun[] }) { return <Panel eyebrow="Recent activity" title="Pipeline runs"><div className="grid gap-4">{runs.length ? runs.map((run) => <article key={run.id} className="border-t border-line pt-4 first:border-t-0 first:pt-0"><div className="flex flex-wrap items-center justify-between gap-3"><div><AdminStatusPill>{run.status}</AdminStatusPill><h3 className="mt-3 font-serif text-xl font-semibold text-deep">{run.pipeline_type}</h3><p className="mt-1 font-sans text-xs text-muted">{run.trigger} / {run.current_stage} / {new Date(run.started_at).toLocaleString()}</p></div></div><ol className="mt-3 list-decimal pl-5 font-sans text-xs leading-relaxed text-muted">{run.stages.map((stage) => <li key={`${run.id}-${stage.name}`}>{stage.name}: {stage.status} / {stage.duration_ms}ms</li>)}</ol></article>) : <p className="font-sans text-sm text-muted">No pipeline runs recorded.</p>}</div></Panel> }

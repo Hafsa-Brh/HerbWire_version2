@@ -9,6 +9,7 @@ from backend.app.models.encyclopedia import (
     EditorialReview,
     NewsletterSubscription,
     PlantProfile,
+    PlantProfileRevision,
     SourceRecord,
 )
 from sqlalchemy import func, select, text
@@ -25,6 +26,7 @@ def clean_milestone2_tables():
         connection.execute(text("DELETE FROM pipeline_stage_results"))
         connection.execute(text("DELETE FROM pipeline_runs"))
         connection.execute(text("DELETE FROM editorial_reviews"))
+        connection.execute(text("DELETE FROM plant_profile_revisions"))
         connection.execute(text("DELETE FROM plant_profile_sources"))
         connection.execute(text("DELETE FROM plant_profiles"))
         connection.execute(text("DELETE FROM source_records"))
@@ -45,6 +47,7 @@ def clean_milestone2_tables():
         connection.execute(text("DELETE FROM pipeline_stage_results"))
         connection.execute(text("DELETE FROM pipeline_runs"))
         connection.execute(text("DELETE FROM editorial_reviews"))
+        connection.execute(text("DELETE FROM plant_profile_revisions"))
         connection.execute(text("DELETE FROM plant_profile_sources"))
         connection.execute(text("DELETE FROM plant_profiles"))
         connection.execute(text("DELETE FROM source_records"))
@@ -266,6 +269,225 @@ def test_import_preserves_human_reviewed_profile_text() -> None:
         assert result["profiles_protected"] == 1
         assert profile.summary == "Human-reviewed summary that must survive re-import."
         assert profile.hero_image["kind"] == "licensed_photograph"
+
+
+def _make_peppermint_version_one() -> None:
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.version = 1
+        profile.status = "published"
+        profile.summary = "Published version one summary."
+        profile.introduction = "Published version one introduction."
+        profile.approved_at = datetime.now(timezone.utc)
+        profile.published_at = datetime.now(timezone.utc)
+        session.commit()
+
+
+def test_pending_revision_workflow_preserves_public_content_until_promotion(
+    client,
+) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+
+    with get_session_factory()() as session:
+        first_import = seed_curated_profiles(session)
+        second_import = seed_curated_profiles(session)
+        revisions = list(
+            session.scalars(
+                select(PlantProfileRevision).where(
+                    PlantProfileRevision.plant_profile.has(slug="peppermint")
+                )
+            ).all()
+        )
+
+    assert first_import["revisions_created"] == 1
+    assert second_import["revisions_created"] == 0
+    assert second_import["revisions_unchanged"] >= 1
+    assert len(revisions) == 1
+    assert revisions[0].version == 3
+    assert revisions[0].status == "needs_review"
+
+    before = client.get("/api/v1/plants/peppermint")
+    assert before.status_code == 200
+    assert before.json()["version"] == 1
+    assert before.json()["introduction"] == "Published version one introduction."
+
+    login_client(client)
+    revision_queue = client.get("/api/v1/admin/revisions")
+    assert revision_queue.status_code == 200
+    peppermint = next(
+        item for item in revision_queue.json() if item["slug"] == "peppermint"
+    )
+    assert peppermint["current_version"] == 1
+    assert peppermint["proposed_version"] == 3
+    assert peppermint["current_content"]["introduction"] == (
+        "Published version one introduction."
+    )
+    assert len(peppermint["proposed_content"]["introduction"].split()) >= 50
+
+    gated = client.post(f"/api/v1/admin/revisions/{peppermint['id']}/promote")
+    assert gated.status_code == 409
+
+    approved = client.post(
+        f"/api/v1/admin/revisions/{peppermint['id']}/approve",
+        json={"reviewer_name": "Milestone 2B test editor"},
+    )
+    assert approved.status_code == 200
+    assert approved.json()["status"] == "approved"
+    still_public_v1 = client.get("/api/v1/plants/peppermint")
+    assert still_public_v1.json()["version"] == 1
+
+    promoted = client.post(f"/api/v1/admin/revisions/{peppermint['id']}/promote")
+    assert promoted.status_code == 200
+    assert promoted.json()["status"] == "promoted"
+    assert promoted.json()["current_version"] == 3
+
+    after = client.get("/api/v1/plants/peppermint")
+    assert after.status_code == 200
+    assert after.json()["version"] == 3
+    assert (
+        after.json()["introduction"] == peppermint["proposed_content"]["introduction"]
+    )
+    assert after.json()["source_count"] == sum(
+        source["source_type"] != "licensed_media" for source in after.json()["sources"]
+    )
+    assert after.json()["hero_image"]["attribution"]
+
+    with get_session_factory()() as session:
+        history = list(
+            session.scalars(
+                select(PlantProfileRevision)
+                .join(PlantProfile)
+                .where(PlantProfile.slug == "peppermint")
+                .order_by(PlantProfileRevision.version)
+            ).all()
+        )
+    assert [(item.version, item.status) for item in history] == [
+        (1, "superseded"),
+        (3, "promoted"),
+    ]
+
+
+def test_revision_hold_requires_reason_and_never_changes_public_profile(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+
+    login_client(client)
+    revision = next(
+        item
+        for item in client.get("/api/v1/admin/revisions").json()
+        if item["slug"] == "peppermint"
+    )
+    missing_reason = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/reject",
+        json={"reviewer_name": "Test editor", "reason": ""},
+    )
+    assert missing_reason.status_code == 422
+
+    held = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/reject",
+        json={"reviewer_name": "Test editor", "reason": "Needs source review."},
+    )
+    assert held.status_code == 200
+    assert held.json()["status"] == "held"
+    assert held.json()["decision_reason"] == "Needs source review."
+    approved = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/approve",
+        json={"reviewer_name": "Test editor"},
+    )
+    assert approved.status_code == 200
+    held_again = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/reject",
+        json={"reviewer_name": "Test editor", "reason": "Approval revoked."},
+    )
+    assert held_again.status_code == 200
+    assert held_again.json()["status"] == "held"
+    assert held_again.json()["decision_reason"] == "Approval revoked."
+    public = client.get("/api/v1/plants/peppermint")
+    assert public.json()["version"] == 1
+
+
+def test_changed_protected_content_requires_a_new_manifest_version() -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.status = "published"
+        profile.summary = "Human-edited content at the same version."
+        session.commit()
+
+        with pytest.raises(
+            ValueError, match="content changed without increasing content_version"
+        ):
+            seed_curated_profiles(session)
+
+
+def test_older_manifest_version_is_skipped_without_canonical_overwrite() -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.version = 4
+        profile.summary = "Newer human-authored canonical content."
+        session.commit()
+        result = seed_curated_profiles(session)
+        session.refresh(profile)
+
+    assert result["older_versions_skipped"] == 1
+    assert profile.version == 4
+    assert profile.summary == "Newer human-authored canonical content."
+
+
+def test_revision_constraints_prevent_duplicate_version_and_checksum() -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        first = PlantProfileRevision(
+            plant_profile_id=profile.id,
+            version=4,
+            content_payload={"profile": {}, "source_refs": []},
+            content_checksum="a" * 64,
+            status="needs_review",
+        )
+        session.add(first)
+        session.commit()
+        session.add(
+            PlantProfileRevision(
+                plant_profile_id=profile.id,
+                version=4,
+                content_payload={"profile": {"changed": True}, "source_refs": []},
+                content_checksum="b" * 64,
+                status="needs_review",
+            )
+        )
+        with pytest.raises(IntegrityError):
+            session.commit()
+        session.rollback()
+        session.add(
+            PlantProfileRevision(
+                plant_profile_id=profile.id,
+                version=5,
+                content_payload={"profile": {"changed": True}, "source_refs": []},
+                content_checksum="a" * 64,
+                status="needs_review",
+            )
+        )
+        with pytest.raises(IntegrityError):
+            session.commit()
 
 
 def test_source_records_reject_duplicate_canonical_url() -> None:

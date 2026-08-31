@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 from http import HTTPStatus
 from uuid import UUID
@@ -10,18 +11,19 @@ from backend.app.domains.encyclopedia.corpus import (
 from backend.app.models.encyclopedia import (
     EditorialReview,
     PlantProfile,
+    PlantProfileRevision,
     PlantProfileSource,
     SourceRecord,
     utc_now,
 )
 from backend.app.models.source import Source
 from fastapi import HTTPException
-from sqlalchemy import func, or_, select
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.orm import Session, selectinload
 
 ACCESS_DATE = "2026-08-31"
 FIXED_TIME = datetime(2026, 8, 31, 12, 0, tzinfo=timezone.utc)
-PROTECTED_STATUSES = {"approved", "published"}
+PROTECTED_STATUSES = {"approved", "published", "held", "rejected"}
 
 
 def _hash_text(value: str) -> str:
@@ -122,6 +124,103 @@ def _profile_values(item: CorpusProfile) -> dict:
     }
 
 
+def _revision_payload(item: CorpusProfile) -> dict:
+    return {
+        "schema_version": 1,
+        "profile": _profile_values(item),
+        "source_refs": [
+            {
+                "source_id": reference.source_id,
+                "support_role": reference.support_role,
+                "note": reference.provenance_notes,
+            }
+            for reference in sorted(
+                item.source_refs,
+                key=lambda value: (value.source_id, value.support_role),
+            )
+        ],
+    }
+
+
+def _payload_checksum(payload: dict) -> str:
+    return _hash_text(
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    )
+
+
+def _canonical_payload(profile: PlantProfile) -> dict:
+    values = {field: getattr(profile, field) for field in _profile_values_from_names()}
+    source_refs = [
+        {
+            "source_id": link.source_record.external_identifier,
+            "support_role": link.support_role,
+            "note": link.note or "",
+        }
+        for link in sorted(
+            profile.sources,
+            key=lambda item: (
+                item.source_record.external_identifier,
+                item.support_role,
+            ),
+        )
+    ]
+    return {"schema_version": 1, "profile": values, "source_refs": source_refs}
+
+
+def _profile_values_from_names() -> tuple[str, ...]:
+    return (
+        "accepted_scientific_name",
+        "botanical_author",
+        "taxon_identifier",
+        "known_synonyms",
+        "display_common_name",
+        "family_name",
+        "diversity_tags",
+        "summary",
+        "introduction",
+        "botanical_description",
+        "traditional_uses",
+        "parts_used",
+        "distribution",
+        "distribution_summary",
+        "growth_form",
+        "biome",
+        "preparation",
+        "safety_notes",
+        "evidence_notes",
+        "readiness_status",
+        "readiness_reason",
+        "hero_image",
+    )
+
+
+def _replace_profile_sources(
+    session: Session, profile: PlantProfile, source_refs: list[dict]
+) -> None:
+    session.execute(
+        delete(PlantProfileSource).where(
+            PlantProfileSource.plant_profile_id == profile.id
+        )
+    )
+    session.flush()
+    for reference in source_refs:
+        record = session.scalar(
+            select(SourceRecord).where(
+                SourceRecord.external_identifier == reference["source_id"]
+            )
+        )
+        if record is None:
+            raise ValueError(f"Unknown revision source {reference['source_id']}")
+        session.add(
+            PlantProfileSource(
+                plant_profile_id=profile.id,
+                source_record_id=record.id,
+                support_role=reference["support_role"],
+                note=reference["note"],
+            )
+        )
+
+
 def seed_curated_profiles(session: Session, batch: str | None = None) -> dict[str, int]:
     manifest = load_corpus()
     source_by_id = {source.external_identifier: source for source in manifest.sources}
@@ -135,12 +234,27 @@ def seed_curated_profiles(session: Session, batch: str | None = None) -> dict[st
     updated = 0
     protected = 0
     source_links_created = 0
+    revisions_created = 0
+    revisions_unchanged = 0
+    older_versions_skipped = 0
 
     for item in selected:
-        values = _profile_values(item)
+        payload = _revision_payload(item)
+        checksum = _payload_checksum(payload)
+        values = payload["profile"]
+        for reference in item.source_refs:
+            _get_or_create_source_record(session, source_by_id[reference.source_id])
+
         profile = session.scalar(
-            select(PlantProfile).where(PlantProfile.slug == item.slug)
+            select(PlantProfile)
+            .where(PlantProfile.slug == item.slug)
+            .options(
+                selectinload(PlantProfile.sources).selectinload(
+                    PlantProfileSource.source_record
+                )
+            )
         )
+        direct_content_changed = False
         if profile is None:
             status = "held" if item.readiness_status == "held" else "needs_review"
             profile = PlantProfile(
@@ -156,86 +270,95 @@ def seed_curated_profiles(session: Session, batch: str | None = None) -> dict[st
             )
             session.add(profile)
             session.flush()
+            _replace_profile_sources(session, profile, payload["source_refs"])
+            source_links_created += len(payload["source_refs"])
             created += 1
+            direct_content_changed = True
+        elif item.content_version < profile.version:
+            older_versions_skipped += 1
+        elif profile.status in PROTECTED_STATUSES:
+            protected += 1
+            if item.content_version == profile.version:
+                if _payload_checksum(_canonical_payload(profile)) != checksum:
+                    raise ValueError(
+                        f"{item.slug}: content changed without increasing "
+                        "content_version"
+                    )
+                revisions_unchanged += 1
+            else:
+                revision = session.scalar(
+                    select(PlantProfileRevision).where(
+                        PlantProfileRevision.plant_profile_id == profile.id,
+                        PlantProfileRevision.version == item.content_version,
+                    )
+                )
+                if revision is None:
+                    session.add(
+                        PlantProfileRevision(
+                            plant_profile_id=profile.id,
+                            version=item.content_version,
+                            content_payload=payload,
+                            content_checksum=checksum,
+                            status="needs_review",
+                            created_at=FIXED_TIME,
+                        )
+                    )
+                    revisions_created += 1
+                elif revision.content_checksum == checksum:
+                    revisions_unchanged += 1
+                else:
+                    raise ValueError(
+                        f"{item.slug}: revision content changed without increasing "
+                        "content_version"
+                    )
+        elif item.content_version == profile.version:
+            if _payload_checksum(_canonical_payload(profile)) != checksum:
+                raise ValueError(
+                    f"{item.slug}: content changed without increasing content_version"
+                )
+            revisions_unchanged += 1
         else:
-            metadata_fields = {
-                "accepted_scientific_name",
-                "botanical_author",
-                "taxon_identifier",
-                "known_synonyms",
-                "display_common_name",
-                "family_name",
-                "diversity_tags",
-                "distribution",
-                "distribution_summary",
-                "growth_form",
-                "biome",
-                "readiness_status",
-                "readiness_reason",
-                "hero_image",
-            }
-            for field in metadata_fields:
-                setattr(profile, field, values[field])
-            if profile.status in PROTECTED_STATUSES:
-                protected += 1
-            elif item.content_version > profile.version:
-                for field, value in values.items():
-                    setattr(profile, field, value)
-                profile.version = item.content_version
-                profile.updated_at = FIXED_TIME
-                updated += 1
+            for field, value in values.items():
+                setattr(profile, field, value)
+            profile.version = item.content_version
+            profile.updated_at = FIXED_TIME
+            _replace_profile_sources(session, profile, payload["source_refs"])
+            source_links_created += len(payload["source_refs"])
+            updated += 1
+            direct_content_changed = True
             if profile.status in {"collected", "normalized", "draft"}:
                 profile.status = "needs_review"
 
-        existing_review = session.scalar(
-            select(EditorialReview).where(
-                EditorialReview.plant_profile_id == profile.id,
-                EditorialReview.content_type == "plant_profile",
-            )
-        )
-        if existing_review is None:
-            review_status = (
-                "held" if item.readiness_status == "held" else "needs_review"
-            )
-            session.add(
-                EditorialReview(
-                    plant_profile_id=profile.id,
-                    content_type="plant_profile",
-                    status=review_status,
-                    decision_reason=item.hold_reason,
-                    review_payload={
-                        "corpus_slug": profile.slug,
-                        "source": "curated_corpus",
-                        "batch": item.batch,
-                        "content_version": item.content_version,
-                        "access_date": ACCESS_DATE,
-                    },
-                    created_at=FIXED_TIME,
+        if direct_content_changed:
+            existing_review = session.scalar(
+                select(EditorialReview).where(
+                    EditorialReview.plant_profile_id == profile.id,
+                    EditorialReview.content_type == "plant_profile",
                 )
             )
-
-        for reference in item.source_refs:
-            source_item = source_by_id[reference.source_id]
-            record = _get_or_create_source_record(session, source_item)
-            link = session.scalar(
-                select(PlantProfileSource).where(
-                    PlantProfileSource.plant_profile_id == profile.id,
-                    PlantProfileSource.source_record_id == record.id,
-                    PlantProfileSource.support_role == reference.support_role,
+            review_payload = {
+                "corpus_slug": profile.slug,
+                "source": "curated_corpus",
+                "batch": item.batch,
+                "content_version": item.content_version,
+                "access_date": ACCESS_DATE,
+            }
+            if existing_review is None:
+                review_status = (
+                    "held" if item.readiness_status == "held" else "needs_review"
                 )
-            )
-            if link is None:
                 session.add(
-                    PlantProfileSource(
+                    EditorialReview(
                         plant_profile_id=profile.id,
-                        source_record_id=record.id,
-                        support_role=reference.support_role,
-                        note=reference.provenance_notes,
+                        content_type="plant_profile",
+                        status=review_status,
+                        decision_reason=item.hold_reason,
+                        review_payload=review_payload,
+                        created_at=FIXED_TIME,
                     )
                 )
-                source_links_created += 1
-            else:
-                link.note = reference.provenance_notes
+            elif existing_review.status == "needs_review":
+                existing_review.review_payload = review_payload
 
     session.commit()
     return {
@@ -246,6 +369,9 @@ def seed_curated_profiles(session: Session, batch: str | None = None) -> dict[st
         "source_records_total": session.scalar(select(func.count(SourceRecord.id)))
         or 0,
         "source_links_created": source_links_created,
+        "revisions_created": revisions_created,
+        "revisions_unchanged": revisions_unchanged,
+        "older_versions_skipped": older_versions_skipped,
     }
 
 
@@ -302,6 +428,156 @@ def get_published_profile(session: Session, slug: str) -> PlantProfile:
             status_code=HTTPStatus.NOT_FOUND, detail="Plant profile not found."
         )
     return profile
+
+
+def list_profile_revisions(session: Session) -> list[PlantProfileRevision]:
+    return list(
+        session.scalars(
+            select(PlantProfileRevision)
+            .options(
+                selectinload(PlantProfileRevision.plant_profile)
+                .selectinload(PlantProfile.sources)
+                .selectinload(PlantProfileSource.source_record)
+            )
+            .order_by(PlantProfileRevision.created_at.desc())
+        ).all()
+    )
+
+
+def get_profile_revision(session: Session, revision_id: UUID) -> PlantProfileRevision:
+    revision = session.scalar(
+        select(PlantProfileRevision)
+        .where(PlantProfileRevision.id == revision_id)
+        .options(
+            selectinload(PlantProfileRevision.plant_profile)
+            .selectinload(PlantProfile.sources)
+            .selectinload(PlantProfileSource.source_record)
+        )
+    )
+    if revision is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="Plant profile revision not found."
+        )
+    return revision
+
+
+def _validate_revision_for_approval(revision: PlantProfileRevision) -> None:
+    values = revision.content_payload.get("profile", {})
+    media = values.get("hero_image", {})
+    if (
+        values.get("readiness_status") != "ready_for_review"
+        or not values.get("safety_notes")
+        or not values.get("evidence_notes")
+        or not values.get("distribution")
+        or media.get("kind") != "licensed_photograph"
+        or not media.get("local_path")
+        or not media.get("license")
+        or not media.get("attribution")
+        or not media.get("checksum_sha256")
+        or not revision.content_payload.get("source_refs")
+    ):
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail="Only complete, source-linked revisions can be approved.",
+        )
+
+
+def approve_profile_revision(
+    session: Session, revision_id: UUID, reviewer_name: str
+) -> PlantProfileRevision:
+    revision = get_profile_revision(session, revision_id)
+    if revision.status not in {"needs_review", "approved", "held"}:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail="Revision cannot be approved from its current state.",
+        )
+    _validate_revision_for_approval(revision)
+    revision.status = "approved"
+    revision.reviewer_name = reviewer_name
+    revision.decision_reason = None
+    revision.reviewed_at = utc_now()
+    session.commit()
+    return get_profile_revision(session, revision.id)
+
+
+def hold_profile_revision(
+    session: Session, revision_id: UUID, reason: str, reviewer_name: str
+) -> PlantProfileRevision:
+    if not reason.strip():
+        raise HTTPException(
+            status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
+            detail="A revision hold reason is required.",
+        )
+    revision = get_profile_revision(session, revision_id)
+    if revision.status not in {"needs_review", "approved", "held"}:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail="Only unpromoted revisions can be held.",
+        )
+    revision.status = "held"
+    revision.reviewer_name = reviewer_name
+    revision.decision_reason = reason.strip()
+    revision.reviewed_at = utc_now()
+    session.commit()
+    return get_profile_revision(session, revision.id)
+
+
+def promote_profile_revision(
+    session: Session, revision_id: UUID
+) -> PlantProfileRevision:
+    revision = get_profile_revision(session, revision_id)
+    profile = revision.plant_profile
+    if revision.status != "approved":
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail="Only approved revisions can be promoted.",
+        )
+    if revision.version <= profile.version:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail="Revision must be newer than the canonical profile.",
+        )
+    _validate_revision_for_approval(revision)
+
+    current_payload = _canonical_payload(profile)
+    current_checksum = _payload_checksum(current_payload)
+    current_history = session.scalar(
+        select(PlantProfileRevision).where(
+            PlantProfileRevision.plant_profile_id == profile.id,
+            PlantProfileRevision.version == profile.version,
+        )
+    )
+    if current_history is None:
+        session.add(
+            PlantProfileRevision(
+                plant_profile_id=profile.id,
+                version=profile.version,
+                content_payload=current_payload,
+                content_checksum=current_checksum,
+                status="superseded",
+                created_at=profile.created_at,
+                reviewed_at=profile.last_reviewed_at,
+                promoted_at=profile.published_at,
+            )
+        )
+    else:
+        current_history.status = "superseded"
+
+    values = revision.content_payload["profile"]
+    for field in _profile_values_from_names():
+        setattr(profile, field, values[field])
+    _replace_profile_sources(session, profile, revision.content_payload["source_refs"])
+    profile.version = revision.version
+    profile.updated_at = utc_now()
+    profile.last_reviewed_at = revision.reviewed_at
+    if profile.status != "published":
+        profile.status = "approved"
+        profile.approved_at = revision.reviewed_at
+
+    revision.status = "promoted"
+    revision.promoted_at = utc_now()
+    session.commit()
+    return get_profile_revision(session, revision.id)
 
 
 def list_reviews(session: Session) -> list[EditorialReview]:

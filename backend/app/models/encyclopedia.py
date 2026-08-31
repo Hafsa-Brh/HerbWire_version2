@@ -27,6 +27,7 @@ PLANT_STATUSES = (
 )
 
 REVIEW_STATUSES = ("needs_review", "approved", "rejected", "held")
+REVISION_STATUSES = ("needs_review", "approved", "held", "promoted", "superseded")
 PIPELINE_STATUSES = ("running", "succeeded", "failed", "held", "partial")
 STAGE_STATUSES = ("pending", "succeeded", "failed", "held", "skipped")
 
@@ -139,6 +140,9 @@ class PlantProfile(Base):
     reviews: Mapped[list["EditorialReview"]] = relationship(
         back_populates="plant_profile"
     )
+    revisions: Mapped[list["PlantProfileRevision"]] = relationship(
+        back_populates="plant_profile"
+    )
 
     __table_args__ = (
         CheckConstraint(
@@ -148,6 +152,52 @@ class PlantProfile(Base):
         Index("ix_plant_profiles_status", "status"),
         Index("ix_plant_profiles_common_name", "display_common_name"),
         Index("ix_plant_profiles_scientific_name", "accepted_scientific_name"),
+    )
+
+
+class PlantProfileRevision(Base):
+    __tablename__ = "plant_profile_revisions"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    plant_profile_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("plant_profiles.id", ondelete="RESTRICT"),
+        nullable=False,
+    )
+    version: Mapped[int] = mapped_column(nullable=False)
+    content_payload: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    content_checksum: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(50), nullable=False, default="needs_review"
+    )
+    reviewer_name: Mapped[str | None] = mapped_column(String(255))
+    decision_reason: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utc_now
+    )
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    promoted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    plant_profile: Mapped[PlantProfile] = relationship(back_populates="revisions")
+
+    __table_args__ = (
+        CheckConstraint("version > 0", name="ck_plant_profile_revisions_version"),
+        CheckConstraint(
+            "status in ('needs_review','approved','held','promoted','superseded')",
+            name="ck_plant_profile_revisions_status",
+        ),
+        UniqueConstraint(
+            "plant_profile_id", "version", name="uq_plant_profile_revisions_version"
+        ),
+        UniqueConstraint(
+            "plant_profile_id",
+            "content_checksum",
+            name="uq_plant_profile_revisions_checksum",
+        ),
+        Index("ix_plant_profile_revisions_profile", "plant_profile_id"),
+        Index("ix_plant_profile_revisions_status", "status"),
     )
 
 

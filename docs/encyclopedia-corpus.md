@@ -58,3 +58,25 @@ The final command is the idempotency check: it should report zero created or upd
 6. Add one schema-valid profile and unique source records to `corpus.json`.
 7. Run validation, focused corpus tests, and a disposable-database import twice before importing to the main local database.
 8. Confirm the new profile remains `needs_review` and is absent from public APIs until a human approves and publishes it through the editorial desk.
+
+## Reviewed profile revisions
+
+A newer manifest version never replaces a published, approved, held, or rejected
+canonical row during import. The importer stores the complete proposed article,
+its stable content checksum, source identifiers, media attribution, and
+structured distribution as a pending revision. Re-importing identical content is
+a no-op because profile/version and profile/checksum pairs are unique.
+
+Authenticated editors use `/admin/revisions` to compare the current canonical
+article with the proposal. A revision can be approved or held with a reason, but
+only an approved revision can be promoted. Promotion runs atomically: it records
+the previous canonical payload as an auditable superseded revision, replaces the
+canonical article and source links, and marks the proposal promoted. Existing
+published profiles remain published; revisions for non-public profiles do not
+bypass the normal publication workflow.
+
+For local verification, run the importer twice. The first run may report
+`revisions_created`; the second must report those records under
+`revisions_unchanged` and create no duplicate revisions or source links.
+Disposable revision-migration checks use only
+`herbwire_m2b_revision_verify`.

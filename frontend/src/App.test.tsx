@@ -36,6 +36,7 @@ const publishedPlant = {
   biome: "temperate",
   distribution_summary: "Europe to Central Asia",
   readiness_status: "ready_for_review",
+  version: 1,
 }
 
 const draftPlant = {
@@ -77,6 +78,24 @@ const draftReview = { id: "review-1", content_type: "plant_profile", status: "ne
 const publishedReview = { id: "review-2", content_type: "plant_profile", status: "approved", reviewer_name: "Local editor", decision_reason: null, review_payload: { seed_slug: "peppermint" }, created_at: "2026-08-30T12:00:00Z", decided_at: "2026-08-30T12:30:00Z", plant_profile: plantDetail }
 const pipelineRun = { id: "run-1", pipeline_type: "curated_seed", trigger: "manual", provider: "local", idempotency_key: "seed-1", status: "succeeded", current_stage: "publisher", summary: {}, started_at: "2026-08-30T12:00:00Z", finished_at: "2026-08-30T12:01:00Z", stages: [{ name: "editorial_qa", status: "succeeded", attempt: 1, duration_ms: 10, input_refs: [], output_refs: [], error_code: null, error_message: null }] }
 const performance = { total_runs: 1, succeeded_runs: 1, failed_runs: 0, held_runs: 0, auto_published: 0, last_execution: "2026-08-30T12:00:00Z", stages: [{ name: "editorial_qa", total_runs: 1, succeeded: 1, failed: 0, held: 0, skipped: 0, average_duration_ms: 10, last_status: "succeeded", last_completed_at: "2026-08-30T12:00:00Z" }] }
+const plantRevision = {
+  id: "revision-1",
+  plant_profile_id: publishedPlant.id,
+  slug: publishedPlant.slug,
+  display_common_name: publishedPlant.display_common_name,
+  current_version: 1,
+  proposed_version: 3,
+  status: "needs_review",
+  content_checksum: "a".repeat(64),
+  current_content: plantDetail,
+  proposed_content: { ...plantDetail, version: undefined, sources: undefined, source_count: undefined, published_at: undefined, last_reviewed_at: undefined, status: undefined, id: undefined, slug: undefined, introduction: "Expanded version-three overview from the corpus manifest.", evidence_notes: "Version-three evidence limitations remain explicit." },
+  proposed_sources: plantDetail.sources.filter((source) => source.source_type !== "licensed_media"),
+  reviewer_name: null,
+  decision_reason: null,
+  created_at: "2026-09-01T12:00:00Z",
+  reviewed_at: null,
+  promoted_at: null,
+}
 
 function jsonResponse(body: unknown, status = 200) {
   return Promise.resolve(new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } }))
@@ -86,8 +105,10 @@ function renderAt(path: string) {
   return render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>)
 }
 
-function installMockApi({ authenticated = true, plants = [publishedPlant], reviews = [draftReview, publishedReview] } = {}) {
+function installMockApi({ authenticated = true, plants = [publishedPlant], reviews = [draftReview, publishedReview], revisions = [plantRevision], revisionFailure = false } = {}) {
   let authed = authenticated
+  let revisionStatus = revisions[0]?.status ?? "needs_review"
+  let revisionFailures = revisionFailure ? 1 : 0
   vi.mocked(fetch).mockImplementation((input, init) => {
     const url = String(input)
     if (url.endsWith("/api/v1/auth/session")) return jsonResponse({ authenticated: authed, user: authed ? { initials: "HB", label: "Local admin", role: "Milestone 2 editor" } : null })
@@ -118,6 +139,10 @@ function installMockApi({ authenticated = true, plants = [publishedPlant], revie
       return jsonResponse({ items, total: filtered.length, page, page_size: pageSize, pages: Math.max(1, Math.ceil(filtered.length / pageSize)) })
     }
     if (!authed && url.includes("/api/v1/admin/")) return jsonResponse({ detail: "Authentication required." }, 401)
+    if (url.endsWith("/api/v1/admin/revisions") && !init?.method) { if (revisionFailures > 0) { revisionFailures -= 1; return jsonResponse({ detail: "Unavailable" }, 503) }; return jsonResponse(revisions.map((revision) => ({ ...revision, status: revisionStatus }))) }
+    if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/approve") && init?.method === "POST") { revisionStatus = "approved"; return jsonResponse({ ...revisions[0], status: revisionStatus }) }
+    if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/reject") && init?.method === "POST") { revisionStatus = "held"; return jsonResponse({ ...revisions[0], status: revisionStatus }) }
+    if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/promote") && init?.method === "POST") { if (revisionStatus !== "approved") return jsonResponse({ detail: "Approval required." }, 409); revisionStatus = "promoted"; return jsonResponse({ ...revisions[0], status: revisionStatus }) }
     if (url.endsWith("/api/v1/admin/reviews") && !init?.method) return jsonResponse(reviews)
     if (url.endsWith("/api/v1/admin/pipeline/runs")) return jsonResponse([pipelineRun])
     if (url.endsWith("/api/v1/admin/agent-performance")) return jsonResponse(performance)
@@ -228,6 +253,40 @@ describe("Milestone 2 final UI and functionality", () => {
     fireEvent.click(screen.getByRole("button", { name: "Next" }))
     expect(await screen.findAllByText("Review plant 7")).not.toHaveLength(0)
     expect(screen.getByText("Page 2 of 2")).toBeInTheDocument()
+  })
+  it("compares, approves, holds, and promotes profile revisions with publication gating", async () => {
+    installMockApi({ authenticated: true })
+    renderAt("/admin/revisions")
+
+    await screen.findByRole("heading", { name: "Profile Revisions" })
+    expect(await screen.findByText("Current version 1")).toBeInTheDocument()
+    expect(screen.getByText("Proposed version 3")).toBeInTheDocument()
+    expect(screen.getByText("Expanded version-three overview from the corpus manifest.")).toBeInTheDocument()
+    const promote = screen.getByRole("button", { name: "Promote revision" })
+    expect(promote).toBeDisabled()
+    fireEvent.click(screen.getByRole("button", { name: "Approve revision" }))
+    await waitFor(() => expect(promote).toBeEnabled())
+    fireEvent.click(promote)
+    expect(await screen.findByText("Approved revision promoted atomically.")).toBeInTheDocument()
+  })
+
+  it("holds a pending revision with an editorial reason", async () => {
+    installMockApi({ authenticated: true })
+    renderAt("/admin/revisions")
+
+    await screen.findByRole("heading", { name: "Profile Revisions" })
+    fireEvent.change(await screen.findByLabelText("Hold reason"), { target: { value: "Safety citation needs review." } })
+    fireEvent.click(screen.getByRole("button", { name: "Hold / reject" }))
+    expect(await screen.findByText("Revision held. Canonical public content is unchanged.")).toBeInTheDocument()
+  })
+
+  it("renders revision empty and retry states", async () => {
+    installMockApi({ authenticated: true, revisions: [], revisionFailure: true })
+    renderAt("/admin/revisions")
+
+    expect(await screen.findByRole("heading", { name: "Profile revisions unavailable" })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }))
+    expect(await screen.findByRole("heading", { name: "No profile revisions" })).toBeInTheDocument()
   })
   it("renders Flashes from real response-shaped published plant data", async () => {
     installMockApi({ authenticated: true })

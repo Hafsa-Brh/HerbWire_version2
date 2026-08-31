@@ -174,3 +174,39 @@ Approve and implement the pending-revision workflow so version-3 drafts can be r
 The pending-revision blocker still applies to substantive changes proposed for
 the twenty-seven currently published rows. No importer may overwrite their
 public content or bypass the editorial state machine.
+
+## Pending profile revision workflow
+
+### Outcome
+
+Store newer corpus articles as reviewable revisions while the canonical published
+profile remains unchanged. Reviewers compare complete current/proposed payloads,
+approve or hold a revision, and explicitly promote only an approved revision in
+one database transaction.
+
+### Owned files
+
+- `backend/app/models/encyclopedia.py` and one forward Alembic migration
+- `backend/app/domains/encyclopedia/service.py`
+- existing editorial schemas/routes and integration tests
+- existing typed frontend API boundary, admin application, and frontend tests
+- corpus operations documentation
+
+### Risks and controls
+
+- Published and otherwise protected profiles are never directly overwritten by
+  import; newer manifest content creates one checksum/version-unique revision.
+- Promotion snapshots the prior canonical payload for audit, applies the complete
+  proposal atomically, and preserves public publication only for an already
+  published profile.
+- Held, failed, and unapproved revisions remain absent from public APIs.
+- Migration downgrade testing targets only `herbwire_m2b_revision_verify`; the
+  main database receives a forward upgrade only.
+
+### Verification sequence
+
+1. Prove migration upgrade/downgrade/upgrade and constraints in the disposable database.
+2. Run importer and workflow integration tests, including idempotency and public exclusion.
+3. Apply the forward migration and import version 3 as pending revisions locally.
+4. Exercise peppermint v1 -> pending v3 -> approved -> promoted through authenticated HTTP.
+5. Run complete backend/frontend gates, runtime checks, hygiene review, and commit without push.

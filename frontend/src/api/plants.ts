@@ -67,6 +67,7 @@ export type ApiPlantListItem = {
   biome: string
   distribution_summary: string
   readiness_status: string
+  version: number
 }
 
 export type ApiPlantPage = {

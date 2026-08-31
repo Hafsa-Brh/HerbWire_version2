@@ -7,21 +7,31 @@ from backend.app.api.schemas import (
     AgentPerformanceResponse,
     DecisionRequest,
     PipelineRunResponse,
+    PlantRevisionResponse,
     ReviewResponse,
     SeedResponse,
 )
 from backend.app.core.auth import require_editor_session
 from backend.app.db.session import get_session
 from backend.app.domains.encyclopedia.service import (
+    approve_profile_revision,
     approve_review,
+    get_profile_revision,
     get_review,
+    hold_profile_revision,
+    list_profile_revisions,
     list_reviews,
+    promote_profile_revision,
     publish_profile,
     reject_review,
     seed_curated_profiles,
 )
 from backend.app.domains.pipeline.fixture_pipeline import run_fixture_pipeline
-from backend.app.models.encyclopedia import PipelineRun, PipelineStageResult
+from backend.app.models.encyclopedia import (
+    PipelineRun,
+    PipelineStageResult,
+    SourceRecord,
+)
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
@@ -47,6 +57,54 @@ def review_response(review) -> ReviewResponse:
         plant_profile=plant_detail(review.plant_profile)
         if review.plant_profile
         else None,
+    )
+
+
+def revision_response(session: Session, revision) -> PlantRevisionResponse:
+    payload = revision.content_payload
+    source_ids = [item["source_id"] for item in payload["source_refs"]]
+    records = list(
+        session.scalars(
+            select(SourceRecord).where(SourceRecord.external_identifier.in_(source_ids))
+        ).all()
+    )
+    by_identifier = {record.external_identifier: record for record in records}
+    proposed_sources = [
+        by_identifier[source_id]
+        for source_id in source_ids
+        if source_id in by_identifier
+    ]
+    return PlantRevisionResponse(
+        id=revision.id,
+        plant_profile_id=revision.plant_profile_id,
+        slug=revision.plant_profile.slug,
+        display_common_name=revision.plant_profile.display_common_name,
+        current_version=revision.plant_profile.version,
+        proposed_version=revision.version,
+        status=revision.status,
+        content_checksum=revision.content_checksum,
+        current_content=plant_detail(revision.plant_profile),
+        proposed_content=payload["profile"],
+        proposed_sources=[
+            {
+                "id": record.id,
+                "url": record.url,
+                "canonical_url": record.canonical_url,
+                "title": record.title,
+                "publisher": record.publisher,
+                "source_type": record.source_type,
+                "original_language": record.original_language,
+                "license_status": record.license_status,
+                "supports": record.supports,
+                "accessed_at": record.collected_at,
+            }
+            for record in proposed_sources
+        ],
+        reviewer_name=revision.reviewer_name,
+        decision_reason=revision.decision_reason,
+        created_at=revision.created_at,
+        reviewed_at=revision.reviewed_at,
+        promoted_at=revision.promoted_at,
     )
 
 
@@ -106,6 +164,75 @@ def reject(
 @router.post("/plants/{plant_id}/publish", dependencies=[Depends(require_editor)])
 def publish(plant_id: UUID, session: Session = Depends(get_session)):
     return plant_detail(publish_profile(session, plant_id))
+
+
+@router.get(
+    "/revisions",
+    response_model=list[PlantRevisionResponse],
+    dependencies=[Depends(require_editor)],
+)
+def read_revisions(
+    session: Session = Depends(get_session),
+) -> list[PlantRevisionResponse]:
+    return [
+        revision_response(session, item) for item in list_profile_revisions(session)
+    ]
+
+
+@router.get(
+    "/revisions/{revision_id}",
+    response_model=PlantRevisionResponse,
+    dependencies=[Depends(require_editor)],
+)
+def read_revision(
+    revision_id: UUID, session: Session = Depends(get_session)
+) -> PlantRevisionResponse:
+    return revision_response(session, get_profile_revision(session, revision_id))
+
+
+@router.post(
+    "/revisions/{revision_id}/approve",
+    response_model=PlantRevisionResponse,
+    dependencies=[Depends(require_editor)],
+)
+def approve_revision(
+    revision_id: UUID,
+    request: DecisionRequest,
+    session: Session = Depends(get_session),
+) -> PlantRevisionResponse:
+    return revision_response(
+        session,
+        approve_profile_revision(session, revision_id, request.reviewer_name),
+    )
+
+
+@router.post(
+    "/revisions/{revision_id}/reject",
+    response_model=PlantRevisionResponse,
+    dependencies=[Depends(require_editor)],
+)
+def reject_revision(
+    revision_id: UUID,
+    request: DecisionRequest,
+    session: Session = Depends(get_session),
+) -> PlantRevisionResponse:
+    return revision_response(
+        session,
+        hold_profile_revision(
+            session, revision_id, request.reason or "", request.reviewer_name
+        ),
+    )
+
+
+@router.post(
+    "/revisions/{revision_id}/promote",
+    response_model=PlantRevisionResponse,
+    dependencies=[Depends(require_editor)],
+)
+def promote_revision(
+    revision_id: UUID, session: Session = Depends(get_session)
+) -> PlantRevisionResponse:
+    return revision_response(session, promote_profile_revision(session, revision_id))
 
 
 @router.post(
