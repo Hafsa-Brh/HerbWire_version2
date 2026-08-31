@@ -33,7 +33,8 @@ def clean_milestone2_tables():
                 """
                 DELETE FROM sources
                 WHERE identifier in (
-                    'kew-powo', 'ema-herbal', 'nccih', 'fixture-discovery'
+                    'kew-powo', 'ema-herbal', 'nccih', 'wikimedia-commons',
+                    'fixture-discovery'
                 )
                 """
             )
@@ -52,7 +53,8 @@ def clean_milestone2_tables():
                 """
                 DELETE FROM sources
                 WHERE identifier in (
-                    'kew-powo', 'ema-herbal', 'nccih', 'fixture-discovery'
+                    'kew-powo', 'ema-herbal', 'nccih', 'wikimedia-commons',
+                    'fixture-discovery'
                 )
                 """
             )
@@ -127,8 +129,10 @@ def test_public_endpoints_hide_review_profiles_until_published(client) -> None:
     response = client.get("/api/v1/plants")
 
     assert response.status_code == 200
-    assert all(item["status"] == "published" for item in response.json())
-    assert not any(item["slug"] == "german-chamomile" for item in response.json())
+    payload = response.json()
+    assert payload["total"] == 0
+    assert all(item["status"] == "published" for item in payload["items"])
+    assert not any(item["slug"] == "german-chamomile" for item in payload["items"])
 
     detail = client.get("/api/v1/plants/german-chamomile")
     assert detail.status_code == 404
@@ -169,6 +173,10 @@ def test_editorial_approval_then_publication_makes_profile_public(client) -> Non
     public_detail = client.get("/api/v1/plants/german-chamomile")
     assert public_detail.status_code == 200
     assert public_detail.json()["display_common_name"] == "German chamomile"
+    assert public_detail.json()["source_count"] == sum(
+        source["source_type"] != "licensed_media"
+        for source in public_detail.json()["sources"]
+    )
 
 
 def test_editorial_api_requires_authenticated_session(client) -> None:
@@ -202,6 +210,62 @@ def test_seed_is_idempotent() -> None:
     assert second["profiles_total"] == first["profiles_total"]
     assert second["source_records_total"] == first["source_records_total"]
     assert second["profiles_created"] == 0
+    assert second["source_links_created"] == 0
+    assert first["profiles_total"] == 30
+    assert first["source_records_total"] == 92
+
+
+def test_public_plant_paging_search_and_filters(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profiles = list(
+            session.scalars(
+                select(PlantProfile).order_by(PlantProfile.display_common_name)
+            ).all()
+        )
+        for profile in profiles[:13]:
+            profile.status = "published"
+            profile.approved_at = datetime.now(timezone.utc)
+            profile.published_at = datetime.now(timezone.utc)
+        session.commit()
+
+    first_page = client.get("/api/v1/plants?page=1&page_size=12")
+    second_page = client.get("/api/v1/plants?page=2&page_size=12")
+    search = client.get("/api/v1/plants?query=ginseng")
+    family = client.get("/api/v1/plants?family=Asteraceae")
+    tag = client.get("/api/v1/plants?tag=India")
+
+    assert first_page.status_code == 200
+    assert first_page.json()["total"] == 13
+    assert len(first_page.json()["items"]) == 12
+    assert len(second_page.json()["items"]) == 1
+    assert all(
+        "ginseng" in item["display_common_name"].lower()
+        for item in search.json()["items"]
+    )
+    assert all(item["family_name"] == "Asteraceae" for item in family.json()["items"])
+    assert all("India" in item["diversity_tags"] for item in tag.json()["items"])
+
+
+def test_import_preserves_human_reviewed_profile_text() -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.status = "published"
+        profile.approved_at = datetime.now(timezone.utc)
+        profile.published_at = datetime.now(timezone.utc)
+        profile.summary = "Human-reviewed summary that must survive re-import."
+        session.commit()
+
+        result = seed_curated_profiles(session)
+        session.refresh(profile)
+
+        assert result["profiles_protected"] == 1
+        assert profile.summary == "Human-reviewed summary that must survive re-import."
+        assert profile.hero_image["kind"] == "licensed_photograph"
 
 
 def test_source_records_reject_duplicate_canonical_url() -> None:

@@ -11,19 +11,31 @@ const TEST_PASSWORD = "test-password"
 const publishedPlant = {
   id: "plant-1",
   slug: "peppermint",
-  accepted_scientific_name: "Mentha x piperita L.",
+  accepted_scientific_name: "Mentha × piperita L.",
+  botanical_author: "L.",
+  taxon_identifier: "urn:lsid:ipni.org:names:450969-1",
+  known_synonyms: [],
   display_common_name: "Peppermint",
   family_name: "Lamiaceae",
+  diversity_tags: ["Europe", "West Asia"],
   summary: "A reviewed peppermint summary from the API.",
   status: "published",
   hero_image: {
-    label: "Botanical placeholder for peppermint",
-    license_status: "No external image used.",
-    attribution: "HerbWire local placeholder",
-    alt_text: "Botanical placeholder for peppermint",
+    kind: "licensed_photograph",
+    local_path: "/media/plants/peppermint.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Peppermint.jpg",
+    attribution: "Test photographer, CC BY-SA 4.0, via Wikimedia Commons",
+    license: "CC BY-SA 4.0",
+    license_url: "https://creativecommons.org/licenses/by-sa/4.0",
+    alt_text: "Botanical image of peppermint.",
+    caption: "Peppermint",
   },
   published_at: "2026-08-30T12:00:00Z",
   source_count: 3,
+  growth_form: "perennial herb",
+  biome: "temperate",
+  distribution_summary: "Europe to Central Asia",
+  readiness_status: "ready_for_review",
 }
 
 const draftPlant = {
@@ -38,18 +50,27 @@ const draftPlant = {
   published_at: null,
 }
 
+const corpusPlants = Array.from({ length: 30 }, (_, index) => ({
+  ...publishedPlant,
+  id: "plant-" + (index + 1),
+  slug: "plant-" + (index + 1),
+  display_common_name: index === 18 ? "Asian ginseng" : "Plant " + String(index + 1).padStart(2, "0"),
+  accepted_scientific_name: index === 18 ? "Panax ginseng C.A.Mey." : "Testus plantus " + (index + 1),
+  family_name: index % 2 === 0 ? "Asteraceae" : "Lamiaceae",
+  diversity_tags: index % 3 === 0 ? ["India"] : ["Europe"],
+}))
 const plantDetail = {
   ...publishedPlant,
   introduction: "Reviewed introduction from the database.",
   botanical_description: "Kew-supported botanical description.",
   traditional_uses: [{ tradition: "European herbal medicine / EMA HMPC", statement: "Traditionally used language with attribution.", limitation: "Not a cure claim." }],
   parts_used: ["leaf", "essential oil"],
-  distribution: ["Europe", "Central Asia"],
+  distribution: [{ code: "POWO-NATIVE-SUMMARY", name: "Europe to Central Asia", status: "native", level: 0, map_countries: ["FR", "DE", "IT"] }, { code: "POWO-INTRODUCED-LIST", name: "Introduced elsewhere", status: "introduced", level: 0, map_countries: ["US", "CA"] }],
   preparation: "Documented infusion tradition without dosage.",
-  safety_notes: ["Allergy caution."],
+  safety_notes: [{ category: "Safety", statement: "Allergy caution.", source: "test-source" }],
   evidence_notes: "Traditional use is not clinical proof.",
   last_reviewed_at: "2026-08-30T12:00:00Z",
-  sources: [{ id: "source-record-1", url: "https://example.org/source", canonical_url: "https://example.org/source", title: "Source title", publisher: "Source publisher", source_type: "taxonomy", original_language: "en", license_status: "Citation and paraphrase only.", supports: { taxonomy: true, traditional_use: true }, accessed_at: "2026-08-30T12:00:00Z" }],
+  sources: [{ id: "source-record-1", url: "https://example.org/source", canonical_url: "https://example.org/source", title: "Source title", publisher: "Source publisher", source_type: "taxonomy", original_language: "en", license_status: "Citation and paraphrase only.", supports: { taxonomy: true, distribution: true, traditional_use: true }, accessed_at: "2026-08-30T12:00:00Z" }, { id: "source-record-2", url: "https://commons.wikimedia.org/wiki/File:Peppermint.jpg", canonical_url: "https://commons.wikimedia.org/wiki/File:Peppermint.jpg", title: "Peppermint image source", publisher: "Wikimedia Commons", source_type: "licensed_media", original_language: "en", license_status: "CC BY-SA 4.0", supports: { media: true }, accessed_at: "2026-08-30T12:00:00Z" }],
 }
 
 const draftReview = { id: "review-1", content_type: "plant_profile", status: "needs_review", reviewer_name: null, decision_reason: null, review_payload: { seed_slug: "german-chamomile" }, created_at: "2026-08-30T12:00:00Z", decided_at: null, plant_profile: { ...plantDetail, ...draftPlant } }
@@ -82,7 +103,20 @@ function installMockApi({ authenticated = true, plants = [publishedPlant], revie
       return jsonResponse({ email: String(body.email).trim().toLowerCase(), status: String(body.email).includes("again") ? "already_subscribed" : "subscribed", created_at: "2026-08-31T12:00:00Z" })
     }
     if (url.includes("/api/v1/plants/peppermint")) return jsonResponse(plantDetail)
-    if (url.includes("/api/v1/plants")) return jsonResponse(plants)
+    if (url.includes("/api/v1/plants")) {
+      const parsed = new URL(url)
+      const query = (parsed.searchParams.get("query") ?? "").toLowerCase()
+      const family = parsed.searchParams.get("family") ?? ""
+      const tag = parsed.searchParams.get("tag") ?? ""
+      const page = Number(parsed.searchParams.get("page") ?? "1")
+      const pageSize = Number(parsed.searchParams.get("page_size") ?? "12")
+      const filtered = plants.filter((plant) => {
+        const names = (plant.display_common_name + " " + plant.accepted_scientific_name).toLowerCase()
+        return (!query || names.includes(query)) && (!family || plant.family_name === family) && (!tag || plant.diversity_tags.includes(tag))
+      })
+      const items = filtered.slice((page - 1) * pageSize, page * pageSize)
+      return jsonResponse({ items, total: filtered.length, page, page_size: pageSize, pages: Math.max(1, Math.ceil(filtered.length / pageSize)) })
+    }
     if (!authed && url.includes("/api/v1/admin/")) return jsonResponse({ detail: "Authentication required." }, 401)
     if (url.endsWith("/api/v1/admin/reviews") && !init?.method) return jsonResponse(reviews)
     if (url.endsWith("/api/v1/admin/pipeline/runs")) return jsonResponse([pipelineRun])
@@ -145,7 +179,7 @@ describe("Milestone 2 final UI and functionality", () => {
 
     fireEvent.change(screen.getByLabelText("Password"), { target: { value: TEST_PASSWORD } })
     fireEvent.click(screen.getByRole("button", { name: "Enter editorial desk" }))
-    await screen.findByRole("heading", { name: "Editorial desk" })
+    await screen.findByRole("heading", { name: "Dashboard" })
     expect(fetch).toHaveBeenCalledWith(
       "http://localhost:8000/api/v1/auth/login",
       expect.objectContaining({ method: "POST", credentials: "include" }),
@@ -163,11 +197,11 @@ describe("Milestone 2 final UI and functionality", () => {
     installMockApi({ authenticated: true })
     renderAt("/admin")
 
-    await screen.findByRole("heading", { name: "Editorial desk" })
-    const reviewWorkspace = await screen.findByRole("region", { name: "Review workspace" })
-    expect(reviewWorkspace).toHaveClass("lg:grid-cols-[.75fr_1.25fr]")
-    expect(within(reviewWorkspace).getByText("Article review")).toBeInTheDocument()
+    await screen.findByRole("heading", { name: "Dashboard" })
+    expect(screen.getByRole("heading", { name: "No operational dashboard yet" })).toBeInTheDocument()
+    expect(screen.queryByRole("region", { name: "Review workspace" })).not.toBeInTheDocument()
     const nav = screen.getByRole("navigation", { name: "Editorial navigation" })
+    expect(within(nav).getByRole("link", { name: /Review Queue/i })).toHaveAttribute("href", "/admin/reviews")
     expect(within(nav).getByRole("link", { name: /Flashes/i })).toHaveAttribute("href", "/admin/flashes")
     expect(within(nav).getByRole("link", { name: /Agent Performance/i })).toHaveAttribute("href", "/admin/agents")
     expect(screen.getByText("HB")).toBeInTheDocument()
@@ -175,6 +209,26 @@ describe("Milestone 2 final UI and functionality", () => {
     await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringContaining("/api/v1/auth/logout"), expect.objectContaining({ method: "POST" })))
   })
 
+  it("keeps the review workspace on its dedicated paged route", async () => {
+    const reviews = Array.from({ length: 7 }, (_, index) => ({
+      ...draftReview,
+      id: `review-${index + 1}`,
+      plant_profile: { ...draftReview.plant_profile, id: `draft-${index + 1}`, display_common_name: `Review plant ${index + 1}` },
+    }))
+    installMockApi({ authenticated: true, reviews })
+    renderAt("/admin/reviews")
+
+    await screen.findByRole("heading", { name: "Review Queue" })
+    const reviewWorkspace = await screen.findByRole("region", { name: "Review workspace" })
+    expect(reviewWorkspace).toHaveClass("lg:grid-cols-[.75fr_1.25fr]")
+    expect(within(reviewWorkspace).getByText("Article review")).toBeInTheDocument()
+    expect(await within(reviewWorkspace).findByRole("img", { name: "Country-level distribution overview for Review plant 1" }, { timeout: 5000 })).toBeInTheDocument()
+    expect(screen.getByText("Page 1 of 2")).toBeInTheDocument()
+    expect(screen.queryByText("Review plant 7")).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "Next" }))
+    expect(await screen.findAllByText("Review plant 7")).not.toHaveLength(0)
+    expect(screen.getByText("Page 2 of 2")).toBeInTheDocument()
+  })
   it("renders Flashes from real response-shaped published plant data", async () => {
     installMockApi({ authenticated: true })
     renderAt("/admin/flashes")
@@ -199,9 +253,24 @@ describe("Milestone 2 final UI and functionality", () => {
     renderAt("/plants/peppermint")
 
     await screen.findByRole("heading", { name: "Peppermint" })
+    const overview = screen.getByTestId("article-overview")
+    expect(within(overview).getByText(/Reviewed introduction from the database/i)).toBeInTheDocument()
+    expect(within(overview).getByRole("heading", { name: "How Much Do We Know?" })).toBeInTheDocument()
+    expect(within(overview).getByText(/Traditional use is not clinical proof/i)).toBeInTheDocument()
+    expect(within(overview).queryByText(/Kew-supported botanical description/i)).not.toBeInTheDocument()
+    expect(within(overview).queryByText(/Documented infusion tradition/i)).not.toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Botanical identity" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Preparation traditions" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Qualified traditional uses" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Safety and contraindications" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Geographical distribution" })).toBeInTheDocument()
+    expect(screen.getByLabelText("Distribution legend")).toBeInTheDocument()
+    expect(await screen.findByRole("img", { name: "Country-level distribution overview for Peppermint" }, { timeout: 5000 })).toBeInTheDocument()
+    expect(screen.getByLabelText("Map legend")).toBeInTheDocument()
+    expect(screen.getByText("Origin uncertain")).toBeInTheDocument()
+    expect(screen.getAllByText(/CC BY-SA 4.0/i).length).toBeGreaterThan(0)
     expect(screen.getByText("Source title")).toBeInTheDocument()
+    expect(screen.queryByText("Peppermint image source")).not.toBeInTheDocument()
     expect(screen.queryByText("German chamomile")).not.toBeInTheDocument()
     const adminHeader = vi.mocked(fetch).mock.calls.find(([input]) => String(input).includes("/api/v1/admin/reviews"))?.[1]?.headers
     if (adminHeader) expect(adminHeader).not.toHaveProperty("X-HerbWire-Local-Editor")
@@ -209,7 +278,7 @@ describe("Milestone 2 final UI and functionality", () => {
 
   it("supports review approve, hold, and publication gating through backend calls", async () => {
     installMockApi({ authenticated: true, reviews: [draftReview] })
-    renderAt("/admin/review")
+    renderAt("/admin/reviews")
 
     await screen.findByRole("heading", { name: "Review Queue" })
     await screen.findByRole("button", { name: "Publish" })
@@ -220,4 +289,44 @@ describe("Milestone 2 final UI and functionality", () => {
     fireEvent.click(screen.getByRole("button", { name: "Hold / reject" }))
     await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringContaining("/api/v1/admin/reviews/review-1/reject"), expect.objectContaining({ body: JSON.stringify({ reviewer_name: "Local editor", reason: "Needs source check." }) })))
   })
-})
+
+  it("pages, searches, and filters a 30-profile response", async () => {
+    installMockApi({ plants: corpusPlants })
+    renderAt("/plants")
+
+    await screen.findByRole("heading", { name: "Plant 01" })
+    expect(screen.getByRole("heading", { name: "MEDICINAL PLANTS" })).toBeInTheDocument()
+    expect(screen.queryByText("Plant encyclopedia")).not.toBeInTheDocument()
+    expect(screen.queryByText("Medicinal plant profiles")).not.toBeInTheDocument()
+    expect(screen.getByText("30 published")).toBeInTheDocument()
+    expect(screen.getByText("Page 1 of 3")).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: /Next/i }))
+    await screen.findByRole("heading", { name: "Plant 13" })
+
+    fireEvent.change(screen.getByLabelText("Search plant profiles"), { target: { value: "Panax" } })
+    fireEvent.change(screen.getByLabelText("Filter by family"), { target: { value: "Asteraceae" } })
+    fireEvent.change(screen.getByLabelText("Filter by region or tradition"), { target: { value: "India" } })
+    fireEvent.click(screen.getByRole("button", { name: "Search" }))
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringContaining("query=Panax"), expect.anything()))
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining("family=Asteraceae"), expect.anything())
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining("tag=India"), expect.anything())
+  })
+
+  it("shows the plant API error state and retries", async () => {
+    let failed = false
+    vi.mocked(fetch).mockImplementation((input) => {
+      if (String(input).includes("/api/v1/plants")) {
+        if (!failed) {
+          failed = true
+          return jsonResponse({ detail: "Unavailable" }, 503)
+        }
+        return jsonResponse({ items: [publishedPlant], total: 1, page: 1, page_size: 12, pages: 1 })
+      }
+      return jsonResponse({ authenticated: false, user: null })
+    })
+    renderAt("/plants")
+
+    await screen.findByRole("heading", { name: "The encyclopedia API is unavailable." })
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }))
+    await screen.findByRole("heading", { name: "Peppermint" })
+  })})

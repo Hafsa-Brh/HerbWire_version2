@@ -95,17 +95,32 @@ class PlantProfile(Base):
     slug: Mapped[str] = mapped_column(String(160), nullable=False, unique=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="draft")
     accepted_scientific_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    botanical_author: Mapped[str] = mapped_column(
+        String(255), nullable=False, default=""
+    )
+    taxon_identifier: Mapped[str] = mapped_column(
+        String(255), nullable=False, default=""
+    )
+    known_synonyms: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     display_common_name: Mapped[str] = mapped_column(String(255), nullable=False)
     family_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    diversity_tags: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     summary: Mapped[str] = mapped_column(Text, nullable=False)
     introduction: Mapped[str] = mapped_column(Text, nullable=False)
     botanical_description: Mapped[str] = mapped_column(Text, nullable=False)
     traditional_uses: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     parts_used: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     distribution: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    distribution_summary: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    growth_form: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    biome: Mapped[str] = mapped_column(String(255), nullable=False, default="")
     preparation: Mapped[str] = mapped_column(Text, nullable=False)
     safety_notes: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     evidence_notes: Mapped[str] = mapped_column(Text, nullable=False)
+    readiness_status: Mapped[str] = mapped_column(
+        String(50), nullable=False, default="legacy"
+    )
+    readiness_reason: Mapped[str | None] = mapped_column(Text)
     hero_image: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
     version: Mapped[int] = mapped_column(nullable=False, default=1)
     approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

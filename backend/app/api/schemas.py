@@ -21,13 +21,29 @@ class PlantListItemResponse(BaseModel):
     id: UUID
     slug: str
     accepted_scientific_name: str
+    botanical_author: str
+    taxon_identifier: str
+    known_synonyms: list
     display_common_name: str
     family_name: str | None
+    diversity_tags: list
     summary: str
     status: str
     hero_image: dict
     published_at: datetime | None
     source_count: int
+    growth_form: str
+    biome: str
+    distribution_summary: str
+    readiness_status: str
+
+
+class PlantPageResponse(BaseModel):
+    items: list[PlantListItemResponse]
+    total: int
+    page: int
+    page_size: int
+    pages: int
 
 
 class PlantDetailResponse(PlantListItemResponse):
@@ -62,8 +78,11 @@ class DecisionRequest(BaseModel):
 
 class SeedResponse(BaseModel):
     profiles_created: int
+    profiles_updated: int
+    profiles_protected: int
     profiles_total: int
     source_records_total: int
+    source_links_created: int
 
 
 class PipelineStageResponse(BaseModel):
