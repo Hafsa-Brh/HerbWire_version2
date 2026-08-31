@@ -1,59 +1,22 @@
-import { useEffect, useState } from "react"
+import { Route, Routes } from "react-router-dom"
+import { HomePage } from "./pages/HomePage"
+import { PlantsPage } from "./pages/PlantsPage"
+import { PlantArticlePage } from "./pages/PlantArticlePage"
+import { DiscoveriesPage } from "./pages/DiscoveriesPage"
+import { LoginPage } from "./pages/LoginPage"
+import { AdminApp } from "./pages/admin/AdminApp"
+import { NotFoundPage } from "./pages/NotFoundPage"
 
-import { fetchHealth, getApiBaseUrl, type ApiHealthResponse } from "./api/health"
-import { SystemStatus } from "./components/SystemStatus"
-
-type AppState =
-  | { kind: "loading" }
-  | { kind: "connected"; data: ApiHealthResponse }
-  | { kind: "degraded"; data: ApiHealthResponse }
-  | { kind: "unreachable" }
-
-function App() {
-  const [state, setState] = useState<AppState>({ kind: "loading" })
-
-  useEffect(() => {
-    let cancelled = false
-
-    async function loadStatus() {
-      try {
-        const payload = await fetchHealth()
-        if (cancelled) {
-          return
-        }
-
-        setState({
-          kind: payload.status === "ok" ? "connected" : "degraded",
-          data: payload,
-        })
-      } catch {
-        if (!cancelled) {
-          setState({ kind: "unreachable" })
-        }
-      }
-    }
-
-    void loadStatus()
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
+export default function App() {
   return (
-    <main className="page-shell">
-      <section className="hero-card">
-        <p className="eyebrow">Milestone 1 foundation</p>
-        <h1>HerbWire V2</h1>
-        <p className="lede">
-          This walking skeleton proves the first real connection in the platform:
-          React frontend to FastAPI backend to PostgreSQL 17.
-        </p>
-      </section>
-
-      <SystemStatus apiBaseUrl={getApiBaseUrl()} state={state} />
-    </main>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/plants" element={<PlantsPage />} />
+      <Route path="/plants/:slug" element={<PlantArticlePage />} />
+      <Route path="/discoveries" element={<DiscoveriesPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/admin/*" element={<AdminApp />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   )
 }
-
-export default App

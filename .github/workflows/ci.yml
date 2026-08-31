@@ -32,6 +32,7 @@ jobs:
       HERBWIRE_FRONTEND_ORIGIN: http://127.0.0.1:5173
       HERBWIRE_API_HOST: 127.0.0.1
       HERBWIRE_API_PORT: 8000
+      HERBWIRE_ALLOW_DESTRUCTIVE_TEST_DB: "true"
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -49,7 +50,7 @@ jobs:
         run: |
           python -m alembic -c backend/alembic.ini current
           python -m alembic -c backend/alembic.ini upgrade head
-          python -m alembic -c backend/alembic.ini downgrade base
+          python -m alembic -c backend/alembic.ini downgrade 20260829_0001
           python -m alembic -c backend/alembic.ini upgrade head
       - name: Backend tests
         run: python -m pytest backend/tests -q

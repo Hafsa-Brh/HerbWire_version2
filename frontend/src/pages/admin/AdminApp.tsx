@@ -1,0 +1,136 @@
+import { Activity, Database, Eye, Filter, LayoutDashboard, LogOut, Menu, Search, ShieldCheck, Sprout, Workflow, X, Zap } from "lucide-react"
+import { useCallback, useMemo, useState } from "react"
+import { Link, Navigate, NavLink, Route, Routes, useNavigate } from "react-router-dom"
+import { fetchSession, logout } from "../../api/auth"
+import { approveReview, fetchAgentPerformance, fetchPipelineRuns, fetchReviews, publishPlant, rejectReview, type ApiAgentPerformance, type ApiPipelineRun, type ApiReview } from "../../api/editorial"
+import { fetchPlants, type ApiPlantDetail, type ApiPlantListItem } from "../../api/plants"
+import { BotanicalImage } from "../../components/plants/PlantPrimitives"
+import { useAsyncResource } from "../../hooks/useAsyncResource"
+import { AdminStateCard, AdminStatusPill, Metric, PageHeader, Panel } from "./AdminPrimitives"
+
+type AdminData = { reviews: ApiReview[]; runs: ApiPipelineRun[] }
+type NavItem = { label: string; path: string; icon: typeof Activity }
+
+const navItems: readonly NavItem[] = [
+  { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
+  { label: "Review Queue", path: "/admin/review", icon: ShieldCheck },
+  { label: "Flashes", path: "/admin/flashes", icon: Zap },
+  { label: "Agent Performance", path: "/admin/agents", icon: Activity },
+  { label: "Pipeline Runs", path: "/admin/runs", icon: Workflow },
+  { label: "Sources", path: "/admin/sources", icon: Database },
+]
+
+function AdminLogo({ inverse = false }: { inverse?: boolean }) {
+  return <Link to="/" className="flex items-center gap-2.5" aria-label="HerbWire home"><span className={`grid h-9 w-9 place-items-center rounded-full ${inverse ? "bg-sage/20 text-sage" : "bg-forest text-sage"}`}><Sprout size={18} /></span><span className={`font-serif text-xl font-semibold tracking-[-.04em] ${inverse ? "text-cream" : "text-deep"}`}>Herb<span className="text-leaf">Wire</span></span></Link>
+}
+
+export function AdminApp() {
+  const session = useAsyncResource(useCallback((signal: AbortSignal) => fetchSession(signal), []))
+
+  if (session.isLoading) return <div className="min-h-screen bg-paper p-6"><AdminStateCard title="Checking editorial session" description="Confirming backend-authenticated local access." /></div>
+  if (session.error || !session.data?.authenticated) return <Navigate to="/login" replace />
+
+  return <AdminShell user={session.data.user ?? { initials: "HB", label: "Local admin", role: "Milestone 2 editor" }} />
+}
+
+function AdminShell({ user }: { user: { initials: string; label: string; role: string } }) {
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+
+  async function signOut() {
+    await logout().catch(() => undefined)
+    navigate("/login", { replace: true })
+  }
+
+  return (
+    <div className="min-h-screen bg-paper text-ink">
+      <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <button className="grid h-9 w-9 place-items-center text-forest md:hidden" onClick={() => setOpen(!open)} aria-label="Toggle admin navigation">{open ? <X size={19} /> : <Menu size={19} />}</button>
+          <AdminLogo />
+          <div className="hidden items-center gap-3 sm:flex"><Link to="/" className="inline-flex items-center gap-2 border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-muted hover:border-leaf hover:text-leaf"><Eye size={14} /> View public site</Link></div>
+        </div>
+      </header>
+      <div className="mx-auto flex max-w-[1320px] items-start px-4 sm:px-6 lg:px-8">
+        <aside className={`${open ? "fixed inset-x-4 top-20 z-20 block shadow-xl" : "hidden"} w-64 shrink-0 border border-line bg-paper md:fixed md:bottom-8 md:left-[max(1.5rem,calc((100vw-1320px)/2+1.5rem))] md:top-24 md:block md:overflow-y-auto md:border-0 md:bg-transparent md:py-0 md:shadow-none`}>
+          <div className="flex min-h-full flex-col p-4 md:p-0">
+            <p className="hw-eyebrow mb-4">Editorial desk</p>
+            <nav className="grid gap-1" aria-label="Editorial navigation">{navItems.map((item) => { const Icon = item.icon; return <NavLink key={item.path} to={item.path} end={item.path === "/admin"} onClick={() => setOpen(false)} className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 font-sans text-sm ${isActive ? "bg-sage/35 font-semibold text-forest" : "text-muted hover:bg-sage/15 hover:text-forest"}`}><Icon size={16} />{item.label}</NavLink> })}</nav>
+            <div className="my-6 border-t border-line" />
+            <p className="mb-3 px-3 font-sans text-[10px] font-bold uppercase tracking-[.14em] text-muted">System</p>
+            <div className="grid gap-1 px-3 py-2 font-sans text-xs text-muted"><div className="flex items-center gap-3"><SettingsDot /><span>Backend session</span><span className="ml-auto h-1.5 w-1.5 rounded-full bg-leaf" /></div><span className="pl-6 text-[10px] leading-relaxed text-muted">HttpOnly local admin cookie. No browser-bundled secret.</span></div>
+            <div className="mt-8 border-t border-line pt-5">
+              <div className="flex items-center gap-3 px-3">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-deep font-serif text-sm text-cream">{user.initials}</span>
+                <div className="min-w-0 flex-1"><p className="font-sans text-xs font-semibold text-forest">{user.label}</p><p className="font-sans text-[10px] text-muted">{user.role}</p></div>
+              </div>
+              <button type="button" onClick={signOut} className="mt-4 flex w-full items-center gap-3 px-3 py-2.5 font-sans text-sm text-muted hover:bg-sage/15 hover:text-rust"><LogOut size={16} />Logout</button>
+            </div>
+          </div>
+        </aside>
+        <main className="min-w-0 flex-1 py-7 md:ml-[19rem] md:py-10">
+          <Routes>
+            <Route index element={<Dashboard />} />
+            <Route path="review" element={<ReviewQueue />} />
+            <Route path="flashes" element={<Flashes />} />
+            <Route path="agents" element={<AgentPerformance />} />
+            <Route path="runs" element={<PipelineRuns />} />
+            <Route path="sources" element={<Sources />} />
+            <Route path="*" element={<AdminStateCard title="Admin page not found" description="That editorial route does not exist. Use the navigation to return to a live desk page." action={<Link to="/admin" className="inline-flex items-center gap-2 bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Return to dashboard</Link>} />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
+  )
+}
+
+function SettingsDot() { return <span className="grid h-3.5 w-3.5 place-items-center rounded-full border border-leaf text-leaf"><span className="h-1.5 w-1.5 rounded-full bg-current" /></span> }
+
+function useAdminData() {
+  return useAsyncResource<AdminData>(useCallback(async (signal: AbortSignal) => {
+    const [reviews, runs] = await Promise.all([fetchReviews(signal), fetchPipelineRuns(signal)])
+    if (signal.aborted) throw new DOMException("Aborted", "AbortError")
+    return { reviews, runs }
+  }, []))
+}
+
+function Dashboard() {
+  const data = useAdminData()
+  const reviews = data.data?.reviews ?? []
+  const runs = data.data?.runs ?? []
+  return <><PageHeader eyebrow="Operations / review" title="Editorial desk" description="A live view of plant profiles moving through human review, provenance inspection, safety checks, and explicit publication." action={<button type="button" onClick={data.reload} className="inline-flex items-center gap-2 bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf">Refresh</button>} /><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric label="Review items" value={String(reviews.length)} detail="Profiles in the editorial queue" /><Metric label="Needs attention" value={String(reviews.filter((review) => review.status === "needs_review" || review.status === "held").length)} detail="Drafts or held items" /><Metric label="Approved" value={String(reviews.filter((review) => review.status === "approved").length)} detail="Ready for publication" /><Metric label="Published" value={String(reviews.filter((review) => review.plant_profile?.status === "published").length)} detail="Visible publicly" /></div>{data.isLoading ? <div className="mt-5"><AdminStateCard title="Loading dashboard" description="Pulling real editorial and pipeline records from FastAPI." /></div> : null}{data.error ? <div className="mt-5"><AdminStateCard title="Dashboard unavailable" description="The backend-authenticated editorial API could not be loaded." action={<button type="button" onClick={data.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /></div> : null}{data.data ? <div className="mt-5"><ReviewPanel data={data.data} /><div className="mt-5"><PipelinePanel runs={runs} /></div></div> : null}</>
+}
+
+function ReviewQueue() {
+  const data = useAdminData()
+  return <><PageHeader eyebrow="Editorial / review" title="Review Queue" description="Human judgment is the final publication gate. Drafts can be approved, held with a reason, and published only after approval." action={<button type="button" onClick={data.reload} className="inline-flex items-center gap-2 bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf">Refresh</button>} />{data.isLoading ? <AdminStateCard title="Loading review queue" description="Pulling the latest items waiting for human judgment." /> : null}{data.error ? <AdminStateCard title="Review queue unavailable" description="The editorial review queue could not be loaded right now." action={<button type="button" onClick={data.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{data.data ? <ReviewPanel data={data.data} /> : null}</>
+}
+
+function ReviewPanel({ data }: { data: AdminData }) {
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [reason, setReason] = useState("Needs additional source review.")
+  const [message, setMessage] = useState("")
+  const selected = useMemo(() => data.reviews.find((review) => review.id === selectedId) ?? data.reviews[0] ?? null, [data.reviews, selectedId])
+
+  function approveSelected() { if (selected) approveReview(selected.id).then(() => setMessage("Review approved. Refresh to see updated state.")).catch(() => setMessage("Approval failed.")) }
+  function holdSelected() { if (selected) rejectReview(selected.id, reason).then(() => setMessage("Review placed on hold. Refresh to see updated state.")).catch(() => setMessage("Hold failed.")) }
+  function publishSelected() { if (selected?.plant_profile) publishPlant(selected.plant_profile.id).then(() => setMessage("Profile published to the public encyclopedia. Refresh to see updated state.")).catch(() => setMessage("Publication requires an approved plant profile with provenance and safety notes.")) }
+
+  return <section aria-label="Review workspace" className="grid gap-5 lg:grid-cols-[.75fr_1.25fr]"><Panel eyebrow="Needs attention" title="Review queue"><div className="grid gap-3">{data.reviews.length ? data.reviews.map((review) => <button key={review.id} type="button" onClick={() => setSelectedId(review.id)} className={`block border border-line p-4 text-left ${selected?.id === review.id ? "bg-sage/25" : "bg-paper hover:border-leaf"}`}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{review.status}</AdminStatusPill><span className="font-sans text-xs text-muted">{review.plant_profile?.status ?? "held"}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{review.plant_profile?.display_common_name ?? "Discovery item"}</h2><p className="mt-2 font-sans text-xs text-muted">{review.content_type}</p></button>) : <p className="font-sans text-sm text-muted">No review items are waiting.</p>}</div></Panel><Panel eyebrow="Article review" title={selected?.plant_profile?.display_common_name ?? "Select a review item"}>{selected?.plant_profile ? <PlantReviewPreview plant={selected.plant_profile} /> : <p className="font-sans text-sm text-muted">No profile selected.</p>}{message ? <p role="alert" className="mt-4 border border-gold/40 bg-gold/10 p-3 font-sans text-sm text-deep">{message}</p> : null}<div className="mt-5 flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" onClick={approveSelected} disabled={!selected || selected.status === "approved"} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf disabled:opacity-50">Approve</button><button type="button" onClick={publishSelected} disabled={!selected?.plant_profile || selected.status !== "approved" || selected.plant_profile.status === "published"} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-forest disabled:opacity-50">Publish</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep outline-none focus:border-leaf" /></label><button type="button" onClick={holdSelected} disabled={!selected || selected.status === "approved"} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust hover:bg-rust hover:text-cream disabled:opacity-50">Hold / reject</button></div></Panel></section>
+}
+
+function PlantReviewPreview({ plant }: { plant: ApiPlantDetail }) {
+  return <div><div className="flex flex-wrap items-center gap-3"><AdminStatusPill>{plant.status}</AdminStatusPill><span className="font-sans text-xs text-muted">{plant.accepted_scientific_name}</span></div><h3 className="mt-4 font-serif text-3xl font-semibold tracking-[-.045em] text-deep">{plant.display_common_name}</h3><p className="mt-3 font-serif text-lg leading-relaxed text-muted">{plant.summary}</p><p className="mt-3 font-serif text-lg leading-relaxed text-muted">{plant.introduction}</p><div className="mt-5 grid gap-4 sm:grid-cols-2"><section className="border border-line bg-sage/15 p-4"><h4 className="font-serif text-xl font-semibold text-deep">Botanical identity</h4><p className="mt-2 font-sans text-sm leading-relaxed text-muted">{plant.botanical_description}</p></section><section className="border border-line bg-sage/15 p-4"><h4 className="font-serif text-xl font-semibold text-deep">Safety panel</h4><ul className="mt-2 list-disc pl-5 font-sans text-sm leading-relaxed text-muted">{plant.safety_notes.map((note) => <li key={note}>{note}</li>)}</ul></section><section className="border border-line bg-sage/15 p-4"><h4 className="font-serif text-xl font-semibold text-deep">Traditional use</h4>{plant.traditional_uses.map((use) => <p key={use.statement} className="mt-2 font-sans text-sm leading-relaxed text-muted">{use.tradition}: {use.statement}</p>)}</section><section className="border border-line bg-sage/15 p-4"><h4 className="font-serif text-xl font-semibold text-deep">Provenance</h4><ol className="mt-2 grid gap-2 font-sans text-sm leading-relaxed text-muted">{plant.sources.map((source) => <li key={source.id}><strong className="text-deep">{source.title}</strong><span className="block text-xs">{source.publisher} / {source.license_status}</span></li>)}</ol></section></div></div>
+}
+
+function PipelineRuns() { const runs = useAsyncResource(useCallback((signal: AbortSignal) => fetchPipelineRuns(signal), [])); return <><PageHeader eyebrow="Operations / monitoring" title="Pipeline Runs" description="A clear record of every persisted HerbWire pipeline run and stage result." />{runs.isLoading ? <AdminStateCard title="Loading pipeline dashboard" description="Gathering run activity and stage history." /> : null}{runs.error ? <AdminStateCard title="Pipeline runs unavailable" description="The pipeline monitoring view could not be loaded." action={<button type="button" onClick={runs.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{runs.data ? <PipelinePanel runs={runs.data} /> : null}</> }
+
+function PipelinePanel({ runs }: { runs: ApiPipelineRun[] }) { return <Panel eyebrow="Recent activity" title="Pipeline runs"><div className="grid gap-4">{runs.length ? runs.map((run) => <article key={run.id} className="border-t border-line pt-4 first:border-t-0 first:pt-0"><div className="flex flex-wrap items-center justify-between gap-3"><div><AdminStatusPill>{run.status}</AdminStatusPill><h3 className="mt-3 font-serif text-xl font-semibold text-deep">{run.pipeline_type}</h3><p className="mt-1 font-sans text-xs text-muted">{run.trigger} / {run.current_stage} / {new Date(run.started_at).toLocaleString()}</p></div></div><ol className="mt-3 list-decimal pl-5 font-sans text-xs leading-relaxed text-muted">{run.stages.map((stage) => <li key={`${run.id}-${stage.name}`}>{stage.name}: {stage.status} / {stage.duration_ms}ms</li>)}</ol></article>) : <p className="font-sans text-sm text-muted">No pipeline runs recorded.</p>}</div></Panel> }
+
+function Flashes() { const [query, setQuery] = useState(""); const plants = useAsyncResource<ApiPlantListItem[]>(useCallback((signal: AbortSignal) => fetchPlants(undefined, signal), [])); const filtered = useMemo(() => (plants.data ?? []).filter((plant) => `${plant.display_common_name} ${plant.accepted_scientific_name}`.toLowerCase().includes(query.toLowerCase())), [plants.data, query]); return <><PageHeader eyebrow="Operations / live feed" title="Flashes" description="Published plant articles currently available through the live FastAPI and PostgreSQL-backed public archive." action={<span className="inline-flex items-center gap-2 border border-line px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-muted">Published profiles only</span>} />{plants.isLoading ? <AdminStateCard title="Loading flashes" description="Refreshing the live published plant feed for the desk." /> : null}{plants.error ? <AdminStateCard title="Flashes are unavailable" description="The published profile feed could not be loaded right now." action={<button type="button" onClick={plants.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{plants.data ? <><div className="mb-7 flex flex-col gap-3 border-b border-line pb-5 lg:flex-row lg:items-center"><div className="flex flex-1 items-center gap-2 border border-line bg-paper px-3 py-2"><Search size={15} className="text-muted" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search flashes" className="w-full bg-transparent font-sans text-sm text-deep outline-none placeholder:text-muted" /></div><span className="inline-flex items-center gap-2 font-sans text-xs text-muted"><Filter size={14} /> {filtered.length} flashes</span></div><div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{filtered.length ? filtered.map((plant) => <article key={plant.id} className="overflow-hidden border border-line bg-paper transition hover:-translate-y-0.5 hover:border-leaf"><div className="relative aspect-[1.7] overflow-hidden bg-sage/20"><BotanicalImage label={plant.display_common_name} /><span className="absolute left-3 top-3 inline-flex items-center gap-1.5 bg-cream/90 px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest"><Zap size={12} /> Flash</span></div><div className="p-5"><div className="flex items-center justify-between gap-3"><span className="hw-eyebrow">Plant article</span><AdminStatusPill>{plant.status}</AdminStatusPill></div><h2 className="mt-3 font-serif text-2xl font-semibold leading-tight text-deep">{plant.display_common_name}</h2><p className="mt-2 font-sans text-xs italic text-muted">{plant.accepted_scientific_name}</p><p className="mt-4 font-sans text-xs leading-relaxed text-muted">{plant.summary}</p><div className="mt-5 flex items-center justify-between border-t border-line pt-3 font-sans text-[10px] uppercase tracking-[.1em] text-muted"><span>{plant.source_count} sources</span><Link to={`/plants/${plant.slug}`} className="font-bold text-leaf hover:text-forest">View public article</Link></div></div></article>) : <AdminStateCard title="No flashes match those filters" description="Try widening the search to see published plant articles." />}</div></> : null}</> }
+
+function AgentPerformance() { const performance = useAsyncResource<ApiAgentPerformance>(useCallback((signal: AbortSignal) => fetchAgentPerformance(signal), [])); return <><PageHeader eyebrow="Operations / observability" title="Agent Performance" description="Truthful metrics from persisted HerbWire pipeline runs and stage results. No unimplemented agents or fabricated percentages are shown." />{performance.isLoading ? <AdminStateCard title="Loading performance data" description="Gathering throughput and reliability metrics from pipeline stage records." /> : null}{performance.error ? <AdminStateCard title="Performance data is unavailable" description="The observability view could not be loaded right now." action={<button type="button" onClick={performance.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{performance.data ? <PerformancePanel data={performance.data} /> : null}</> }
+
+function PerformancePanel({ data }: { data: ApiAgentPerformance }) { const maxDuration = Math.max(...data.stages.map((stage) => stage.average_duration_ms), 0); return <><div className="mb-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric label="Pipeline runs" value={String(data.total_runs)} detail="Persisted runs" /><Metric label="Succeeded" value={String(data.succeeded_runs)} detail="Runs marked succeeded" /><Metric label="Held" value={String(data.held_runs)} detail="Runs waiting on review" /><Metric label="Auto-published" value={String(data.auto_published)} detail="Must remain zero" /></div>{data.stages.length ? <><Panel eyebrow="Throughput" title="Average duration per implemented stage"><div className="space-y-4 pt-3">{data.stages.map((metric) => <div key={metric.name} className="grid grid-cols-[140px_1fr_70px] items-center gap-3"><span className="font-sans text-xs text-muted">{metric.name}</span><div className="h-3 bg-sage/25"><div className="h-full bg-leaf" style={{ width: maxDuration > 0 ? `${(metric.average_duration_ms / maxDuration) * 100}%` : "0%" }} /></div><span className="font-sans text-xs font-semibold text-forest">{metric.average_duration_ms}ms</span></div>)}</div></Panel><div className="mt-5 overflow-x-auto border border-line"><table className="w-full min-w-[760px] text-left"><thead className="bg-sage/15 font-sans text-[10px] font-bold uppercase tracking-[.12em] text-muted"><tr><th className="px-5 py-4">Stage</th><th>Total</th><th>Succeeded</th><th>Held</th><th>Failed</th><th>Skipped</th><th>Last status</th></tr></thead><tbody>{data.stages.map((metric) => <tr key={metric.name} className="border-t border-line font-sans text-sm"><td className="px-5 py-4 font-semibold text-deep">{metric.name}</td><td className="text-muted">{metric.total_runs}</td><td className="font-semibold text-leaf">{metric.succeeded}</td><td className="text-muted">{metric.held}</td><td className="text-muted">{metric.failed}</td><td className="text-muted">{metric.skipped}</td><td className="text-muted">{metric.last_status ?? "Not yet"}</td></tr>)}</tbody></table></div></> : <AdminStateCard title="No runs yet" description="Agent performance will appear after persisted pipeline stage records exist." />}</> }
+
+function Sources() { return <><PageHeader eyebrow="Operations / sources" title="Sources" description="Source provenance is visible in each profile preview and public article. A dedicated source-health API is not implemented yet." /><AdminStateCard title="Source view pending" description="Use Review Queue to inspect source records attached to each database-backed plant profile." /></> }

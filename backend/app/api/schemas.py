@@ -1,0 +1,141 @@
+from datetime import datetime
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict
+
+
+class SourceRecordResponse(BaseModel):
+    id: UUID
+    url: str
+    canonical_url: str
+    title: str
+    publisher: str
+    source_type: str
+    original_language: str
+    license_status: str
+    supports: dict
+    accessed_at: datetime
+
+
+class PlantListItemResponse(BaseModel):
+    id: UUID
+    slug: str
+    accepted_scientific_name: str
+    display_common_name: str
+    family_name: str | None
+    summary: str
+    status: str
+    hero_image: dict
+    published_at: datetime | None
+    source_count: int
+
+
+class PlantDetailResponse(PlantListItemResponse):
+    introduction: str
+    botanical_description: str
+    traditional_uses: list
+    parts_used: list
+    distribution: list
+    preparation: str
+    safety_notes: list
+    evidence_notes: str
+    last_reviewed_at: datetime | None
+    sources: list[SourceRecordResponse]
+
+
+class ReviewResponse(BaseModel):
+    id: UUID
+    content_type: str
+    status: str
+    reviewer_name: str | None
+    decision_reason: str | None
+    review_payload: dict
+    created_at: datetime
+    decided_at: datetime | None
+    plant_profile: PlantDetailResponse | None
+
+
+class DecisionRequest(BaseModel):
+    reviewer_name: str = "Local editor"
+    reason: str | None = None
+
+
+class SeedResponse(BaseModel):
+    profiles_created: int
+    profiles_total: int
+    source_records_total: int
+
+
+class PipelineStageResponse(BaseModel):
+    name: str
+    status: str
+    attempt: int
+    duration_ms: int
+    input_refs: list
+    output_refs: list
+    error_code: str | None
+    error_message: str | None
+
+
+class PipelineRunResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    pipeline_type: str
+    trigger: str
+    provider: str
+    idempotency_key: str
+    status: str
+    current_stage: str
+    summary: dict
+    started_at: datetime
+    finished_at: datetime | None
+    stages: list[PipelineStageResponse] = []
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class SessionUserResponse(BaseModel):
+    initials: str
+    label: str
+    role: str
+
+
+class SessionResponse(BaseModel):
+    authenticated: bool
+    user: SessionUserResponse | None = None
+
+
+class NewsletterSubscriptionRequest(BaseModel):
+    email: str
+
+
+class NewsletterSubscriptionResponse(BaseModel):
+    email: str
+    status: str
+    created_at: datetime
+
+
+class AgentMetricResponse(BaseModel):
+    name: str
+    total_runs: int
+    succeeded: int
+    failed: int
+    held: int
+    skipped: int
+    average_duration_ms: int
+    last_status: str | None
+    last_completed_at: datetime | None
+
+
+class AgentPerformanceResponse(BaseModel):
+    total_runs: int
+    succeeded_runs: int
+    failed_runs: int
+    held_runs: int
+    auto_published: int
+    last_execution: datetime | None
+    stages: list[AgentMetricResponse]
