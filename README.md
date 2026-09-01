@@ -138,9 +138,10 @@ Zyte configuration names exist for a future approved integration, but ordinary M
 
 The production container builds React and serves it from the FastAPI process.
 The browser uses same-origin API URLs, the web entry point binds Heroku's
-PORT, and the release phase runs Alembic migrations. The 30-profile staging
-bootstrap is explicit and import-only; a human editor must still approve and
-publish every profile.
+PORT, and the release phase runs Alembic migrations. The generic 30-profile
+bootstrap remains explicit, import-only, and review-gated. The initial staging
+environment instead uses a one-time sanitized transfer of the already reviewed
+local editorial corpus; it does not create or repeat editorial approvals.
 
 See [Heroku staging deployment](docs/architecture/DEPLOYMENT.md) for the cost
 boundary, required variable names, verification order, proposed Phase 2
