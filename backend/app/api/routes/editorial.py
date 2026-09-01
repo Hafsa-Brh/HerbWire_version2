@@ -12,6 +12,7 @@ from backend.app.api.schemas import (
     SeedResponse,
 )
 from backend.app.core.auth import require_editor_session
+from backend.app.core.settings import get_settings
 from backend.app.db.session import get_session
 from backend.app.domains.encyclopedia.service import (
     approve_profile_revision,
@@ -43,6 +44,14 @@ router = APIRouter(prefix="/admin")
 
 def require_editor(request: Request) -> None:
     require_editor_session(request)
+
+
+def require_development_endpoint() -> None:
+    if not get_settings().enable_development_endpoints:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Not found.",
+        )
 
 
 def review_response(review) -> ReviewResponse:
@@ -119,7 +128,7 @@ def revision_response(session: Session, revision) -> PlantRevisionResponse:
 @router.post(
     "/dev/seed-curated",
     response_model=SeedResponse,
-    dependencies=[Depends(require_editor)],
+    dependencies=[Depends(require_editor), Depends(require_development_endpoint)],
 )
 def seed_curated(session: Session = Depends(get_session)) -> SeedResponse:
     return SeedResponse(**seed_curated_profiles(session))
@@ -246,7 +255,7 @@ def promote_revision(
 @router.post(
     "/dev/run-discovery-fixture",
     response_model=PipelineRunResponse,
-    dependencies=[Depends(require_editor)],
+    dependencies=[Depends(require_editor), Depends(require_development_endpoint)],
 )
 def run_discovery_fixture(session: Session = Depends(get_session)) -> PipelineRun:
     return run_fixture_pipeline(session)

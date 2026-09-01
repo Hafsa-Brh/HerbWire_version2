@@ -15,7 +15,9 @@ Milestone 2 and 2B provide:
 - An idempotent newsletter subscription endpoint and database table. No external email provider is connected.
 - A deterministic, schema-validated 30-profile encyclopedia corpus importer that preserves human editorial state and never auto-publishes.
 
-Production authentication, deployment, RAG, and live Zyte collection are not included.
+Heroku provisioning, production identity management, RAG, and live Zyte
+collection are not included. The repository contains staging deployment
+readiness only; no Heroku resource is created by this code.
 
 ## Local setup
 
@@ -131,3 +133,15 @@ Authenticated editorial endpoints include review queue actions, approved-profile
 ## External services
 
 Zyte configuration names exist for a future approved integration, but ordinary Milestone 2B tests and runtime do not call Zyte. No Heroku or Zyte deployment is part of this milestone.
+
+## Heroku staging readiness
+
+The production container builds React and serves it from the FastAPI process.
+The browser uses same-origin API URLs, the web entry point binds Heroku's
+PORT, and the release phase runs Alembic migrations. The 30-profile staging
+bootstrap is explicit and import-only; a human editor must still approve and
+publish every profile.
+
+See [Heroku staging deployment](docs/architecture/DEPLOYMENT.md) for the cost
+boundary, required variable names, verification order, proposed Phase 2
+commands, and destructive exit plan.

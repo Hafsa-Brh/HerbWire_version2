@@ -3,6 +3,8 @@ import hashlib
 import hmac
 import json
 import time
+from collections import defaultdict, deque
+from threading import Lock
 from typing import Any
 
 from backend.app.core.settings import Settings, get_settings
@@ -10,6 +12,10 @@ from fastapi import HTTPException, Request, Response
 from starlette import status
 
 SESSION_USER = {"initials": "HB", "label": "Local admin", "role": "Milestone 2 editor"}
+LOGIN_ATTEMPT_LIMIT = 5
+LOGIN_ATTEMPT_WINDOW_SECONDS = 300
+_failed_logins: dict[str, deque[float]] = defaultdict(deque)
+_failed_logins_lock = Lock()
 
 
 def _b64encode(data: bytes) -> str:
@@ -48,6 +54,25 @@ def credentials_match(
     email_ok = hmac.compare_digest(normalized_email, expected_email)
     password_ok = hmac.compare_digest(password, settings.admin_password)
     return email_ok and password_ok
+
+
+def login_attempt_allowed(key: str) -> bool:
+    cutoff = time.monotonic() - LOGIN_ATTEMPT_WINDOW_SECONDS
+    with _failed_logins_lock:
+        attempts = _failed_logins[key]
+        while attempts and attempts[0] < cutoff:
+            attempts.popleft()
+        return len(attempts) < LOGIN_ATTEMPT_LIMIT
+
+
+def record_failed_login(key: str) -> None:
+    with _failed_logins_lock:
+        _failed_logins[key].append(time.monotonic())
+
+
+def clear_failed_logins(key: str) -> None:
+    with _failed_logins_lock:
+        _failed_logins.pop(key, None)
 
 
 def create_session_cookie_value(settings: Settings | None = None) -> str:
