@@ -13,8 +13,10 @@ from backend.app.models.encyclopedia import (
     NewsletterSubscription,
     PlantProfile,
     PlantProfileRevision,
+    PlantProfileSource,
     SourceRecord,
 )
+from backend.app.workers.bootstrap_staging_corpus import bootstrap_staging_corpus
 from sqlalchemy import func, select, text
 from sqlalchemy.exc import IntegrityError
 
@@ -219,6 +221,39 @@ def test_seed_is_idempotent() -> None:
     assert second["source_links_created"] == 0
     assert first["profiles_total"] == 30
     assert first["source_records_total"] == 93
+
+
+def test_staging_bootstrap_is_idempotent_and_preserves_canonical_profiles() -> None:
+    with get_session_factory()() as session:
+        first = bootstrap_staging_corpus(session)
+        before = {
+            profile.slug: (profile.version, profile.summary, profile.article_details)
+            for profile in session.scalars(select(PlantProfile)).all()
+        }
+        second = bootstrap_staging_corpus(session)
+        after = {
+            profile.slug: (profile.version, profile.summary, profile.article_details)
+            for profile in session.scalars(select(PlantProfile)).all()
+        }
+        profile_count = session.scalar(select(func.count()).select_from(PlantProfile))
+        review_count = session.scalar(select(func.count()).select_from(EditorialReview))
+        revision_count = session.scalar(
+            select(func.count()).select_from(PlantProfileRevision)
+        )
+        source_link_count = session.scalar(
+            select(func.count()).select_from(PlantProfileSource)
+        )
+        statuses = set(session.scalars(select(PlantProfile.status)).all())
+
+    assert first["profiles_created"] == 30
+    assert first["profiles_review_ready"] == 30
+    assert second["profiles_created"] == 0
+    assert second["source_links_created"] == 0
+    assert before == after
+    assert profile_count == review_count == 30
+    assert revision_count == 0
+    assert source_link_count > 30
+    assert statuses == {"needs_review"}
 
 
 def test_public_plant_paging_search_and_filters(client) -> None:

@@ -1,9 +1,12 @@
 from backend.app.api.schemas import LoginRequest, SessionResponse, SessionUserResponse
 from backend.app.core.auth import (
     SESSION_USER,
+    clear_failed_logins,
     clear_session_cookie,
     configured_for_login,
     credentials_match,
+    login_attempt_allowed,
+    record_failed_login,
     set_session_cookie,
     valid_session,
 )
@@ -22,18 +25,28 @@ def _session_response(authenticated: bool) -> SessionResponse:
 
 
 @router.post("/login", response_model=SessionResponse)
-def login(request: LoginRequest, response: Response) -> SessionResponse:
+def login(
+    credentials: LoginRequest, request: Request, response: Response
+) -> SessionResponse:
     settings = get_settings()
     if not configured_for_login(settings):
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Editorial login is not configured.",
         )
-    if not credentials_match(request.email, request.password, settings):
+    login_key = request.client.host if request.client else "unknown"
+    if not login_attempt_allowed(login_key):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many login attempts. Try again later.",
+        )
+    if not credentials_match(credentials.email, credentials.password, settings):
+        record_failed_login(login_key)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password.",
         )
+    clear_failed_logins(login_key)
     set_session_cookie(response, settings)
     return _session_response(True)
 

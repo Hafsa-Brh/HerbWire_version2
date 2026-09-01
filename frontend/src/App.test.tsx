@@ -129,7 +129,7 @@ function installMockApi({ authenticated = true, plants = [publishedPlant], revie
     }
     if (url.includes("/api/v1/plants/peppermint")) return jsonResponse(plantDetail)
     if (url.includes("/api/v1/plants")) {
-      const parsed = new URL(url)
+      const parsed = new URL(url, "http://localhost")
       const query = (parsed.searchParams.get("query") ?? "").toLowerCase()
       const family = parsed.searchParams.get("family") ?? ""
       const tag = parsed.searchParams.get("tag") ?? ""
@@ -227,7 +227,7 @@ describe("Milestone 2 final UI and functionality", () => {
     fireEvent.click(screen.getByRole("button", { name: "Enter editorial desk" }))
     await screen.findByRole("heading", { name: "Dashboard" })
     expect(fetch).toHaveBeenCalledWith(
-      "http://localhost:8000/api/v1/auth/login",
+      "/api/v1/auth/login",
       expect.objectContaining({ method: "POST", credentials: "include" }),
     )
   })

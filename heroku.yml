@@ -1,0 +1,9 @@
+build:
+  docker:
+    web: Dockerfile
+release:
+  image: web
+  command:
+    - python -m alembic -c backend/alembic.ini upgrade head
+run:
+  web: python -m backend.app.web
