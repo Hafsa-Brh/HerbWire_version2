@@ -118,6 +118,7 @@ class PlantProfile(Base):
     preparation: Mapped[str] = mapped_column(Text, nullable=False)
     safety_notes: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     evidence_notes: Mapped[str] = mapped_column(Text, nullable=False)
+    article_details: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
     readiness_status: Mapped[str] = mapped_column(
         String(50), nullable=False, default="legacy"
     )

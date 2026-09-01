@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 
 class SourceRecordResponse(BaseModel):
     id: UUID
+    external_identifier: str
     url: str
     canonical_url: str
     title: str
@@ -56,6 +57,7 @@ class PlantDetailResponse(PlantListItemResponse):
     preparation: str
     safety_notes: list
     evidence_notes: str
+    article_details: dict
     last_reviewed_at: datetime | None
     sources: list[SourceRecordResponse]
 

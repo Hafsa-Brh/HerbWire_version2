@@ -99,6 +99,84 @@ class SourceReference(CorpusModel):
     provenance_notes: str
 
 
+class PreparationForm(CorpusModel):
+    label: str
+    plant_part: str
+    route: str
+    description: str
+    equivalence_warning: str
+    source_ids: list[str] = Field(min_length=1)
+
+
+class EvidenceFinding(CorpusModel):
+    heading: str
+    preparation: str
+    evidence_level: str
+    summary: str
+    limitations: str
+    source_ids: list[str] = Field(min_length=1)
+
+    @field_validator("evidence_level")
+    @classmethod
+    def validate_evidence_level(cls, value: str) -> str:
+        allowed = {
+            "well_established",
+            "traditional_use",
+            "preliminary",
+            "limited",
+            "uncertain",
+        }
+        if value not in allowed:
+            raise ValueError("invalid evidence level")
+        return value
+
+
+class MechanismNote(CorpusModel):
+    preparation: str
+    summary: str
+    qualification: str
+    source_ids: list[str] = Field(min_length=1)
+
+
+class SpecialPopulationNote(CorpusModel):
+    population: str
+    guidance: str
+    source_ids: list[str] = Field(min_length=1)
+
+
+class InteractionNote(CorpusModel):
+    interaction: str
+    evidence_level: str
+    statement: str
+    source_ids: list[str] = Field(min_length=1)
+
+
+class ArticleDetails(CorpusModel):
+    preparation_forms: list[PreparationForm] = Field(default_factory=list)
+    evidence_findings: list[EvidenceFinding] = Field(default_factory=list)
+    mechanisms: list[MechanismNote] = Field(default_factory=list)
+    special_populations: list[SpecialPopulationNote] = Field(default_factory=list)
+    interactions: list[InteractionNote] = Field(default_factory=list)
+    section_sources: dict[str, list[str]] = Field(default_factory=dict)
+
+
+class TraditionalUse(CorpusModel):
+    tradition: str
+    statement: str
+    limitation: str
+    preparation: str | None = None
+    evidence_class: str | None = None
+    source_ids: list[str] = Field(default_factory=list)
+
+
+class SafetyNote(CorpusModel):
+    category: str
+    statement: str
+    source: str | None = None
+    route: str | None = None
+    source_ids: list[str] = Field(default_factory=list)
+
+
 class CorpusProfile(CorpusModel):
     batch: str
     slug: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -113,15 +191,16 @@ class CorpusProfile(CorpusModel):
     summary: str
     introduction: str
     botanical_description: str
-    traditional_uses: list[dict[str, str]]
+    traditional_uses: list[TraditionalUse]
     parts_used: list[str]
     distribution: list[DistributionRegion]
     distribution_summary: str
     growth_form: str
     biome: str
     preparation: str
-    safety_notes: list[dict[str, str]]
+    safety_notes: list[SafetyNote]
     evidence_notes: str
+    article_details: ArticleDetails = Field(default_factory=ArticleDetails)
     media: MediaAsset
     source_refs: list[SourceReference]
     content_version: int = Field(ge=1)
@@ -205,6 +284,30 @@ class CorpusManifest(CorpusModel):
             ]
             if len(regions) != len(set(regions)):
                 raise ValueError(f"{profile.slug}.distribution contains duplicates")
+
+            referenced = set(reference_ids)
+            detail_source_ids = {
+                source_id
+                for collection in (
+                    profile.article_details.preparation_forms,
+                    profile.article_details.evidence_findings,
+                    profile.article_details.mechanisms,
+                    profile.article_details.special_populations,
+                    profile.article_details.interactions,
+                )
+                for item in collection
+                for source_id in item.source_ids
+            }
+            detail_source_ids.update(
+                source_id
+                for source_ids in profile.article_details.section_sources.values()
+                for source_id in source_ids
+            )
+            if unknown := detail_source_ids - referenced:
+                raise ValueError(
+                    f"{profile.slug}.article_details references unlinked sources "
+                    f"{sorted(unknown)}"
+                )
         return self
 
     def validate_source_coverage(self) -> "CorpusManifest":

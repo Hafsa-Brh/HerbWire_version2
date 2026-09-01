@@ -215,7 +215,7 @@ def test_seed_is_idempotent() -> None:
     assert second["profiles_created"] == 0
     assert second["source_links_created"] == 0
     assert first["profiles_total"] == 30
-    assert first["source_records_total"] == 92
+    assert first["source_records_total"] == 93
 
 
 def test_public_plant_paging_search_and_filters(client) -> None:
@@ -337,7 +337,7 @@ def test_pending_revision_workflow_preserves_public_content_until_promotion(
     assert second_import["revisions_created"] == 0
     assert second_import["revisions_unchanged"] >= 1
     assert len(revisions) == 1
-    assert revisions[0].version == 3
+    assert revisions[0].version == 4
     assert revisions[0].status == "needs_review"
 
     before = client.get("/api/v1/plants/peppermint")
@@ -352,7 +352,7 @@ def test_pending_revision_workflow_preserves_public_content_until_promotion(
         item for item in revision_queue.json() if item["slug"] == "peppermint"
     )
     assert peppermint["current_version"] == 1
-    assert peppermint["proposed_version"] == 3
+    assert peppermint["proposed_version"] == 4
     assert peppermint["current_content"]["introduction"] == (
         "Published version one introduction."
     )
@@ -373,11 +373,11 @@ def test_pending_revision_workflow_preserves_public_content_until_promotion(
     promoted = client.post(f"/api/v1/admin/revisions/{peppermint['id']}/promote")
     assert promoted.status_code == 200
     assert promoted.json()["status"] == "promoted"
-    assert promoted.json()["current_version"] == 3
+    assert promoted.json()["current_version"] == 4
 
     after = client.get("/api/v1/plants/peppermint")
     assert after.status_code == 200
-    assert after.json()["version"] == 3
+    assert after.json()["version"] == 4
     assert (
         after.json()["introduction"] == peppermint["proposed_content"]["introduction"]
     )
@@ -397,7 +397,7 @@ def test_pending_revision_workflow_preserves_public_content_until_promotion(
         )
     assert [(item.version, item.status) for item in history] == [
         (1, "superseded"),
-        (3, "promoted"),
+        (4, "promoted"),
     ]
 
 
@@ -467,14 +467,14 @@ def test_older_manifest_version_is_skipped_without_canonical_overwrite() -> None
             select(PlantProfile).where(PlantProfile.slug == "peppermint")
         )
         assert profile is not None
-        profile.version = 4
+        profile.version = 5
         profile.summary = "Newer human-authored canonical content."
         session.commit()
         result = seed_curated_profiles(session)
         session.refresh(profile)
 
     assert result["older_versions_skipped"] == 1
-    assert profile.version == 4
+    assert profile.version == 5
     assert profile.summary == "Newer human-authored canonical content."
 
 

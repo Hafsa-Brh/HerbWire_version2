@@ -1812,6 +1812,28 @@
       "support_role": "taxonomy_distribution",
       "provenance_notes": "Accepted name, family, growth form, biome, and range summary checked against POWO/WCVP on 2026-08-31. IPNI identifier 860012-1.",
       "source_publication_date": null
+    },
+    {
+      "source_identifier": "ema-herbal",
+      "source_name": "European Medicines Agency",
+      "base_url": "https://www.ema.europa.eu/",
+      "external_identifier": "ema-menthae-piperitae-folium",
+      "url": "https://www.ema.europa.eu/en/medicines/herbal/menthae-piperitae-folium",
+      "canonical_url": "https://www.ema.europa.eu/en/medicines/herbal/menthae-piperitae-folium",
+      "title": "Menthae piperitae folium - herbal medicinal product",
+      "publisher": "European Medicines Agency",
+      "source_type": "traditional_use_safety",
+      "license_status": "Official public monograph page; cited and paraphrased, with no long extract copied.",
+      "supports": {
+        "traditional_use": true,
+        "safety": true,
+        "evidence_limits": true,
+        "background": true,
+        "preparation": true
+      },
+      "support_role": "traditional_use_safety",
+      "provenance_notes": "Used for preparation-specific traditional-use, evidence-limit, age, reflux, and biliary cautions. No dosage or long passage copied. Accessed 2026-09-01.",
+      "source_publication_date": null
     }
   ],
   "profiles": [
@@ -2063,13 +2085,28 @@
         "European herbal medicine"
       ],
       "summary": "A cultivated mint hybrid used as leaf and, separately, as concentrated essential oil preparations.",
-      "introduction": "Peppermint is a natural hybrid of water mint and spearmint. Both its leaves and the essential oil distilled from flowering aerial parts are used, but they represent very different concentrations and exposures. Mint has a long digestive-use history in Mediterranean and ancient Greek, Roman, and Egyptian contexts; modern products range from leaf tea to enteric-coated oil capsules and topical preparations.",
+      "introduction": "Peppermint is the accepted hybrid Mentha × piperita, derived from water mint and spearmint and native from Europe into Central Asia. Its leaf and concentrated essential oil are materially different preparations. Official sources discuss leaf tea or extracts, enteric-coated oral oil, topical oil, and inhaled products separately. The strongest modern evidence summarized by NCCIH concerns some oral oil products for adult irritable bowel syndrome, while evidence for leaf and many other uses remains limited.",
       "botanical_description": "POWO/WCVP treats Mentha × piperita L. as an accepted species in Lamiaceae. It is described here as a perennial herb associated primarily with the temperate biome. The cited range summary is Europe to Central Asia.",
       "traditional_uses": [
         {
-          "tradition": "Europe / West Asia / European herbal medicine",
-          "statement": "EMA records peppermint leaf and peppermint oil preparations in herbal-medicine contexts, particularly for digestive symptoms.",
-          "limitation": "This records attributed traditional or monograph context. It is not a claim of proven efficacy or a recommendation to self-treat."
+          "tradition": "EMA/HMPC traditional-use assessment: peppermint leaf",
+          "statement": "Leaf tea and oral leaf preparations are assessed from long-standing use for digestive complaints such as indigestion and flatulence.",
+          "limitation": "This rests on tradition and plausibility rather than sufficient clinical trials and does not apply to concentrated oil.",
+          "preparation": "Dried leaf and oral leaf extracts",
+          "evidence_class": "traditional_use",
+          "source_ids": [
+            "ema-menthae-piperitae-folium"
+          ]
+        },
+        {
+          "tradition": "EMA/HMPC assessment: peppermint oil",
+          "statement": "Specific oral oil medicines are assessed for minor gastrointestinal spasms, flatulence, and abdominal pain, particularly in IBS; topical and inhaled uses have separate conditions.",
+          "limitation": "Oil uses are route- and age-specific and cannot be transferred to leaf tea or undiluted household oil.",
+          "preparation": "Standardized oral, topical, sprayed, or inhaled oil medicinal products",
+          "evidence_class": "traditional_use",
+          "source_ids": [
+            "ema-menthae-piperitae-aetheroleum"
+          ]
         }
       ],
       "parts_used": [
@@ -2177,22 +2214,52 @@
       "distribution_summary": "Europe to Central Asia, with broad cultivation and introduction elsewhere",
       "growth_form": "perennial herb",
       "biome": "temperate",
-      "preparation": "Peppermint leaf is commonly represented by tea or other leaf preparations. Peppermint oil is a concentrated essential oil used in specific oral, inhaled, or topical products; some oral capsules are enteric-coated. Leaf tea, undiluted oil, aromatherapy products, and regulated capsules must not be treated as interchangeable.",
+      "preparation": "Peppermint leaf is used as dried material in tea and oral extracts. Peppermint oil is a concentrated steam-distilled product used in specific oral medicines, on skin, or by inhalation. These forms differ in concentration, route, age restrictions, evidence, and risk; they must not be substituted. HerbWire records assessed forms without recipes or dosage.",
       "safety_notes": [
         {
-          "category": "Common effects",
-          "statement": "Oral peppermint oil can cause heartburn, nausea, abdominal pain, or dry mouth; topical products can irritate skin, and allergic reactions are possible."
+          "category": "Oral peppermint oil",
+          "route": "oral",
+          "statement": "Possible effects include heartburn, nausea, abdominal pain, dry mouth, and allergy; relevant preparations also carry reflux and biliary cautions.",
+          "source_ids": [
+            "nccih-peppermint-oil",
+            "ema-menthae-piperitae-aetheroleum"
+          ]
         },
         {
-          "category": "Children",
-          "statement": "Menthol-containing peppermint oil should not be applied to the face of infants or young children because inhalation can cause serious breathing effects."
+          "category": "Peppermint leaf and reflux",
+          "route": "oral",
+          "statement": "Leaf may worsen reflux and heartburn; use caution with gallstones or biliary disorders.",
+          "source_ids": [
+            "ema-menthae-piperitae-folium"
+          ]
         },
         {
-          "category": "Pregnancy and interactions",
-          "statement": "Food amounts are generally distinct from medicinal exposure. Safety of medicinal amounts during pregnancy or breastfeeding is not established, and medicines or persistent symptoms should be discussed with a health professional."
+          "category": "Topical and inhaled oil",
+          "route": "topical or inhaled",
+          "statement": "Topical oil can cause rash or irritation; safety of applying oil inside the nose is uncertain.",
+          "source_ids": [
+            "nccih-peppermint-oil"
+          ]
+        },
+        {
+          "category": "Infants and young children",
+          "route": "topical or inhaled",
+          "statement": "Menthol-containing oil should not be applied to the face of, or inhaled by, an infant or small child because breathing may be affected.",
+          "source_ids": [
+            "nccih-peppermint-oil",
+            "ema-menthae-piperitae-aetheroleum"
+          ]
+        },
+        {
+          "category": "Pregnancy and breastfeeding",
+          "route": "medicinal use",
+          "statement": "Little is known about medicinal-use safety during pregnancy or breastfeeding.",
+          "source_ids": [
+            "nccih-peppermint-oil"
+          ]
         }
       ],
-      "evidence_notes": "Research is concentrated on peppermint oil rather than peppermint leaf, and the overall body of research is still small. Some adult IBS studies report symptom improvement with enteric-coated oil, but side effects occur and evidence for peppermint leaf or many other promoted uses remains insufficient.",
+      "evidence_notes": "NCCIH reports little research on peppermint leaf and insufficient evidence that leaf preparations treat any condition. A 2022 review of 10 studies involving 1,030 adults found enteric-coated oral oil improved overall IBS symptoms versus placebo, with more mild adverse effects. Evidence for nausea, topical headache products, and aromatherapy is more limited or preparation-specific.",
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3APeppermint%20Mentha%20%C3%97%20piperita%20IMG%207237.jpg",
@@ -2262,11 +2329,198 @@
             "evidence_limits"
           ],
           "provenance_notes": "Supports the distinct background, preparation forms, research-depth summary, and safety cautions."
+        },
+        {
+          "source_id": "ema-menthae-piperitae-folium",
+          "support_role": "traditional_use_safety",
+          "supports": [
+            "traditional_use",
+            "safety",
+            "preparation",
+            "evidence_limits"
+          ],
+          "provenance_notes": "Preparation-specific EMA peppermint leaf assessment, accessed 2026-09-01."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Peppermint leaf tea or extract",
+            "plant_part": "Leaf",
+            "route": "oral",
+            "description": "EMA assesses dried leaf tea and certain oral extracts on a traditional-use basis.",
+            "equivalence_warning": "Leaf products are not equivalent to concentrated oil.",
+            "source_ids": [
+              "ema-menthae-piperitae-folium"
+            ]
+          },
+          {
+            "label": "Enteric-coated peppermint oil",
+            "plant_part": "Essential oil from fresh flowering aerial parts",
+            "route": "oral",
+            "description": "Much adult IBS research concerns enteric-coated oral oil products.",
+            "equivalence_warning": "Results do not establish benefit or safety for leaf tea, topical oil, or unformulated oil.",
+            "source_ids": [
+              "nccih-peppermint-oil",
+              "ema-menthae-piperitae-aetheroleum"
+            ]
+          },
+          {
+            "label": "Topical peppermint oil",
+            "plant_part": "Essential oil",
+            "route": "topical",
+            "description": "Some assessed products apply oil to skin, including headache products with specific age conditions.",
+            "equivalence_warning": "Topical use is not oral use and can irritate skin.",
+            "source_ids": [
+              "ema-menthae-piperitae-aetheroleum",
+              "nccih-peppermint-oil"
+            ]
+          },
+          {
+            "label": "Aromatherapy or inhaled product",
+            "plant_part": "Essential oil",
+            "route": "inhaled",
+            "description": "Oil is inhaled in aromatherapy or assessed respiratory products.",
+            "equivalence_warning": "Inhaled products have route- and age-specific cautions.",
+            "source_ids": [
+              "nccih-peppermint-oil",
+              "ema-menthae-piperitae-aetheroleum"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Adult irritable bowel syndrome",
+            "preparation": "Enteric-coated oral oil",
+            "evidence_level": "limited",
+            "summary": "A 2022 review found improved overall IBS symptoms versus placebo across 10 studies with 1,030 adults.",
+            "limitations": "Mild effects were more common and findings apply to studied enteric-coated products and adults.",
+            "source_ids": [
+              "nccih-peppermint-oil"
+            ]
+          },
+          {
+            "heading": "Peppermint leaf",
+            "preparation": "Leaf tea and extracts",
+            "evidence_level": "traditional_use",
+            "summary": "EMA accepts certain digestive uses from long-standing use and plausibility.",
+            "limitations": "NCCIH reports very little leaf research and insufficient evidence of treatment efficacy.",
+            "source_ids": [
+              "ema-menthae-piperitae-folium",
+              "nccih-peppermint-oil"
+            ]
+          },
+          {
+            "heading": "Other oil uses",
+            "preparation": "Topical, inhaled, or combination products",
+            "evidence_level": "uncertain",
+            "summary": "Some studies examine nausea, topical headache products, or aromatherapy.",
+            "limitations": "Results are limited, route-specific, and sometimes involve combinations.",
+            "source_ids": [
+              "nccih-peppermint-oil",
+              "ema-menthae-piperitae-aetheroleum"
+            ]
+          }
+        ],
+        "mechanisms": [
+          {
+            "preparation": "Peppermint leaf",
+            "summary": "Laboratory evidence reviewed by EMA suggests a relaxing, antispasmodic effect on the gut.",
+            "qualification": "A laboratory action does not prove clinical benefit.",
+            "source_ids": [
+              "ema-menthae-piperitae-folium"
+            ]
+          },
+          {
+            "preparation": "Peppermint oil",
+            "summary": "EMA describes proposed smooth-muscle effects involving calcium ions and cooling through cold-sensitive nerves on skin.",
+            "qualification": "These proposals do not establish benefit for all uses.",
+            "source_ids": [
+              "ema-menthae-piperitae-aetheroleum"
+            ]
+          }
+        ],
+        "special_populations": [
+          {
+            "population": "Children using peppermint leaf",
+            "guidance": "EMA traditional-use conclusions apply to adults and children over 4; product instructions still govern use.",
+            "source_ids": [
+              "ema-menthae-piperitae-folium"
+            ]
+          },
+          {
+            "population": "Children using peppermint oil",
+            "guidance": "Age limits vary by route: certain oral gastrointestinal products are not recommended under 8, topical headache use under 18, and menthol must not be applied to or inhaled by infants and small children.",
+            "source_ids": [
+              "ema-menthae-piperitae-aetheroleum",
+              "nccih-peppermint-oil"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Medicinal-use safety is insufficiently known.",
+            "source_ids": [
+              "nccih-peppermint-oil"
+            ]
+          },
+          {
+            "population": "People with reflux or biliary disorders",
+            "guidance": "Peppermint may worsen reflux or heartburn; relevant products warrant biliary caution.",
+            "source_ids": [
+              "ema-menthae-piperitae-folium",
+              "ema-menthae-piperitae-aetheroleum"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Other medicines and peppermint-oil products",
+            "evidence_level": "uncertain",
+            "statement": "Discuss medicines and herbal products with a professional; official summaries do not provide a universal interaction list.",
+            "source_ids": [
+              "nccih-peppermint-oil",
+              "ema-menthae-piperitae-aetheroleum"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-peppermint",
+            "nccih-peppermint-oil"
+          ],
+          "botanical": [
+            "powo-peppermint"
+          ],
+          "preparations": [
+            "ema-menthae-piperitae-folium",
+            "ema-menthae-piperitae-aetheroleum",
+            "nccih-peppermint-oil"
+          ],
+          "traditional_uses": [
+            "ema-menthae-piperitae-folium",
+            "ema-menthae-piperitae-aetheroleum"
+          ],
+          "evidence": [
+            "nccih-peppermint-oil",
+            "ema-menthae-piperitae-folium"
+          ],
+          "mechanism": [
+            "ema-menthae-piperitae-folium",
+            "ema-menthae-piperitae-aetheroleum"
+          ],
+          "safety": [
+            "nccih-peppermint-oil",
+            "ema-menthae-piperitae-folium",
+            "ema-menthae-piperitae-aetheroleum"
+          ],
+          "distribution": [
+            "powo-peppermint"
+          ]
+        }
+      }
     },
     {
       "batch": "A",
@@ -3082,13 +3336,18 @@
         "Aromatherapy"
       ],
       "summary": "A Mediterranean aromatic subshrub used in fragrance, bathing, and herbal traditions.",
-      "introduction": "Lavender is an aromatic evergreen plant native to the Mediterranean. Its name is associated with the Latin verb for washing, reflecting a long connection with bathing and fragrance. Contemporary products include food flavoring, bath and perfume ingredients, aromatherapy oils, topical preparations, teas, and oral extracts, each with a different exposure profile.",
+      "introduction": "English lavender is an aromatic evergreen subshrub native from northeastern Spain to Italy and widely cultivated for its fragrant flowering tops. Products sold as lavender are not interchangeable: research and safety conclusions may concern a named oral oil product, an inhaled essential oil, a topical preparation, or amounts used in food. Official reviews describe some promising findings, especially for certain oral oil products, but emphasize small studies, limited independent replication, and uncertainty for many promoted uses.",
       "botanical_description": "POWO/WCVP treats Lavandula angustifolia Mill. as an accepted species in Lamiaceae. It is described here as a subshrub associated primarily with the temperate biome. The cited range summary is Northeastern Spain to Italy.",
       "traditional_uses": [
         {
-          "tradition": "Mediterranean / Europe / Aromatherapy",
-          "statement": "NCCIH describes lavender use in traditional and complementary practices, including aromatic preparations and products promoted for stress or sleep.",
-          "limitation": "This records attributed traditional or monograph context. It is not a claim of proven efficacy or a recommendation to self-treat."
+          "tradition": "European and Mediterranean aromatic practice",
+          "statement": "Lavender flowering material and aromatic preparations have a long history of use in fragrancing, bathing, topical products, and calming contexts.",
+          "limitation": "Historical use does not establish clinical effectiveness; oral, topical, and inhaled preparations require separate assessment.",
+          "preparation": "Flowering tops, topical products, inhaled essential oil, or named oral oil products",
+          "evidence_class": "traditional_use",
+          "source_ids": [
+            "nccih-lavender"
+          ]
         }
       ],
       "parts_used": [
@@ -3145,22 +3404,42 @@
       "distribution_summary": "Northeastern Spain to Italy, introduced in parts of Europe and other temperate regions",
       "growth_form": "subshrub",
       "biome": "temperate",
-      "preparation": "Lavender appears as dried flowering material, tea, oral oil products, inhaled essential oil, bath ingredients, and topical formulations. Evidence from a standardized oral product should not be transferred to aromatherapy or skin products, and concentrated oil is not equivalent to culinary lavender.",
+      "preparation": "Lavender is encountered as food flavoring, tea or other oral products, concentrated oral lavender-oil products, essential oil used by inhalation, and topical preparations. Studies of one route or formulation cannot establish the effects or safety of another. HerbWire records these forms for interpretation and does not provide recipes or dosage instructions.",
       "safety_notes": [
         {
-          "category": "Common effects",
-          "statement": "Oral lavender products may cause diarrhea, headache, nausea, or belching; aromatherapy may cause headache or coughing."
+          "category": "Oral products",
+          "route": "oral",
+          "statement": "Food amounts are likely safe; short-term oral products may cause diarrhea, headache, nausea, or burping. One tested oil product does not establish safety for every oral preparation.",
+          "source_ids": [
+            "nccih-lavender"
+          ]
         },
         {
-          "category": "Skin and sedation",
-          "statement": "Topical products can cause allergic skin reactions. Lavender may have additive effects with sedative medicines or herbs, which matters before surgery."
+          "category": "Aromatherapy and topical use",
+          "route": "inhaled or topical",
+          "statement": "Inhaled oil may cause headache or coughing, and topical lavender products may cause allergic skin reactions.",
+          "source_ids": [
+            "nccih-lavender"
+          ]
+        },
+        {
+          "category": "Medicines and surgery",
+          "route": "multiple",
+          "statement": "NCCIH notes a theoretical sedative-interaction concern and advises discussing herbal products before surgery.",
+          "source_ids": [
+            "nccih-lavender"
+          ]
         },
         {
           "category": "Pregnancy and breastfeeding",
-          "statement": "There is too little information to establish medicinal-use safety during pregnancy or breastfeeding."
+          "route": "medicinal use",
+          "statement": "Little is known about medicinal lavender safety during pregnancy or breastfeeding.",
+          "source_ids": [
+            "nccih-lavender"
+          ]
         }
       ],
-      "evidence_notes": "Studies cover several lavender products and conditions, but more independent, high-quality research is needed. Some oral-oil studies suggest possible anxiety benefit, while evidence for aromatherapy, sleep, stress, depression, pain, and other uses remains uncertain or preliminary.",
+      "evidence_notes": "Research is preparation-specific and incomplete. NCCIH reports that some studies suggest a particular oral lavender-oil product may help anxiety, but notes small samples, limited independent funding and testing, and limited participant diversity. Evidence for depression is preliminary, while evidence for aromatherapy across anxiety, stress, pain, and sleep remains unclear.",
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ALavandula%20angustifolia%20-%20lavender%20-%20Lavendel%20-%2001.jpg",
@@ -3220,9 +3499,126 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Oral lavender-oil product",
+            "plant_part": "Essential oil from flowering material",
+            "route": "oral",
+            "description": "Some clinical research concerns a specifically formulated oral lavender-oil product.",
+            "equivalence_warning": "Results cannot be transferred automatically to tea, aromatherapy, or topical lavender.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          },
+          {
+            "label": "Aromatherapy",
+            "plant_part": "Essential oil",
+            "route": "inhaled",
+            "description": "Lavender essential oil aroma is inhaled or dispersed; evidence for promoted outcomes remains unclear.",
+            "equivalence_warning": "Inhalation is not equivalent to swallowing essential oil.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          },
+          {
+            "label": "Topical products",
+            "plant_part": "Essential oil or lavender formulation",
+            "route": "topical",
+            "description": "Lavender appears in skin and massage products, with route-specific allergy risk.",
+            "equivalence_warning": "Topical findings do not establish oral benefit or safety.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Oral oil and anxiety",
+            "preparation": "Named oral lavender-oil product",
+            "evidence_level": "preliminary",
+            "summary": "Some studies suggest possible benefit for anxiety.",
+            "limitations": "Samples are small, independent replication and funding are limited, and participants lack diversity.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          },
+          {
+            "heading": "Depression",
+            "preparation": "Oral products and topical lavender",
+            "evidence_level": "preliminary",
+            "summary": "Small early oral studies reported possible changes, while topical lavender did not appear effective.",
+            "limitations": "The research does not confirm a treatment effect.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          },
+          {
+            "heading": "Aromatherapy outcomes",
+            "preparation": "Inhaled essential oil",
+            "evidence_level": "uncertain",
+            "summary": "Benefit for anxiety, stress, depression symptoms, pain, or sleep remains unclear.",
+            "limitations": "Subjective improvement alone does not demonstrate clinical effect.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Medicinal-use safety is insufficiently established; concentrated products cannot be assumed equivalent to food use.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          },
+          {
+            "population": "People preparing for surgery",
+            "guidance": "Discuss lavender products with the surgical team because theoretical sedative interactions may matter.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Sedative medicines",
+            "evidence_level": "uncertain",
+            "statement": "The interaction concern is theoretical, not a confirmed or exhaustive interaction profile.",
+            "source_ids": [
+              "nccih-lavender"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-lavender",
+            "nccih-lavender"
+          ],
+          "botanical": [
+            "powo-lavender"
+          ],
+          "preparations": [
+            "nccih-lavender"
+          ],
+          "traditional_uses": [
+            "nccih-lavender"
+          ],
+          "evidence": [
+            "nccih-lavender"
+          ],
+          "safety": [
+            "nccih-lavender"
+          ],
+          "distribution": [
+            "powo-lavender"
+          ]
+        }
+      }
     },
     {
       "batch": "A",
@@ -5400,18 +5796,22 @@
         "South Asia"
       ],
       "summary": "A dry-region shrub whose leaflets and fruits are sources of stimulant-laxative herbal preparations.",
-      "introduction": "Senna leaf and fruit contain stimulant laxative compounds, but the EMA monograph addresses standardized medicinal preparations rather than ordinary herbal tea used without measurement. Unlike most profiles in this corpus, senna has a well-established short-term medicinal use, paired with strict limits because prolonged or inappropriate use can harm fluid, electrolyte, and bowel function.",
+      "introduction": "Senna is the accepted species Senna alexandrina, a leguminous shrub native across parts of the Sahara and Sahel through the Indian subcontinent. This pilot focuses specifically on senna leaf medicinal preparations assessed by the European Medicines Agency. EMA supports short-term use for occasional constipation under defined conditions while emphasizing strict duration, age, contraindication, and dehydration precautions.",
       "botanical_description": "POWO/WCVP treats Senna alexandrina Mill. as an accepted species in Fabaceae. It is described here as a shrub associated primarily with the desert or dry shrubland biome. The cited range summary is Northern and northeastern Africa through Arabia toward the Indian subcontinent.",
       "traditional_uses": [
         {
-          "tradition": "North Africa / Middle East / South Asia",
-          "statement": "The EMA monograph recognizes well-established short-term use of senna leaf or fruit preparations for occasional constipation.",
-          "limitation": "This records attributed traditional or monograph context. It is not a claim of proven efficacy or a recommendation to self-treat."
+          "tradition": "EMA/HMPC regulatory assessment",
+          "statement": "Senna leaf preparations are assessed for short-term oral use in occasional constipation in adults and adolescents over 12 years.",
+          "limitation": "This well-established use is preparation- and duration-specific and does not support chronic self-treatment.",
+          "preparation": "Dried or comminuted leaf and standardized leaf extracts in oral medicines",
+          "evidence_class": "well_established",
+          "source_ids": [
+            "ema-sennae-folium"
+          ]
         }
       ],
       "parts_used": [
-        "leaflets",
-        "fruits"
+        "leaflets"
       ],
       "distribution": [
         {
@@ -5485,22 +5885,50 @@
       "distribution_summary": "Northern and northeastern Africa through Arabia toward the Indian subcontinent",
       "growth_form": "shrub",
       "biome": "desert or dry shrubland",
-      "preparation": "Regulated products use measured senna leaf or fruit preparations in oral solid, liquid, or tea forms. HerbWire does not provide a dose. Senna is intended for short-term occasional constipation, not routine use, weight loss, detoxification, or chronic bowel management.",
+      "preparation": "EMA-assessed products use dried, comminuted senna leaf or leaf extracts standardized by anthraquinone content. They are supplied as herbal tea and solid or liquid oral medicines. Product instructions determine amount and form; HerbWire does not reproduce dosage directions or recommend improvised use.",
       "safety_notes": [
         {
-          "category": "Common effects",
-          "statement": "Senna can cause abdominal pain, spasms, and diarrhea and may disturb fluid and electrolyte balance."
+          "category": "Duration",
+          "route": "oral",
+          "statement": "Use should not exceed one week; persistent or worsening symptoms require professional advice.",
+          "source_ids": [
+            "ema-sennae-folium"
+          ]
         },
         {
-          "category": "Do not prolong use",
-          "statement": "Repeated or chronic use can contribute to dependence, impaired bowel function, dehydration, and medicine interactions."
+          "category": "Adverse effects",
+          "route": "oral",
+          "statement": "Allergy, abdominal pain, spasm, and diarrhea may occur. Long use may cause intestinal discoloration and water or salt disturbances.",
+          "source_ids": [
+            "ema-sennae-folium"
+          ]
         },
         {
-          "category": "Who needs advice",
-          "statement": "Bowel obstruction or inflammatory bowel disease, unexplained abdominal pain, dehydration, pregnancy, breastfeeding, childhood, or ongoing medicine use require professional guidance."
+          "category": "Contraindications",
+          "route": "oral",
+          "statement": "Do not use with intestinal obstruction or narrowing, atony, appendicitis, inflammatory bowel disease, unexplained abdominal pain, or severe dehydration.",
+          "source_ids": [
+            "ema-sennae-folium"
+          ]
+        },
+        {
+          "category": "Pregnancy, breastfeeding, and children",
+          "route": "oral",
+          "statement": "EMA states that senna leaf medicines must not be used during pregnancy or breastfeeding or by children under 12.",
+          "source_ids": [
+            "ema-sennae-folium"
+          ]
+        },
+        {
+          "category": "Prolonged laxative use",
+          "route": "oral",
+          "statement": "Prolonged use can impair bowel function and lead to laxative dependence.",
+          "source_ids": [
+            "ema-sennae-folium"
+          ]
         }
       ],
-      "evidence_notes": "EMA recognizes well-established short-term use for occasional constipation. That evidence does not support long-term self-treatment, weight-loss claims, or routine detoxification, and recurrent constipation requires investigation rather than escalating or extending stimulant-laxative use.",
+      "evidence_notes": "EMA classifies short-term senna leaf use for occasional constipation as well established from bibliographic evidence, clinical experience, and studies. Summarized studies often involved older people with severe or long-standing constipation, and some included fiber combinations. This is a bounded regulatory conclusion, not support for unrestricted long-term use.",
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ASenna%20alexandrina%20Mill.-Cassia%20angustifolia%20L.%20(Senna%20Plant).jpg",
@@ -5560,9 +5988,115 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Herbal tea",
+            "plant_part": "Dried, comminuted leaf",
+            "route": "oral",
+            "description": "EMA includes tea from assessed senna leaf material.",
+            "equivalence_warning": "This does not support arbitrary homemade strength or other plant parts.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          },
+          {
+            "label": "Standardized oral medicine",
+            "plant_part": "Senna leaf extract",
+            "route": "oral",
+            "description": "Solid and liquid medicines may contain extracts standardized by anthraquinone content.",
+            "equivalence_warning": "Extract and tea concentrations are not interchangeable.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Occasional constipation",
+            "preparation": "Oral senna leaf preparations",
+            "evidence_level": "well_established",
+            "summary": "HMPC concluded evidence and clinical use support short-term use for occasional constipation.",
+            "limitations": "Studies often involved older people or combination products; the conclusion remains bounded by preparation, age, and duration.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          }
+        ],
+        "mechanisms": [
+          {
+            "preparation": "Anthraquinone-containing leaf preparations",
+            "summary": "Anthraquinones stimulate bowel movement and alter water and salt absorption, increasing water in bowel contents.",
+            "qualification": "This does not remove duration limits or establish suitability for every cause of constipation.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          }
+        ],
+        "special_populations": [
+          {
+            "population": "Children",
+            "guidance": "Do not use under 12 years according to EMA.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "EMA states these medicines must not be taken during pregnancy or breastfeeding.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          },
+          {
+            "population": "Gastrointestinal disease or dehydration",
+            "guidance": "Avoid use in the listed obstructive, inflammatory, painful, atonic, or severely dehydrated conditions.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Concurrent medicines",
+            "evidence_level": "uncertain",
+            "statement": "EMA advises some medicine users to consult a doctor; its public summary does not provide a complete named list, so HerbWire does not invent one.",
+            "source_ids": [
+              "ema-sennae-folium"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-senna",
+            "ema-sennae-folium"
+          ],
+          "botanical": [
+            "powo-senna"
+          ],
+          "preparations": [
+            "ema-sennae-folium"
+          ],
+          "traditional_uses": [
+            "ema-sennae-folium"
+          ],
+          "evidence": [
+            "ema-sennae-folium"
+          ],
+          "mechanism": [
+            "ema-sennae-folium"
+          ],
+          "safety": [
+            "ema-sennae-folium"
+          ],
+          "distribution": [
+            "powo-senna"
+          ]
+        }
+      }
     },
     {
       "batch": "C",

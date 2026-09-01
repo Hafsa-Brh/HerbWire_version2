@@ -19,6 +19,7 @@ def _source_response(link) -> SourceRecordResponse:
     record = link.source_record
     return SourceRecordResponse(
         id=record.id,
+        external_identifier=record.external_identifier,
         url=record.url,
         canonical_url=record.canonical_url,
         title=record.title,
@@ -69,6 +70,7 @@ def plant_detail(profile) -> PlantDetailResponse:
         preparation=profile.preparation,
         safety_notes=profile.safety_notes,
         evidence_notes=profile.evidence_notes,
+        article_details=profile.article_details,
         last_reviewed_at=profile.last_reviewed_at,
         sources=[_source_response(link) for link in profile.sources],
     )

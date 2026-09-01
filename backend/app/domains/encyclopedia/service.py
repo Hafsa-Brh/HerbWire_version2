@@ -107,7 +107,9 @@ def _profile_values(item: CorpusProfile) -> dict:
         "summary": item.summary,
         "introduction": item.introduction,
         "botanical_description": item.botanical_description,
-        "traditional_uses": item.traditional_uses,
+        "traditional_uses": [
+            use.model_dump(mode="json") for use in item.traditional_uses
+        ],
         "parts_used": item.parts_used,
         "distribution": [
             region.model_dump(mode="json") for region in item.distribution
@@ -116,8 +118,9 @@ def _profile_values(item: CorpusProfile) -> dict:
         "growth_form": item.growth_form,
         "biome": item.biome,
         "preparation": item.preparation,
-        "safety_notes": item.safety_notes,
+        "safety_notes": [note.model_dump(mode="json") for note in item.safety_notes],
         "evidence_notes": item.evidence_notes,
+        "article_details": item.article_details.model_dump(mode="json"),
         "readiness_status": item.readiness_status,
         "readiness_reason": item.hold_reason,
         "hero_image": item.media.model_dump(mode="json"),
@@ -188,6 +191,7 @@ def _profile_values_from_names() -> tuple[str, ...]:
         "preparation",
         "safety_notes",
         "evidence_notes",
+        "article_details",
         "readiness_status",
         "readiness_reason",
         "hero_image",
@@ -221,11 +225,18 @@ def _replace_profile_sources(
         )
 
 
-def seed_curated_profiles(session: Session, batch: str | None = None) -> dict[str, int]:
+def seed_curated_profiles(
+    session: Session,
+    batch: str | None = None,
+    slugs: set[str] | None = None,
+) -> dict[str, int]:
     manifest = load_corpus()
     source_by_id = {source.external_identifier: source for source in manifest.sources}
     selected = [
-        item for item in manifest.profiles if batch is None or item.batch == batch
+        item
+        for item in manifest.profiles
+        if (batch is None or item.batch == batch)
+        and (slugs is None or item.slug in slugs)
     ]
     if batch is not None and batch not in {"A", "B", "C"}:
         raise ValueError("batch must be A, B, or C")

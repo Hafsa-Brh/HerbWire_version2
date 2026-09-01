@@ -88,6 +88,7 @@ def revision_response(session: Session, revision) -> PlantRevisionResponse:
         proposed_sources=[
             {
                 "id": record.id,
+                "external_identifier": record.external_identifier,
                 "url": record.url,
                 "canonical_url": record.canonical_url,
                 "title": record.title,

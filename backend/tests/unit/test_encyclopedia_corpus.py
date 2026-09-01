@@ -139,3 +139,60 @@ def test_corpus_avoids_unsupported_marketing_language() -> None:
     assert "miracle cure" not in content
     assert "\u00e3" not in content
     assert "\ufffd" not in content
+
+
+def test_rich_article_pilot_is_versioned_preparation_specific_and_traceable() -> None:
+    manifest = load_corpus()
+    pilots = {
+        profile.slug: profile
+        for profile in manifest.profiles
+        if profile.slug in {"lavender", "senna", "peppermint"}
+    }
+
+    assert set(pilots) == {"lavender", "senna", "peppermint"}
+    assert all(profile.content_version == 4 for profile in pilots.values())
+    assert all(profile.article_details.preparation_forms for profile in pilots.values())
+    assert all(profile.article_details.evidence_findings for profile in pilots.values())
+    assert all(
+        profile.article_details.special_populations for profile in pilots.values()
+    )
+    assert all(profile.article_details.section_sources for profile in pilots.values())
+    assert {
+        form.route for form in pilots["lavender"].article_details.preparation_forms
+    } == {"oral", "inhaled", "topical"}
+    assert pilots["senna"].parts_used == ["leaflets"]
+    assert {
+        form.route for form in pilots["senna"].article_details.preparation_forms
+    } == {"oral"}
+    assert len(pilots["peppermint"].article_details.preparation_forms) == 4
+    assert any(
+        "leaf" in form.label.casefold()
+        for form in pilots["peppermint"].article_details.preparation_forms
+    )
+    assert any(
+        "oil" in form.label.casefold()
+        for form in pilots["peppermint"].article_details.preparation_forms
+    )
+
+
+def test_rich_article_medical_claims_have_linked_source_ids() -> None:
+    manifest = load_corpus()
+    for profile in (
+        item
+        for item in manifest.profiles
+        if item.slug in {"lavender", "senna", "peppermint"}
+    ):
+        linked = {reference.source_id for reference in profile.source_refs}
+        items = [
+            *profile.article_details.preparation_forms,
+            *profile.article_details.evidence_findings,
+            *profile.article_details.mechanisms,
+            *profile.article_details.special_populations,
+            *profile.article_details.interactions,
+        ]
+        assert items
+        assert all(item.source_ids and set(item.source_ids) <= linked for item in items)
+        assert all(
+            note.source_ids and set(note.source_ids) <= linked
+            for note in profile.safety_notes
+        )
