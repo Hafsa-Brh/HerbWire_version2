@@ -196,3 +196,55 @@ def test_rich_article_medical_claims_have_linked_source_ids() -> None:
             note.source_ids and set(note.source_ids) <= linked
             for note in profile.safety_notes
         )
+
+
+def test_recovery_batch_one_is_rich_versioned_and_source_traceable() -> None:
+    manifest = load_corpus()
+    expected = {
+        "german-chamomile",
+        "ginger",
+        "turmeric",
+        "garlic",
+        "fennel",
+        "asian-ginseng",
+        "black-cohosh",
+        "boswellia",
+        "devils-claw",
+    }
+    profiles = {
+        profile.slug: profile
+        for profile in manifest.profiles
+        if profile.slug in expected
+    }
+
+    assert set(profiles) == expected
+    for profile in profiles.values():
+        details = profile.article_details
+        linked = {reference.source_id for reference in profile.source_refs}
+        media_ids = {
+            reference.source_id
+            for reference in profile.source_refs
+            if reference.support_role == "licensed_media"
+        }
+        assert profile.content_version == 4
+        assert details.preparation_forms
+        assert details.evidence_findings
+        assert details.special_populations
+        required_sections = {
+            "overview",
+            "botanical",
+            "preparations",
+            "evidence",
+            "safety",
+            "distribution",
+        }
+        assert required_sections <= set(details.section_sources)
+        assert all(
+            set(source_ids) <= linked for source_ids in details.section_sources.values()
+        )
+        assert all(
+            not (set(source_ids) & media_ids)
+            for source_ids in details.section_sources.values()
+        )
+        assert all(item.equivalence_warning for item in details.preparation_forms)
+        assert all(item.limitations for item in details.evidence_findings)

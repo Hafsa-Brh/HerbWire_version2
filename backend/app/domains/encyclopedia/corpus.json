@@ -2006,6 +2006,34 @@
         }
       ],
       "evidence_notes": "The EMA conclusions are primarily based on longstanding traditional use. Clinical evidence is not strong enough to turn every historical use into an established treatment claim, and findings for one preparation or route cannot be generalized to another.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Flower tea and oral extracts", "plant_part": "Dried flower heads", "route": "oral", "description": "EMA includes comminuted flower as tea and defined liquid or dry extracts taken by mouth for traditional digestive uses.", "equivalence_warning": "Tea, tinctures, and dry extracts differ in composition and are not interchangeable.", "source_ids": ["ema-matricariae-flos"]},
+          {"label": "Mouth, throat, and inhalation preparations", "plant_part": "Dried flower heads", "route": "oromucosal or inhaled", "description": "Assessed forms include rinses or gargles and steam from tea or liquid preparations.", "equivalence_warning": "Local and inhaled uses have different instructions and risks from swallowed preparations.", "source_ids": ["ema-matricariae-flos"]},
+          {"label": "Skin and bath preparations", "plant_part": "Dried flower heads", "route": "topical or bath", "description": "Infusions, liquid preparations, and semi-solid products are assessed for limited external traditional uses.", "equivalence_warning": "Topical products, compresses, and baths create different exposures.", "source_ids": ["ema-matricariae-flos"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Traditional-use conclusions", "preparation": "Route-specific matricaria flower medicines", "evidence_level": "traditional_use", "summary": "HMPC accepts narrowly described digestive, cold, mouth-and-throat, and minor skin uses from long-standing medicinal use.", "limitations": "This does not establish clinical effectiveness; reviewed studies were insufficient and often lacked an adequate comparison treatment.", "source_ids": ["ema-matricariae-flos"]},
+          {"heading": "Clinical evidence remains insufficient", "preparation": "Various flower preparations", "evidence_level": "limited", "summary": "Some studies considered by HMPC reported possible benefits in different conditions.", "limitations": "Products and routes varied, and the data did not support an established-use conclusion.", "source_ids": ["ema-matricariae-flos"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "Children and adolescents", "guidance": "Many assessed uses are for adults and adolescents over 12; only particular preparations have instructions for younger children.", "source_ids": ["ema-matricariae-flos"]},
+          {"population": "People considering medicinal baths", "guidance": "EMA excludes full baths with severe heart or circulation problems and full or partial baths with open wounds, extensive skin damage, acute skin disease, high fever, or severe infection.", "source_ids": ["ema-matricariae-flos"]}
+        ],
+        "interactions": [
+          {"interaction": "Asteraceae allergy", "evidence_level": "documented", "statement": "People allergic to chamomile or other Asteraceae plants must not use these medicines; severe reactions have followed contact with moist internal surfaces.", "source_ids": ["ema-matricariae-flos"]}
+        ],
+        "section_sources": {
+          "overview": ["ema-matricariae-flos"],
+          "botanical": ["powo-german-chamomile"],
+          "preparations": ["ema-matricariae-flos"],
+          "traditional_uses": ["ema-matricariae-flos"],
+          "evidence": ["ema-matricariae-flos"],
+          "safety": ["ema-matricariae-flos"],
+          "distribution": ["powo-german-chamomile", "gbif-wcvp-dataset"]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AMatricaria%20recutita%200.1%20R.jpg",
@@ -2065,7 +2093,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -2642,6 +2670,23 @@
         }
       ],
       "evidence_notes": "Many human studies have examined ginger, particularly for different forms of nausea, but some are low quality and results vary by clinical setting. Evidence for pregnancy-related nausea and menstrual cramps is more encouraging than evidence for motion sickness or several other promoted uses.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Food and traditional preparations", "plant_part": "Rhizome", "route": "oral", "description": "Fresh or dried ginger rhizome is used in foods and traditional preparations.", "equivalence_warning": "Food use is not equivalent to a concentrated supplement or studied extract.", "source_ids": ["nccih-ginger"]},
+          {"label": "Oral supplements", "plant_part": "Rhizome", "route": "oral", "description": "Most clinical research summarized by NCCIH concerns capsules or other oral supplements with varying composition.", "equivalence_warning": "Results from one supplement cannot be assumed for every ginger food, tea, or extract.", "source_ids": ["nccih-ginger"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Nausea findings depend on context", "preparation": "Oral ginger supplements", "evidence_level": "limited", "summary": "Research suggests ginger may help pregnancy-related nausea, while most motion-sickness studies have not shown benefit and results for chemotherapy or postoperative nausea remain uncertain.", "limitations": "Studies use different products and clinical settings, and some are low quality.", "source_ids": ["nccih-ginger"]},
+          {"heading": "Pain research is preliminary", "preparation": "Oral or topical ginger products", "evidence_level": "preliminary", "summary": "Some research suggests possible benefit for menstrual cramps; evidence for knee osteoarthritis is inconsistent.", "limitations": "Study quality and product variation prevent a broad treatment conclusion, and topical benefit has not been established.", "source_ids": ["nccih-ginger"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "Pregnancy", "guidance": "Ginger supplements may be safe in pregnancy, but use should be discussed with a health professional because evidence and individual circumstances vary.", "source_ids": ["nccih-ginger"]},
+          {"population": "Breastfeeding", "guidance": "Reliable information about medicinal or supplement use while breastfeeding is limited.", "source_ids": ["nccih-ginger"]}
+        ],
+        "interactions": [],
+        "section_sources": {"overview": ["nccih-ginger"], "botanical": ["powo-ginger"], "preparations": ["nccih-ginger"], "traditional_uses": ["nccih-ginger"], "evidence": ["nccih-ginger"], "safety": ["nccih-ginger"], "distribution": ["powo-ginger", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AZingiber_officinale_%28Zingiberaceae%29.jpg",
@@ -2701,7 +2746,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -2836,6 +2881,25 @@
         }
       ],
       "evidence_notes": "Many studies have examined turmeric or curcumin, including for osteoarthritis, fatty liver disease, and lipid disorders, but products and bioavailability vary widely. NCCIH concludes that current evidence is not sufficient for a definitive benefit claim for any health purpose.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Culinary turmeric", "plant_part": "Rhizome", "route": "oral", "description": "Turmeric rhizome is used as a spice and food ingredient in forms distinct from medicinal supplements.", "equivalence_warning": "Culinary amounts are not equivalent to concentrated curcumin or enhanced-absorption products.", "source_ids": ["nccih-turmeric"]},
+          {"label": "Oral turmeric or curcumin products", "plant_part": "Rhizome-derived preparations", "route": "oral", "description": "Research uses products that vary greatly in curcuminoid content and bioavailability.", "equivalence_warning": "Findings from a specific formulation cannot be generalized to all turmeric supplements.", "source_ids": ["nccih-turmeric"]},
+          {"label": "Topical preparations", "plant_part": "Rhizome-derived preparations", "route": "topical", "description": "Topical turmeric products are marketed and studied separately from oral products.", "equivalence_warning": "Topical and oral exposure have different evidence and adverse-effect profiles.", "source_ids": ["nccih-turmeric"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Osteoarthritis evidence is not definitive", "preparation": "Variable oral turmeric or curcumin products", "evidence_level": "preliminary", "summary": "Initial research has reported possible improvement in some osteoarthritis symptoms.", "limitations": "Higher-quality research is needed, and variable formulations make comparison difficult.", "source_ids": ["nccih-turmeric"]},
+          {"heading": "Other studied uses remain uncertain", "preparation": "Oral or topical products", "evidence_level": "uncertain", "summary": "Research has considered fatty liver disease, oral mucositis, and other conditions.", "limitations": "Current evidence is insufficient to conclude that turmeric or curcumin is beneficial for any health purpose.", "source_ids": ["nccih-turmeric"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "Pregnancy", "guidance": "Medicinal amounts of turmeric supplements may be unsafe during pregnancy; food use and supplement exposure should not be conflated.", "source_ids": ["nccih-turmeric"]},
+          {"population": "Breastfeeding", "guidance": "Safety of turmeric above food amounts during breastfeeding is not well established.", "source_ids": ["nccih-turmeric"]},
+          {"population": "People using enhanced-bioavailability products", "guidance": "Highly bioavailable curcumin formulations have been associated with liver injury in some people; symptoms suggesting liver injury require prompt medical attention.", "source_ids": ["nccih-turmeric"]}
+        ],
+        "interactions": [],
+        "section_sources": {"overview": ["nccih-turmeric"], "botanical": ["powo-turmeric"], "preparations": ["nccih-turmeric"], "traditional_uses": ["nccih-turmeric"], "evidence": ["nccih-turmeric"], "safety": ["nccih-turmeric"], "distribution": ["powo-turmeric", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AStarr-140925-1977-Curcuma%20longa-flowering%20habit-Pali%20o%20Waipio%20Huelo-Maui%20(25128294462).jpg",
@@ -2895,7 +2959,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -3045,6 +3109,26 @@
         }
       ],
       "evidence_notes": "A substantial research literature exists, especially for cholesterol and related lipids. Reported effects on cholesterol, blood pressure, or blood sugar are generally small, while evidence for immune claims and cancer prevention is limited, uncertain, or inconsistent.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Food use", "plant_part": "Bulb and cloves", "route": "oral", "description": "Garlic has a long culinary history in many regions.", "equivalence_warning": "Food use is not equivalent to a standardized powder, aged extract, oil, or other supplement.", "source_ids": ["nccih-garlic"]},
+          {"label": "Oral supplements", "plant_part": "Bulb-derived products", "route": "oral", "description": "Studies use several preparations, including powders and extracts with differing composition.", "equivalence_warning": "Evidence from one garlic preparation cannot be transferred to every supplement.", "source_ids": ["nccih-garlic"]},
+          {"label": "Topical raw garlic or products", "plant_part": "Bulb-derived material", "route": "topical", "description": "Garlic is sometimes applied to skin, but raw topical garlic can cause severe irritation or chemical burns.", "equivalence_warning": "Topical exposure has distinct risks and is not an oral-use substitute.", "source_ids": ["nccih-garlic"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Cardiometabolic effects are generally small", "preparation": "Oral garlic supplements", "evidence_level": "limited", "summary": "Garlic supplements may slightly reduce total and LDL cholesterol, blood pressure in people with hypertension, and blood sugar in people with diabetes.", "limitations": "Effects are modest, products differ, and supplements do not replace established care.", "source_ids": ["nccih-garlic"]},
+          {"heading": "Cancer and immune claims remain uncertain", "preparation": "Dietary garlic or supplements", "evidence_level": "uncertain", "summary": "Research has examined cancer risk and immune outcomes.", "limitations": "Evidence is limited or inconsistent and does not support a prevention or treatment claim.", "source_ids": ["nccih-garlic"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "People preparing for surgery", "guidance": "Garlic supplements may increase bleeding risk; planned use should be disclosed before surgery or dental procedures.", "source_ids": ["nccih-garlic"]},
+          {"population": "Pregnancy and breastfeeding", "guidance": "Amounts greater than those commonly eaten in food may be unsafe during pregnancy or breastfeeding.", "source_ids": ["nccih-garlic"]}
+        ],
+        "interactions": [
+          {"interaction": "Anticoagulants and aspirin", "evidence_level": "documented", "statement": "Garlic supplements may increase bleeding risk, especially when combined with anticoagulants or aspirin.", "source_ids": ["nccih-garlic"]}
+        ],
+        "section_sources": {"overview": ["nccih-garlic"], "botanical": ["powo-garlic"], "preparations": ["nccih-garlic"], "traditional_uses": ["nccih-garlic"], "evidence": ["nccih-garlic"], "safety": ["nccih-garlic"], "distribution": ["powo-garlic", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AGarlic%20bulbs%20and%20cloves.jpg",
@@ -3104,7 +3188,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -4348,6 +4432,27 @@
         }
       ],
       "evidence_notes": "The reviewed uses for mild spasmodic digestive complaints, minor menstrual cramps, and cough with colds are traditional-use conclusions. Longstanding use supports plausibility, but clinical evidence is not sufficient to establish broad treatment effects.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Sweet fennel fruit tea", "plant_part": "Dried fruit", "route": "oral", "description": "EMA describes comminuted or crushed sweet fennel fruit used as herbal tea.", "equivalence_warning": "Tea is not equivalent to concentrated essential oil or every capsule product.", "source_ids": ["ema-foeniculi-dulcis-fructus"]},
+          {"label": "Powdered fruit products", "plant_part": "Dried fruit", "route": "oral", "description": "Assessed oral forms also include powdered fruit in tablets or capsules.", "equivalence_warning": "Individual medicinal products have preparation-specific instructions.", "source_ids": ["ema-foeniculi-dulcis-fructus"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Traditional medicinal uses", "preparation": "Sweet fennel fruit medicines", "evidence_level": "traditional_use", "summary": "HMPC recognizes traditional use for mild spasmodic digestive complaints, minor menstrual cramps, and cough associated with colds.", "limitations": "The conclusions rely on long-standing use and plausibility rather than sufficient modern clinical trials.", "source_ids": ["ema-foeniculi-dulcis-fructus"]},
+          {"heading": "Experimental support is not clinical proof", "preparation": "Fennel extracts, oil, or isolated constituents", "evidence_level": "limited", "summary": "Experimental studies report smooth-muscle relaxation and other activities that may support plausibility.", "limitations": "Isolated-component and experimental findings do not establish patient benefit or explain the whole preparation precisely.", "source_ids": ["ema-foeniculi-dulcis-fructus"]}
+        ],
+        "mechanisms": [
+          {"preparation": "Sweet fennel fruit preparations", "summary": "Several constituents may act together; experimental smooth-muscle relaxation has been observed.", "qualification": "This is a proposed explanation supporting plausibility, not proof of clinical effectiveness.", "source_ids": ["ema-foeniculi-dulcis-fructus"]}
+        ],
+        "special_populations": [
+          {"population": "Children", "guidance": "The EMA summary permits particular sweet fennel fruit medicines from age 4 and does not recommend them below age 4 because safety information is insufficient.", "source_ids": ["ema-foeniculi-dulcis-fructus"]},
+          {"population": "Pregnancy and breastfeeding", "guidance": "EMA advises against medicinal use during pregnancy or breastfeeding as a precaution because adequate testing is unavailable.", "source_ids": ["ema-foeniculi-dulcis-fructus"]}
+        ],
+        "interactions": [
+          {"interaction": "Fennel hypersensitivity", "evidence_level": "documented", "statement": "People allergic to sweet fennel should not use these medicines; skin or respiratory allergic reactions can occur.", "source_ids": ["ema-foeniculi-dulcis-fructus"]}
+        ],
+        "section_sources": {"overview": ["ema-foeniculi-dulcis-fructus"], "botanical": ["powo-fennel"], "preparations": ["ema-foeniculi-dulcis-fructus"], "traditional_uses": ["ema-foeniculi-dulcis-fructus"], "evidence": ["ema-foeniculi-dulcis-fructus"], "mechanism": ["ema-foeniculi-dulcis-fructus"], "safety": ["ema-foeniculi-dulcis-fructus"], "distribution": ["powo-fennel", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AFennel%20(Foeniculum%20vulgare)%20-%20Parc%20Natural%20de%20s'Albufera%2C%20Spain%202022-04-18%20(02).jpg",
@@ -4407,7 +4512,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -5358,6 +5463,26 @@
         }
       ],
       "evidence_notes": "Clinical research has increased, but most trials include fewer than 200 participants and last less than three months. Findings for cognition, fatigue, diabetes, sexual function, and other uses are mixed, small, preliminary, or inconsistent; larger and longer studies are needed.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "White ginseng products", "plant_part": "Root", "route": "oral", "description": "White ginseng is prepared from peeled and dried root and appears in oral supplements.", "equivalence_warning": "White and red ginseng differ in processing and cannot be assumed equivalent.", "source_ids": ["nccih-asian-ginseng"]},
+          {"label": "Red ginseng products", "plant_part": "Root", "route": "oral", "description": "Red ginseng is made by steaming and drying the root before use in oral products.", "equivalence_warning": "Results from one extract, processing method, or dose cannot be generalized to all ginseng products.", "source_ids": ["nccih-asian-ginseng"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Cognition and fatigue findings are preliminary", "preparation": "Oral Asian ginseng products", "evidence_level": "preliminary", "summary": "A small amount of research suggests possible effects on some cognitive tasks in middle-aged adults and on general fatigue.", "limitations": "Trials are generally small and short, findings conflict, and evidence does not establish broad benefit.", "source_ids": ["nccih-asian-ginseng"]},
+          {"heading": "Other health claims remain mixed", "preparation": "Oral Asian ginseng products", "evidence_level": "uncertain", "summary": "Studies have examined influenza risk, blood sugar, erectile dysfunction, and other outcomes.", "limitations": "Results are inconsistent or too limited for reliable treatment conclusions; athletic performance benefit has not been shown.", "source_ids": ["nccih-asian-ginseng"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "Pregnancy and breastfeeding", "guidance": "Oral Asian ginseng may be unsafe during pregnancy, and reliable breastfeeding safety information is limited.", "source_ids": ["nccih-asian-ginseng"]},
+          {"population": "Children", "guidance": "Some experts advise against use in infants and children because evidence and safety data are limited.", "source_ids": ["nccih-asian-ginseng"]},
+          {"population": "People with autoimmune, clotting, or blood-sugar conditions", "guidance": "Asian ginseng may affect immune activity, blood clotting, or blood sugar and warrants professional review in these settings.", "source_ids": ["nccih-asian-ginseng"]}
+        ],
+        "interactions": [
+          {"interaction": "Medicines affecting clotting or blood sugar", "evidence_level": "potential", "statement": "Interaction concerns are relevant for medicines affecting clotting or blood sugar; product use should be reviewed with a clinician or pharmacist.", "source_ids": ["nccih-asian-ginseng"]}
+        ],
+        "section_sources": {"overview": ["nccih-asian-ginseng"], "botanical": ["powo-asian-ginseng"], "preparations": ["nccih-asian-ginseng"], "traditional_uses": ["nccih-asian-ginseng"], "evidence": ["nccih-asian-ginseng"], "safety": ["nccih-asian-ginseng"], "distribution": ["powo-asian-ginseng", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3APanax%20ginseng%20C.A.Mey.%203399124768.jpg",
@@ -5417,7 +5542,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -7089,6 +7214,23 @@
         }
       ],
       "evidence_notes": "A substantial number of studies address menopausal symptoms, but results and products vary. A recent review suggests possible improvement in overall symptoms and hot flashes, while evidence is uncertain for treatment-related hot flashes and inadequate for other uses.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Oral root and rhizome supplements", "plant_part": "Root and rhizome", "route": "oral", "description": "Black cohosh is sold in oral extracts, tablets, capsules, and other supplements made from underground parts.", "equivalence_warning": "Products vary in extraction and identity; results from one preparation do not establish equivalence for another.", "source_ids": ["nccih-black-cohosh"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Menopausal symptom evidence is mixed", "preparation": "Oral black cohosh products", "evidence_level": "limited", "summary": "A recent review suggests possible improvement in overall menopausal symptoms and hot flashes.", "limitations": "Products and studies vary, and the evidence does not establish benefit for every symptom or preparation.", "source_ids": ["nccih-black-cohosh"]},
+          {"heading": "Treatment-related hot flashes remain uncertain", "preparation": "Oral black cohosh products", "evidence_level": "uncertain", "summary": "Research has considered hot flashes associated with breast-cancer treatment.", "limitations": "Available evidence is insufficient for a dependable conclusion, and safety in hormone-sensitive conditions remains uncertain.", "source_ids": ["nccih-black-cohosh"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "Pregnancy and breastfeeding", "guidance": "Black cohosh may be unsafe during pregnancy or breastfeeding and should not be treated as routine self-care.", "source_ids": ["nccih-black-cohosh"]},
+          {"population": "People with hormone-sensitive conditions", "guidance": "Safety for breast or uterine cancer and other hormone-sensitive conditions is uncertain and requires professional review.", "source_ids": ["nccih-black-cohosh"]},
+          {"population": "People with possible liver injury", "guidance": "Rare serious liver problems have been reported, although causation is uncertain; concerning symptoms require prompt medical assessment.", "source_ids": ["nccih-black-cohosh"]}
+        ],
+        "interactions": [],
+        "section_sources": {"overview": ["nccih-black-cohosh"], "botanical": ["powo-black-cohosh"], "preparations": ["nccih-black-cohosh"], "traditional_uses": ["nccih-black-cohosh"], "evidence": ["nccih-black-cohosh"], "safety": ["nccih-black-cohosh"], "distribution": ["powo-black-cohosh", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ACimicifuga%20racemosa%20002.jpg",
@@ -7148,7 +7290,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -7490,6 +7632,24 @@
         }
       ],
       "evidence_notes": "Several human studies exist, but most are small and low quality. Preliminary findings for osteoarthritis, asthma, and other conditions are not sufficient for a reliable treatment conclusion, and no high-quality evidence establishes boswellia as useful for any health condition.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Oral gum-resin or bark extracts", "plant_part": "Gum resin or bark", "route": "oral", "description": "Clinical studies generally use oral extracts prepared from Boswellia serrata gum resin or bark.", "equivalence_warning": "Extract composition varies and frankincense from other Boswellia species may not represent B. serrata.", "source_ids": ["nccih-boswellia"]},
+          {"label": "Topical products", "plant_part": "Gum resin-derived material", "route": "topical", "description": "Topical products are used and studied separately from oral extracts.", "equivalence_warning": "Topical findings cannot be transferred to oral products.", "source_ids": ["nccih-boswellia"]},
+          {"label": "Frankincense and aromatherapy material", "plant_part": "Aromatic resin", "route": "inhaled or topical", "description": "Frankincense may be burned or used in aromatic products, creating exposures distinct from standardized oral extracts.", "equivalence_warning": "Aromatic use is not equivalent to a medicinal B. serrata extract.", "source_ids": ["nccih-boswellia"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Osteoarthritis research is preliminary", "preparation": "Oral Boswellia serrata extracts", "evidence_level": "preliminary", "summary": "Small studies suggest possible reductions in osteoarthritis pain or inflammation.", "limitations": "Most studies are small or low quality; larger, well-designed trials are needed.", "source_ids": ["nccih-boswellia"]},
+          {"heading": "Other claims lack reliable support", "preparation": "Oral, topical, or aromatic products", "evidence_level": "uncertain", "summary": "Research has examined asthma and other conditions, while frankincense is sometimes promoted for cancer.", "limitations": "Evidence is insufficient, and boswellia or frankincense is not established as a cancer treatment.", "source_ids": ["nccih-boswellia"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "Pregnancy", "guidance": "Food amounts may be acceptable, but safety of medicinal oral extracts or frankincense exposure during pregnancy is not established.", "source_ids": ["nccih-boswellia"]},
+          {"population": "Breastfeeding", "guidance": "Reliable safety information for medicinal boswellia or frankincense use while breastfeeding is lacking.", "source_ids": ["nccih-boswellia"]}
+        ],
+        "interactions": [],
+        "section_sources": {"overview": ["nccih-boswellia"], "botanical": ["powo-boswellia"], "preparations": ["nccih-boswellia"], "traditional_uses": ["nccih-boswellia"], "evidence": ["nccih-boswellia"], "safety": ["nccih-boswellia"], "distribution": ["powo-boswellia", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ABoswellia%20serrata%20(4399783209).jpg",
@@ -7549,7 +7709,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -7622,6 +7782,24 @@
         }
       ],
       "evidence_notes": "EMA classifies use for mild joint pain and mild digestive complaints as traditional. Clinical research has limitations and does not establish devil's claw as a treatment for arthritis or other chronic disease; persistent pain or digestive symptoms require assessment.",
+      "article_details": {
+        "preparation_forms": [
+          {"label": "Root tea or powder", "plant_part": "Dried secondary storage roots", "route": "oral", "description": "EMA includes comminuted root as tea and powdered root in oral medicinal preparations.", "equivalence_warning": "Tea and powdered products are not equivalent to every extract.", "source_ids": ["ema-harpagophyti-radix"]},
+          {"label": "Dry and liquid root extracts", "plant_part": "Dried secondary storage roots", "route": "oral", "description": "The monograph covers several defined extraction methods used in oral medicines.", "equivalence_warning": "Extraction method and composition matter; one product cannot stand for all devil's-claw preparations.", "source_ids": ["ema-harpagophyti-radix"]}
+        ],
+        "evidence_findings": [
+          {"heading": "Traditional-use assessment", "preparation": "Defined oral root preparations", "evidence_level": "traditional_use", "summary": "HMPC recognizes traditional use for mild joint pain and mild digestive complaints, including temporary loss of appetite.", "limitations": "The classification rests on long-standing use and plausibility, not proof that devil's claw treats arthritis or chronic disease.", "source_ids": ["ema-harpagophyti-radix"]},
+          {"heading": "Clinical evidence remains limited", "preparation": "Variable oral root extracts", "evidence_level": "limited", "summary": "Clinical studies have investigated pain-related outcomes.", "limitations": "Differences among extracts and study quality prevent a broad efficacy conclusion.", "source_ids": ["ema-harpagophyti-radix"]}
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {"population": "Children and adolescents", "guidance": "EMA does not recommend medicinal use in people under 18 because adequate data are unavailable.", "source_ids": ["ema-harpagophyti-radix"]},
+          {"population": "Pregnancy and breastfeeding", "guidance": "Safety has not been established; EMA does not recommend use during pregnancy or breastfeeding.", "source_ids": ["ema-harpagophyti-radix"]},
+          {"population": "People with gastric or duodenal ulcers", "guidance": "The monograph lists active gastric or duodenal ulcer as a contraindication and advises professional review for gallstones.", "source_ids": ["ema-harpagophyti-radix"]}
+        ],
+        "interactions": [],
+        "section_sources": {"overview": ["ema-harpagophyti-radix"], "botanical": ["powo-devils-claw"], "preparations": ["ema-harpagophyti-radix"], "traditional_uses": ["ema-harpagophyti-radix"], "evidence": ["ema-harpagophyti-radix"], "safety": ["ema-harpagophyti-radix"], "distribution": ["powo-devils-claw", "gbif-wcvp-dataset"]}
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AHarpagophytum%20procumbens%20001.JPG",
@@ -7681,7 +7859,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     }
