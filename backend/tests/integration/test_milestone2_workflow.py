@@ -3,7 +3,10 @@ from datetime import datetime, timezone
 
 import pytest
 from backend.app.db.session import get_engine, get_session_factory
-from backend.app.domains.encyclopedia.service import seed_curated_profiles
+from backend.app.domains.encyclopedia.service import (
+    promote_profile_revision,
+    seed_curated_profiles,
+)
 from backend.app.domains.pipeline.fixture_pipeline import run_fixture_pipeline
 from backend.app.models.encyclopedia import (
     EditorialReview,
@@ -399,6 +402,192 @@ def test_pending_revision_workflow_preserves_public_content_until_promotion(
         (1, "superseded"),
         (4, "promoted"),
     ]
+
+    duplicate = client.post(f"/api/v1/admin/revisions/{peppermint['id']}/promote")
+    assert duplicate.status_code == 409
+    assert duplicate.json()["detail"]["code"] == "revision_already_promoted"
+    with get_session_factory()() as session:
+        assert session.scalar(select(func.count(PlantProfileRevision.id))) == 2
+
+
+def test_legacy_approved_revision_without_article_details_promotes(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        payload = dict(revision.content_payload)
+        profile_payload = dict(payload["profile"])
+        profile_payload.pop("article_details")
+        payload["profile"] = profile_payload
+        revision.content_payload = payload
+        revision.version = 3
+        revision.content_checksum = "c" * 64
+        session.commit()
+        revision_id = revision.id
+
+    login_client(client)
+    approved = client.post(
+        f"/api/v1/admin/revisions/{revision_id}/approve",
+        json={"reviewer_name": "Compatibility test editor"},
+    )
+    assert approved.status_code == 200
+    assert approved.json()["promotion_eligible"] is True
+
+    promoted = client.post(f"/api/v1/admin/revisions/{revision_id}/promote")
+    assert promoted.status_code == 200
+    assert promoted.json()["status"] == "promoted"
+    assert promoted.json()["current_version"] == 3
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        assert profile.version == 3
+        assert profile.article_details == {}
+
+
+def test_stale_approved_revision_is_rejected_when_newer_revision_exists(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        revision.status = "approved"
+        revision.reviewed_at = datetime.now(timezone.utc)
+        newer_payload = dict(revision.content_payload)
+        newer_profile = dict(newer_payload["profile"])
+        newer_profile["summary"] = "A newer proposed summary."
+        newer_payload["profile"] = newer_profile
+        session.add(
+            PlantProfileRevision(
+                plant_profile_id=revision.plant_profile_id,
+                version=revision.version + 1,
+                content_payload=newer_payload,
+                content_checksum="d" * 64,
+                status="needs_review",
+            )
+        )
+        session.commit()
+        revision_id = revision.id
+
+    login_client(client)
+    response = client.post(f"/api/v1/admin/revisions/{revision_id}/promote")
+    assert response.status_code == 409
+    assert response.json()["detail"]["code"] == "revision_stale"
+    assert "newer revision" in response.json()["detail"]["message"]
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        rejected = session.get(PlantProfileRevision, revision_id)
+        assert profile is not None
+        assert profile.version == 1
+        assert rejected is not None
+        assert rejected.status == "approved"
+
+
+def test_promotion_with_missing_provenance_returns_safe_error(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        payload = dict(revision.content_payload)
+        payload["source_refs"] = [
+            {
+                "source_id": "missing-source-record",
+                "support_role": "safety",
+                "note": "Intentionally invalid test reference.",
+            }
+        ]
+        revision.content_payload = payload
+        revision.status = "approved"
+        revision.reviewed_at = datetime.now(timezone.utc)
+        session.commit()
+        revision_id = revision.id
+
+    login_client(client)
+    response = client.post(f"/api/v1/admin/revisions/{revision_id}/promote")
+    assert response.status_code == 409
+    assert response.json()["detail"] == {
+        "code": "revision_provenance_incomplete",
+        "message": "Required provenance is incomplete.",
+    }
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        revision = session.get(PlantProfileRevision, revision_id)
+        assert profile is not None
+        assert profile.version == 1
+        assert revision is not None
+        assert revision.status == "approved"
+
+
+def test_promotion_commit_failure_rolls_back_all_changes(client, monkeypatch) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        revision.status = "approved"
+        revision.reviewed_at = datetime.now(timezone.utc)
+        session.commit()
+        revision_id = revision.id
+
+    with get_session_factory()() as session:
+
+        def fail_commit() -> None:
+            raise RuntimeError("simulated commit failure")
+
+        monkeypatch.setattr(session, "commit", fail_commit)
+        with pytest.raises(RuntimeError, match="simulated commit failure"):
+            promote_profile_revision(session, revision_id)
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        revision = session.get(PlantProfileRevision, revision_id)
+        history_count = session.scalar(
+            select(func.count(PlantProfileRevision.id)).where(
+                PlantProfileRevision.plant_profile_id == profile.id
+            )
+        )
+        assert profile.version == 1
+        assert profile.summary == "Published version one summary."
+        assert revision is not None
+        assert revision.status == "approved"
+        assert history_count == 1
 
 
 def test_revision_hold_requires_reason_and_never_changes_public_profile(client) -> None:

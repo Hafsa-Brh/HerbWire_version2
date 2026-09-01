@@ -493,6 +493,89 @@ def _validate_revision_for_approval(revision: PlantProfileRevision) -> None:
         )
 
 
+def _promotion_conflict(code: str, message: str) -> HTTPException:
+    return HTTPException(
+        status_code=HTTPStatus.CONFLICT,
+        detail={"code": code, "message": message},
+    )
+
+
+def _promotion_values(revision: PlantProfileRevision) -> dict:
+    values = dict(revision.content_payload.get("profile", {}))
+    # Revisions created before rich article details were introduced remain valid.
+    values.setdefault("article_details", {})
+    missing = [field for field in _profile_values_from_names() if field not in values]
+    if missing:
+        raise _promotion_conflict(
+            "revision_payload_incomplete",
+            "The revision payload is incomplete and cannot be promoted safely.",
+        )
+    return values
+
+
+def revision_promotion_eligibility(
+    session: Session, revision: PlantProfileRevision
+) -> tuple[bool, str | None, str | None]:
+    if revision.status == "promoted":
+        return (
+            False,
+            "revision_already_promoted",
+            "This revision has already been promoted.",
+        )
+    if revision.status == "superseded":
+        return (
+            False,
+            "revision_superseded",
+            "This revision has been superseded by newer content.",
+        )
+    if revision.status != "approved":
+        return False, "revision_not_approved", "Approve this revision before promotion."
+
+    profile = revision.plant_profile
+    newest_version = session.scalar(
+        select(func.max(PlantProfileRevision.version)).where(
+            PlantProfileRevision.plant_profile_id == profile.id
+        )
+    )
+    if revision.version <= profile.version or (
+        newest_version is not None and revision.version < newest_version
+    ):
+        return (
+            False,
+            "revision_stale",
+            "This revision is no longer current. Review the newer revision.",
+        )
+
+    try:
+        _validate_revision_for_approval(revision)
+        _promotion_values(revision)
+    except HTTPException:
+        return (
+            False,
+            "revision_not_ready",
+            "Required provenance or review content is incomplete.",
+        )
+
+    source_ids = {
+        item.get("source_id")
+        for item in revision.content_payload.get("source_refs", [])
+    }
+    known_source_ids = set(
+        session.scalars(
+            select(SourceRecord.external_identifier).where(
+                SourceRecord.external_identifier.in_(source_ids)
+            )
+        ).all()
+    )
+    if not source_ids or None in source_ids or known_source_ids != source_ids:
+        return (
+            False,
+            "revision_provenance_incomplete",
+            "Required provenance is incomplete.",
+        )
+    return True, None, None
+
+
 def approve_profile_revision(
     session: Session, revision_id: UUID, reviewer_name: str
 ) -> PlantProfileRevision:
@@ -538,56 +621,59 @@ def promote_profile_revision(
 ) -> PlantProfileRevision:
     revision = get_profile_revision(session, revision_id)
     profile = revision.plant_profile
-    if revision.status != "approved":
-        raise HTTPException(
-            status_code=HTTPStatus.CONFLICT,
-            detail="Only approved revisions can be promoted.",
-        )
-    if revision.version <= profile.version:
-        raise HTTPException(
-            status_code=HTTPStatus.CONFLICT,
-            detail="Revision must be newer than the canonical profile.",
-        )
-    _validate_revision_for_approval(revision)
-
-    current_payload = _canonical_payload(profile)
-    current_checksum = _payload_checksum(current_payload)
-    current_history = session.scalar(
-        select(PlantProfileRevision).where(
-            PlantProfileRevision.plant_profile_id == profile.id,
-            PlantProfileRevision.version == profile.version,
-        )
+    eligible, error_code, error_message = revision_promotion_eligibility(
+        session, revision
     )
-    if current_history is None:
-        session.add(
-            PlantProfileRevision(
-                plant_profile_id=profile.id,
-                version=profile.version,
-                content_payload=current_payload,
-                content_checksum=current_checksum,
-                status="superseded",
-                created_at=profile.created_at,
-                reviewed_at=profile.last_reviewed_at,
-                promoted_at=profile.published_at,
+    if not eligible:
+        raise _promotion_conflict(
+            error_code or "revision_not_eligible",
+            error_message or "This revision cannot be promoted.",
+        )
+
+    values = _promotion_values(revision)
+    try:
+        current_payload = _canonical_payload(profile)
+        current_checksum = _payload_checksum(current_payload)
+        current_history = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile_id == profile.id,
+                PlantProfileRevision.version == profile.version,
             )
         )
-    else:
-        current_history.status = "superseded"
+        if current_history is None:
+            session.add(
+                PlantProfileRevision(
+                    plant_profile_id=profile.id,
+                    version=profile.version,
+                    content_payload=current_payload,
+                    content_checksum=current_checksum,
+                    status="superseded",
+                    created_at=profile.created_at,
+                    reviewed_at=profile.last_reviewed_at,
+                    promoted_at=profile.published_at,
+                )
+            )
+        else:
+            current_history.status = "superseded"
 
-    values = revision.content_payload["profile"]
-    for field in _profile_values_from_names():
-        setattr(profile, field, values[field])
-    _replace_profile_sources(session, profile, revision.content_payload["source_refs"])
-    profile.version = revision.version
-    profile.updated_at = utc_now()
-    profile.last_reviewed_at = revision.reviewed_at
-    if profile.status != "published":
-        profile.status = "approved"
-        profile.approved_at = revision.reviewed_at
+        for field in _profile_values_from_names():
+            setattr(profile, field, values[field])
+        _replace_profile_sources(
+            session, profile, revision.content_payload["source_refs"]
+        )
+        profile.version = revision.version
+        profile.updated_at = utc_now()
+        profile.last_reviewed_at = revision.reviewed_at
+        if profile.status != "published":
+            profile.status = "approved"
+            profile.approved_at = revision.reviewed_at
 
-    revision.status = "promoted"
-    revision.promoted_at = utc_now()
-    session.commit()
+        revision.status = "promoted"
+        revision.promoted_at = utc_now()
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
     return get_profile_revision(session, revision.id)
 
 

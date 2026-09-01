@@ -132,6 +132,18 @@ export function getApiBaseUrl(): string {
   return alignPageLoopbackHostname(baseUrl.replace(new RegExp("/$"), ""))
 }
 
+export class ApiRequestError extends Error {
+  readonly status: number
+  readonly code: string
+
+  constructor(status: number, code: string, message: string) {
+    super(message)
+    this.name = "ApiRequestError"
+    this.status = status
+    this.code = code
+  }
+}
+
 export async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(getApiBaseUrl() + path, {
     ...init,
@@ -139,7 +151,21 @@ export async function requestJson<T>(path: string, init?: RequestInit): Promise<
     headers: { Accept: "application/json", ...init?.headers },
   })
 
-  if (!response.ok) throw new Error("api-" + response.status)
+  if (!response.ok) {
+    let code = "api_error"
+    let message = "The request could not be completed."
+    try {
+      const body = await response.json() as { detail?: string | { code?: string; message?: string } }
+      if (typeof body.detail === "string") message = body.detail
+      else if (body.detail) {
+        code = body.detail.code ?? code
+        message = body.detail.message ?? message
+      }
+    } catch {
+      // Keep the safe fallback when the server does not return JSON.
+    }
+    throw new ApiRequestError(response.status, code, message)
+  }
   return (await response.json()) as T
 }
 

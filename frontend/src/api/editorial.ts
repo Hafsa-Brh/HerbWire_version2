@@ -45,6 +45,9 @@ export type ApiPlantRevision = {
   current_version: number
   proposed_version: number
   status: "needs_review" | "approved" | "held" | "promoted" | "superseded"
+  promotion_eligible: boolean
+  promotion_error_code: string | null
+  promotion_error_message: string | null
   content_checksum: string
   current_content: ApiPlantDetail
   proposed_content: ApiRevisionContent

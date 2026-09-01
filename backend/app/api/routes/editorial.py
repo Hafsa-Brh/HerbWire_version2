@@ -24,6 +24,7 @@ from backend.app.domains.encyclopedia.service import (
     promote_profile_revision,
     publish_profile,
     reject_review,
+    revision_promotion_eligibility,
     seed_curated_profiles,
 )
 from backend.app.domains.pipeline.fixture_pipeline import run_fixture_pipeline
@@ -74,6 +75,9 @@ def revision_response(session: Session, revision) -> PlantRevisionResponse:
         for source_id in source_ids
         if source_id in by_identifier
     ]
+    promotion_eligible, promotion_error_code, promotion_error_message = (
+        revision_promotion_eligibility(session, revision)
+    )
     return PlantRevisionResponse(
         id=revision.id,
         plant_profile_id=revision.plant_profile_id,
@@ -82,6 +86,9 @@ def revision_response(session: Session, revision) -> PlantRevisionResponse:
         current_version=revision.plant_profile.version,
         proposed_version=revision.version,
         status=revision.status,
+        promotion_eligible=promotion_eligible,
+        promotion_error_code=promotion_error_code,
+        promotion_error_message=promotion_error_message,
         content_checksum=revision.content_checksum,
         current_content=plant_detail(revision.plant_profile),
         proposed_content=payload["profile"],

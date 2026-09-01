@@ -87,6 +87,9 @@ const plantRevision = {
   current_version: 1,
   proposed_version: 3,
   status: "needs_review",
+  promotion_eligible: false,
+  promotion_error_code: "revision_not_approved" as string | null,
+  promotion_error_message: "Approve this revision before promotion." as string | null,
   content_checksum: "a".repeat(64),
   current_content: plantDetail,
   proposed_content: { ...plantDetail, version: undefined, sources: undefined, source_count: undefined, published_at: undefined, last_reviewed_at: undefined, status: undefined, id: undefined, slug: undefined, introduction: "Expanded version-three overview from the corpus manifest.", evidence_notes: "Version-three evidence limitations remain explicit." },
@@ -106,7 +109,7 @@ function renderAt(path: string) {
   return render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>)
 }
 
-function installMockApi({ authenticated = true, plants = [publishedPlant], reviews = [draftReview, publishedReview], revisions = [plantRevision], revisionFailure = false } = {}) {
+function installMockApi({ authenticated = true, plants = [publishedPlant], reviews = [draftReview, publishedReview], revisions = [plantRevision], revisionFailure = false, promotionFailure = false } = {}) {
   let authed = authenticated
   let revisionStatus = revisions[0]?.status ?? "needs_review"
   let revisionFailures = revisionFailure ? 1 : 0
@@ -140,10 +143,27 @@ function installMockApi({ authenticated = true, plants = [publishedPlant], revie
       return jsonResponse({ items, total: filtered.length, page, page_size: pageSize, pages: Math.max(1, Math.ceil(filtered.length / pageSize)) })
     }
     if (!authed && url.includes("/api/v1/admin/")) return jsonResponse({ detail: "Authentication required." }, 401)
-    if (url.endsWith("/api/v1/admin/revisions") && !init?.method) { if (revisionFailures > 0) { revisionFailures -= 1; return jsonResponse({ detail: "Unavailable" }, 503) }; return jsonResponse(revisions.map((revision) => ({ ...revision, status: revisionStatus }))) }
-    if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/approve") && init?.method === "POST") { revisionStatus = "approved"; return jsonResponse({ ...revisions[0], status: revisionStatus }) }
+    if (url.endsWith("/api/v1/admin/revisions") && !init?.method) {
+      if (revisionFailures > 0) { revisionFailures -= 1; return jsonResponse({ detail: "Unavailable" }, 503) }
+      return jsonResponse(revisions.map((revision) => ({
+        ...revision,
+        status: revisionStatus,
+        promotion_eligible: revisionStatus === "approved",
+        promotion_error_code: revisionStatus === "approved" ? null : "revision_not_approved",
+        promotion_error_message: revisionStatus === "approved" ? null : "Approve this revision before promotion.",
+      })))
+    }
+    if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/approve") && init?.method === "POST") {
+      revisionStatus = "approved"
+      return jsonResponse({ ...revisions[0], status: revisionStatus, promotion_eligible: true, promotion_error_code: null, promotion_error_message: null })
+    }
     if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/reject") && init?.method === "POST") { revisionStatus = "held"; return jsonResponse({ ...revisions[0], status: revisionStatus }) }
-    if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/promote") && init?.method === "POST") { if (revisionStatus !== "approved") return jsonResponse({ detail: "Approval required." }, 409); revisionStatus = "promoted"; return jsonResponse({ ...revisions[0], status: revisionStatus }) }
+    if (url.includes("/api/v1/admin/revisions/") && url.endsWith("/promote") && init?.method === "POST") {
+      if (promotionFailure) return jsonResponse({ detail: { code: "revision_stale", message: "This revision is no longer current. Review the newer revision." } }, 409)
+      if (revisionStatus !== "approved") return jsonResponse({ detail: { code: "revision_not_approved", message: "Approve this revision before promotion." } }, 409)
+      revisionStatus = "promoted"
+      return jsonResponse({ ...revisions[0], status: revisionStatus, promotion_eligible: false, promotion_error_code: "revision_already_promoted", promotion_error_message: "This revision has already been promoted." })
+    }
     if (url.endsWith("/api/v1/admin/reviews") && !init?.method) return jsonResponse(reviews)
     if (url.endsWith("/api/v1/admin/pipeline/runs")) return jsonResponse([pipelineRun])
     if (url.endsWith("/api/v1/admin/agent-performance")) return jsonResponse(performance)
@@ -327,6 +347,20 @@ describe("Milestone 2 final UI and functionality", () => {
     fireEvent.click(promote)
     expect(await within(workspace).findByText("Approved revision promoted atomically.")).toBeInTheDocument()
   }, 15000)
+
+  it("renders a safe structured promotion error and submits promotion once", async () => {
+    installMockApi({ authenticated: true, revisions: [{ ...plantRevision, status: "approved", promotion_eligible: true, promotion_error_code: null, promotion_error_message: null }], promotionFailure: true })
+    renderAt("/admin/revisions")
+
+    const workspace = await screen.findByRole("region", { name: "Profile revision workspace" })
+    const promote = within(workspace).getByRole("button", { name: "Promote revision" })
+    fireEvent.click(promote)
+    fireEvent.click(promote)
+
+    expect(await within(workspace).findByText("This revision is no longer current. Review the newer revision.")).toBeInTheDocument()
+    const promotionCalls = vi.mocked(fetch).mock.calls.filter(([input]) => String(input).endsWith("/promote"))
+    expect(promotionCalls).toHaveLength(1)
+  })
 
   it("paginates the profile revision queue and resets comparison sections", async () => {
     const revisions = Array.from({ length: 7 }, (_, index) => ({

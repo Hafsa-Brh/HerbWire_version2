@@ -2,7 +2,7 @@ import { ArrowUpRight, Check, Globe2 } from "lucide-react"
 import { useCallback, useState } from "react"
 import { Link } from "react-router-dom"
 import { subscribeNewsletter } from "../api/newsletter"
-import { fetchPlants } from "../api/plants"
+import { ApiRequestError, fetchPlants } from "../api/plants"
 import globalCoverageImage from "../assets/global-coverage.png"
 
 const SUBSCRIBE_DECOR =
@@ -92,7 +92,7 @@ function NewsletterSection() {
       const result = await subscribeNewsletter(email)
       setStatus(result.status === "already_subscribed" ? "duplicate" : "success")
     } catch (error) {
-      setStatus(error instanceof Error && error.message === "api-422" ? "invalid" : "error")
+      setStatus(error instanceof ApiRequestError && error.status === 422 ? "invalid" : "error")
     }
   }
 

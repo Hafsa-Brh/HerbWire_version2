@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { Link, Navigate, NavLink, Route, Routes, useNavigate } from "react-router-dom"
 import { fetchSession, logout } from "../../api/auth"
 import { approvePlantRevision, approveReview, fetchAgentPerformance, fetchPipelineRuns, fetchPlantRevisions, fetchReviews, holdPlantRevision, promotePlantRevision, publishPlant, rejectReview, type ApiAgentPerformance, type ApiPipelineRun, type ApiPlantRevision, type ApiReview } from "../../api/editorial"
-import { fetchPlants, type ApiPlantDetail, type ApiPlantListItem } from "../../api/plants"
+import { ApiRequestError, fetchPlants, type ApiPlantDetail, type ApiPlantListItem } from "../../api/plants"
 import { BotanicalImage, PlantDistributionMap } from "../../components/plants/PlantPrimitives"
 import { useAsyncResource } from "../../hooks/useAsyncResource"
 import { AdminStateCard, AdminStatusPill, Metric, PageHeader, Panel } from "./AdminPrimitives"
@@ -290,8 +290,10 @@ function ProfileRevisions() {
       await action()
       setMessage(success)
       revisions.reload()
-    } catch {
-      setMessage("The revision action failed. Refresh the data and try again.")
+    } catch (error) {
+      setMessage(error instanceof ApiRequestError
+        ? error.message
+        : "Promotion could not be completed. No article changes were saved.")
     } finally {
       setBusy(false)
     }
@@ -308,7 +310,8 @@ function ProfileRevisions() {
       })}</div><QueuePagination page={safePage} pageCount={pageCount} onPrevious={() => setPage((current) => Math.max(1, current - 1))} onNext={() => setPage((current) => Math.min(pageCount, current + 1))} /></Panel>
       <Panel eyebrow="Current / proposed" title={selected?.display_common_name ?? "Select a revision"} className="flex h-full min-w-0 flex-col">{selected ? <RevisionComparison revision={selected} /> : null}
         {message ? <p role="alert" className="mt-4 border border-gold/40 bg-gold/10 p-3 font-sans text-sm text-deep">{message}</p> : null}
-        {selected ? <div className="mt-auto flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" disabled={busy || !["needs_review", "held"].includes(selected.status)} onClick={() => act(() => approvePlantRevision(selected.id), "Revision approved. It remains private until promotion.")} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Approve revision</button><button type="button" disabled={busy || selected.status !== "approved"} onClick={() => act(() => promotePlantRevision(selected.id), "Approved revision promoted atomically.")} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Promote revision</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep" /></label><button type="button" disabled={busy || !reason.trim() || selected.status === "promoted" || selected.status === "superseded"} onClick={() => act(() => holdPlantRevision(selected.id, reason), "Revision held. Canonical public content is unchanged.")} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust disabled:opacity-40">Hold / reject</button></div> : null}
+        {selected?.promotion_error_message && !selected.promotion_eligible ? <p className="mt-4 border border-line bg-sage/15 p-3 font-sans text-sm text-muted"><strong className="text-deep">Promotion status:</strong> {selected.promotion_error_message}</p> : null}
+        {selected ? <div className="mt-auto flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" disabled={busy || !["needs_review", "held"].includes(selected.status)} onClick={() => act(() => approvePlantRevision(selected.id), "Revision approved. It remains private until promotion.")} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">{busy ? "Working..." : "Approve revision"}</button><button type="button" disabled={busy || !selected.promotion_eligible} onClick={() => act(() => promotePlantRevision(selected.id), "Approved revision promoted atomically.")} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">{busy ? "Working..." : "Promote revision"}</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep" /></label><button type="button" disabled={busy || !reason.trim() || selected.status === "promoted" || selected.status === "superseded"} onClick={() => act(() => holdPlantRevision(selected.id, reason), "Revision held. Canonical public content is unchanged.")} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust disabled:opacity-40">{busy ? "Working..." : "Hold / reject"}</button></div> : null}
       </Panel>
     </section> : null}
   </>

@@ -70,6 +70,9 @@ class PlantRevisionResponse(BaseModel):
     current_version: int
     proposed_version: int
     status: str
+    promotion_eligible: bool
+    promotion_error_code: str | None
+    promotion_error_message: str | None
     content_checksum: str
     current_content: PlantDetailResponse
     proposed_content: dict
