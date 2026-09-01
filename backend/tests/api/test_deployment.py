@@ -21,7 +21,7 @@ def deployed_settings(**overrides) -> Settings:
     values = {
         "environment": "staging",
         "database_url": "postgres://user:password@db.example.invalid/herbwire",
-        "frontend_origin": "",
+        "frontend_origin": "https://herbwire-staging-hafsa.herokuapp.com",
         "admin_email": "editor@example.invalid",
         "admin_password": "long-staging-password",
         "session_secret": "a" * 32,
@@ -38,7 +38,9 @@ def test_staging_settings_normalize_heroku_database_url_and_require_ssl() -> Non
 
     assert settings.database_url.startswith("postgresql+psycopg://")
     assert "sslmode=require" in settings.database_url
-    assert settings.allowed_frontend_origins == []
+    assert settings.allowed_frontend_origins == [
+        "https://herbwire-staging-hafsa.herokuapp.com"
+    ]
 
 
 def test_settings_accept_heroku_database_url_variable(
@@ -58,7 +60,10 @@ def test_settings_accept_heroku_database_url_variable(
 @pytest.mark.parametrize(
     ("field", "value"),
     [
-        ("frontend_origin", "https://staging.example.invalid"),
+        ("frontend_origin", ""),
+        ("frontend_origin", "http://staging.example.invalid"),
+        ("frontend_origin", "https://user@staging.example.invalid"),
+        ("frontend_origin", "https://staging.example.invalid/path"),
         ("admin_password", "short"),
         ("session_secret", "short"),
         ("session_cookie_name", "herbwire_editor_session"),

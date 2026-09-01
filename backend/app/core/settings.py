@@ -49,9 +49,20 @@ class Settings(BaseSettings):
             errors: list[str] = []
             if database_url.drivername != "postgresql+psycopg":
                 errors.append("DATABASE_URL must select PostgreSQL through psycopg")
-            if self.frontend_origin.strip():
+            frontend_origin = self.frontend_origin.strip()
+            parsed_frontend_origin = urlparse(frontend_origin)
+            if (
+                parsed_frontend_origin.scheme != "https"
+                or not parsed_frontend_origin.netloc
+                or parsed_frontend_origin.username is not None
+                or parsed_frontend_origin.password is not None
+                or parsed_frontend_origin.path not in {"", "/"}
+                or parsed_frontend_origin.params
+                or parsed_frontend_origin.query
+                or parsed_frontend_origin.fragment
+            ):
                 errors.append(
-                    "HERBWIRE_FRONTEND_ORIGIN must be empty for same-origin deployment"
+                    "HERBWIRE_FRONTEND_ORIGIN must be an HTTPS origin without a path"
                 )
             if not configured_admin_email(self.admin_email):
                 errors.append("HERBWIRE_ADMIN_EMAIL must be explicitly configured")
@@ -77,6 +88,8 @@ class Settings(BaseSettings):
                 )
 
         self.database_url = database_url.render_as_string(hide_password=False)
+        if self.environment in {"staging", "production"}:
+            self.frontend_origin = self.frontend_origin.strip().rstrip("/")
         return self
 
     @property
