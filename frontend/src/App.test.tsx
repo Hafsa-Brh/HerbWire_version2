@@ -345,6 +345,13 @@ describe("Milestone 2 final UI and functionality", () => {
     fireEvent.click(within(workspace).getByRole("button", { name: "Approve revision" }))
     await waitFor(() => expect(promote).toBeEnabled())
     fireEvent.click(promote)
+    const confirmation = await screen.findByRole("dialog", { name: "Promote Peppermint?" })
+    expect(within(confirmation).getByText(/version 1 to version 3/i)).toBeInTheDocument()
+    expect(within(confirmation).getByText(/Rich article content/i)).toBeInTheDocument()
+    const confirmPromotion = within(confirmation).getByRole("button", { name: "Confirm promotion" })
+    expect(confirmPromotion).toBeDisabled()
+    fireEvent.click(within(confirmation).getByRole("checkbox"))
+    fireEvent.click(confirmPromotion)
     expect(await within(workspace).findByText("Approved revision promoted atomically.")).toBeInTheDocument()
   }, 15000)
 
@@ -355,11 +362,39 @@ describe("Milestone 2 final UI and functionality", () => {
     const workspace = await screen.findByRole("region", { name: "Profile revision workspace" })
     const promote = within(workspace).getByRole("button", { name: "Promote revision" })
     fireEvent.click(promote)
-    fireEvent.click(promote)
+    const confirmation = await screen.findByRole("dialog", { name: "Promote Peppermint?" })
+    fireEvent.click(within(confirmation).getByRole("checkbox"))
+    const confirmPromotion = within(confirmation).getByRole("button", { name: "Confirm promotion" })
+    fireEvent.click(confirmPromotion)
+    fireEvent.click(confirmPromotion)
 
     expect(await within(workspace).findByText("This revision is no longer current. Review the newer revision.")).toBeInTheDocument()
     const promotionCalls = vi.mocked(fetch).mock.calls.filter(([input]) => String(input).endsWith("/promote"))
     expect(promotionCalls).toHaveLength(1)
+  })
+
+  it("labels legacy revisions and cancellation never promotes", async () => {
+    const legacyRevision = {
+      ...plantRevision,
+      status: "approved",
+      promotion_eligible: true,
+      promotion_error_code: null,
+      promotion_error_message: null,
+      proposed_content: { ...plantRevision.proposed_content, article_details: { preparation_forms: [], evidence_findings: [], mechanisms: [], special_populations: [], interactions: [], section_sources: { evidence: [], safety: [] } } },
+    }
+    installMockApi({ authenticated: true, revisions: [legacyRevision] })
+    renderAt("/admin/revisions")
+
+    const workspace = await screen.findByRole("region", { name: "Profile revision workspace" })
+    expect(await within(workspace).findByText("Legacy article format - does not meet the current rich-content standard.")).toBeInTheDocument()
+    expect(within(workspace).getAllByText("Legacy/basic content").length).toBeGreaterThan(0)
+    fireEvent.click(within(workspace).getByRole("button", { name: "Promote revision" }))
+    const confirmation = await screen.findByRole("dialog", { name: "Promote Peppermint?" })
+    expect(within(confirmation).getByText(/changes the public article/i)).toBeInTheDocument()
+    expect(within(confirmation).getByText(/does not meet the current rich-content standard/i)).toBeInTheDocument()
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Cancel" }))
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+    expect(vi.mocked(fetch).mock.calls.filter(([input]) => String(input).endsWith("/promote"))).toHaveLength(0)
   })
 
   it("paginates the profile revision queue and resets comparison sections", async () => {

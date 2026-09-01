@@ -277,6 +277,9 @@ function ProfileRevisions() {
   const [reason, setReason] = useState("Needs additional editorial review.")
   const [message, setMessage] = useState("")
   const [busy, setBusy] = useState(false)
+  const actionInFlight = useRef(false)
+  const [promotionCandidate, setPromotionCandidate] = useState<ApiPlantRevision | null>(null)
+  const [reviewConfirmed, setReviewConfirmed] = useState(false)
   const items = useMemo(() => revisions.data ?? [], [revisions.data])
   const pageCount = Math.max(1, Math.ceil(items.length / pageSize))
   const safePage = Math.min(page, pageCount)
@@ -284,6 +287,8 @@ function ProfileRevisions() {
   const selected = useMemo(() => pageItems.find((revision) => revision.id === selectedId) ?? pageItems[0] ?? null, [pageItems, selectedId])
 
   async function act(action: () => Promise<ApiPlantRevision>, success: string) {
+    if (actionInFlight.current) return
+    actionInFlight.current = true
     setBusy(true)
     setMessage("")
     try {
@@ -295,6 +300,7 @@ function ProfileRevisions() {
         ? error.message
         : "Promotion could not be completed. No article changes were saved.")
     } finally {
+      actionInFlight.current = false
       setBusy(false)
     }
   }
@@ -306,15 +312,60 @@ function ProfileRevisions() {
     {items.length ? <section aria-label="Profile revision workspace" className="grid items-stretch gap-5 xl:grid-cols-[.48fr_1.52fr]">
       <Panel eyebrow="Pending content" title="Revision queue" className="h-full"><div className="grid gap-3">{pageItems.map((revision) => {
         const isSelected = selected?.id === revision.id
-        return <button key={revision.id} type="button" aria-pressed={isSelected} onClick={() => setSelectedId(revision.id)} className={"border p-4 text-left " + (isSelected ? "border-leaf bg-sage/25" : "border-line bg-paper hover:border-leaf")}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">v{revision.current_version} to v{revision.proposed_version}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{revision.display_common_name}</h2></button>
+        const standard = revisionStandard(revision)
+        return <button key={revision.id} type="button" aria-pressed={isSelected} onClick={() => { setSelectedId(revision.id); setPromotionCandidate(null) }} className={"border p-4 text-left " + (isSelected ? "border-leaf bg-sage/25" : "border-line bg-paper hover:border-leaf")}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">v{revision.current_version} to v{revision.proposed_version}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{revision.display_common_name}</h2><p className={"mt-2 font-sans text-[10px] font-bold uppercase tracking-[.08em] " + (standard.rich ? "text-leaf" : "text-rust")}>{standard.label}</p></button>
       })}</div><QueuePagination page={safePage} pageCount={pageCount} onPrevious={() => setPage((current) => Math.max(1, current - 1))} onNext={() => setPage((current) => Math.min(pageCount, current + 1))} /></Panel>
-      <Panel eyebrow="Current / proposed" title={selected?.display_common_name ?? "Select a revision"} className="flex h-full min-w-0 flex-col">{selected ? <RevisionComparison revision={selected} /> : null}
+      <Panel eyebrow="Current / proposed" title={selected?.display_common_name ?? "Select a revision"} className="flex h-full min-w-0 flex-col">{selected ? <><RevisionReadiness revision={selected} /><RevisionComparison revision={selected} /></> : null}
         {message ? <p role="alert" className="mt-4 border border-gold/40 bg-gold/10 p-3 font-sans text-sm text-deep">{message}</p> : null}
         {selected?.promotion_error_message && !selected.promotion_eligible ? <p className="mt-4 border border-line bg-sage/15 p-3 font-sans text-sm text-muted"><strong className="text-deep">Promotion status:</strong> {selected.promotion_error_message}</p> : null}
-        {selected ? <div className="mt-auto flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" disabled={busy || !["needs_review", "held"].includes(selected.status)} onClick={() => act(() => approvePlantRevision(selected.id), "Revision approved. It remains private until promotion.")} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">{busy ? "Working..." : "Approve revision"}</button><button type="button" disabled={busy || !selected.promotion_eligible} onClick={() => act(() => promotePlantRevision(selected.id), "Approved revision promoted atomically.")} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">{busy ? "Working..." : "Promote revision"}</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep" /></label><button type="button" disabled={busy || !reason.trim() || selected.status === "promoted" || selected.status === "superseded"} onClick={() => act(() => holdPlantRevision(selected.id, reason), "Revision held. Canonical public content is unchanged.")} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust disabled:opacity-40">{busy ? "Working..." : "Hold / reject"}</button></div> : null}
+        {selected ? <div className="mt-auto flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" disabled={busy || !["needs_review", "held"].includes(selected.status)} onClick={() => act(() => approvePlantRevision(selected.id), "Revision approved. It remains private until promotion.")} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">{busy ? "Working..." : "Approve revision"}</button><button type="button" disabled={busy || !selected.promotion_eligible} onClick={() => { setReviewConfirmed(false); setPromotionCandidate(selected) }} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">{busy ? "Working..." : "Promote revision"}</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep" /></label><button type="button" disabled={busy || !reason.trim() || selected.status === "promoted" || selected.status === "superseded"} onClick={() => act(() => holdPlantRevision(selected.id, reason), "Revision held. Canonical public content is unchanged.")} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust disabled:opacity-40">{busy ? "Working..." : "Hold / reject"}</button></div> : null}
       </Panel>
     </section> : null}
+    {promotionCandidate ? <PromotionConfirmation revision={promotionCandidate} confirmed={reviewConfirmed} busy={busy} onConfirmedChange={setReviewConfirmed} onCancel={() => setPromotionCandidate(null)} onPromote={() => { const revision = promotionCandidate; setPromotionCandidate(null); void act(() => promotePlantRevision(revision.id), "Approved revision promoted atomically.") }} /> : null}
   </>
+}
+
+function revisionStandard(revision: ApiPlantRevision) {
+  const details = revision.proposed_content.article_details
+  const preparationCount = details?.preparation_forms?.length ?? 0
+  const evidenceCount = details?.evidence_findings?.length ?? 0
+  const populationCount = details?.special_populations?.length ?? 0
+  const traceabilityCount = Object.keys(details?.section_sources ?? {}).length
+  const rich = preparationCount > 0 && evidenceCount > 0 && populationCount > 0 && traceabilityCount > 0
+  return { rich, label: rich ? "Rich article content" : "Legacy/basic content", preparationCount, evidenceCount, populationCount, traceabilityCount }
+}
+
+function RevisionReadiness({ revision }: { revision: ApiPlantRevision }) {
+  const standard = revisionStandard(revision)
+  const safetyReady = revision.proposed_content.safety_notes.length > 0
+  const mediaReady = Boolean(revision.proposed_content.hero_image.attribution && revision.proposed_content.hero_image.license)
+  const privateRevision = !["promoted", "superseded"].includes(revision.status)
+  return <div className="mb-4 border border-line bg-sage/15 p-4">
+    <div className="flex flex-wrap gap-2"><AdminStatusPill>{standard.label}</AdminStatusPill>{privateRevision ? <AdminStatusPill>Pending - not public</AdminStatusPill> : null}{revision.promotion_eligible ? <AdminStatusPill>Promotion eligible</AdminStatusPill> : <AdminStatusPill>Stale / ineligible</AdminStatusPill>}</div>
+    {!standard.rich ? <p role="note" className="mt-3 font-sans text-sm font-semibold text-rust">Legacy article format - does not meet the current rich-content standard.</p> : null}
+    <dl className="mt-3 grid grid-cols-2 gap-2 font-sans text-xs text-muted sm:grid-cols-5">
+      <div><dt>Preparations</dt><dd className="font-semibold text-deep">{standard.preparationCount}</dd></div>
+      <div><dt>Evidence</dt><dd className="font-semibold text-deep">{standard.evidenceCount}</dd></div>
+      <div><dt>Safety</dt><dd className="font-semibold text-deep">{safetyReady ? "Ready" : "Missing"}</dd></div>
+      <div><dt>Populations</dt><dd className="font-semibold text-deep">{standard.populationCount}</dd></div>
+      <div><dt>Source sections</dt><dd className="font-semibold text-deep">{standard.traceabilityCount}</dd></div>
+    </dl>
+    <p className="mt-2 font-sans text-xs text-muted">Media attribution: {mediaReady ? "ready" : "missing"}. Technical promotion eligibility does not replace editorial review of sources and safety wording.</p>
+  </div>
+}
+
+function PromotionConfirmation({ revision, confirmed, busy, onConfirmedChange, onCancel, onPromote }: { revision: ApiPlantRevision; confirmed: boolean; busy: boolean; onConfirmedChange: (value: boolean) => void; onCancel: () => void; onPromote: () => void }) {
+  const standard = revisionStandard(revision)
+  return <div className="fixed inset-0 z-50 grid place-items-center bg-deep/55 p-4" role="presentation">
+    <section role="dialog" aria-modal="true" aria-labelledby="promotion-title" className="w-full max-w-lg border border-line bg-paper p-6 shadow-xl">
+      <p className="hw-eyebrow">Public article change</p>
+      <h2 id="promotion-title" className="mt-2 font-serif text-3xl font-semibold text-deep">Promote {revision.display_common_name}?</h2>
+      <p className="mt-3 font-sans text-sm leading-relaxed text-muted">This changes the public article from version {revision.current_version} to version {revision.proposed_version}. Classification: <strong className={standard.rich ? "text-leaf" : "text-rust"}>{standard.label}</strong>.</p>
+      {!standard.rich ? <p className="mt-3 border border-rust/40 bg-rust/10 p-3 font-sans text-sm text-rust">Legacy article format - does not meet the current rich-content standard.</p> : null}
+      <label className="mt-5 flex items-start gap-3 font-sans text-sm leading-relaxed text-deep"><input type="checkbox" checked={confirmed} onChange={(event) => onConfirmedChange(event.target.checked)} className="mt-1 h-4 w-4 accent-leaf" />I inspected the information sources, media attribution, and safety wording for this revision.</label>
+      <div className="mt-6 flex justify-end gap-3"><button type="button" onClick={onCancel} disabled={busy} className="border border-line px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest disabled:opacity-40">Cancel</button><button type="button" onClick={onPromote} disabled={busy || !confirmed} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Confirm promotion</button></div>
+    </section>
+  </div>
 }
 
 function RevisionComparison({ revision }: { revision: ApiPlantRevision }) {
