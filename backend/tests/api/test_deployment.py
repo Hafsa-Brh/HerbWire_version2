@@ -20,7 +20,7 @@ from pydantic import ValidationError
 def deployed_settings(**overrides) -> Settings:
     values = {
         "environment": "staging",
-        "database_url": "postgres://user:password@db.example.invalid/herbwire",
+        "database_url": "postgres://user@db.example.invalid/herbwire",
         "frontend_origin": "https://herbwire-staging-hafsa.herokuapp.com",
         "admin_email": "editor@example.invalid",
         "admin_password": "long-staging-password",
@@ -49,7 +49,7 @@ def test_settings_accept_heroku_database_url_variable(
     monkeypatch.delenv("HERBWIRE_DATABASE_URL", raising=False)
     monkeypatch.setenv(
         "DATABASE_URL",
-        "postgres://user:password@db.example.invalid/herbwire",
+        "postgres://user@db.example.invalid/herbwire",
     )
 
     settings = Settings(_env_file=None)
