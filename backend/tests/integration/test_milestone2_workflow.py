@@ -250,7 +250,8 @@ def test_public_plant_paging_search_and_filters(client) -> None:
     assert all("India" in item["diversity_tags"] for item in tag.json()["items"])
 
 
-def test_import_preserves_human_reviewed_profile_text() -> None:
+def test_import_rejects_changed_same_version_and_preserves_reviewed_profile() -> None:
+    reviewed_summary = "Human-reviewed summary that must survive re-import."
     with get_session_factory()() as session:
         seed_curated_profiles(session)
         profile = session.scalar(
@@ -260,15 +261,43 @@ def test_import_preserves_human_reviewed_profile_text() -> None:
         profile.status = "published"
         profile.approved_at = datetime.now(timezone.utc)
         profile.published_at = datetime.now(timezone.utc)
-        profile.summary = "Human-reviewed summary that must survive re-import."
+        profile.summary = reviewed_summary
         session.commit()
 
-        result = seed_curated_profiles(session)
-        session.refresh(profile)
+        profile_id = profile.id
+        content_version = profile.version
+        approved_at = profile.approved_at
+        published_at = profile.published_at
 
-        assert result["profiles_protected"] == 1
-        assert profile.summary == "Human-reviewed summary that must survive re-import."
-        assert profile.hero_image["kind"] == "licensed_photograph"
+        with pytest.raises(
+            ValueError, match="content changed without increasing content_version"
+        ):
+            seed_curated_profiles(session)
+        session.rollback()
+
+    with get_session_factory()() as session:
+        profiles = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug == "peppermint")
+            ).all()
+        )
+        assert len(profiles) == 1
+        persisted = profiles[0]
+        assert persisted.id == profile_id
+        assert persisted.summary == reviewed_summary
+        assert persisted.version == content_version
+        assert persisted.status == "published"
+        assert persisted.approved_at == approved_at
+        assert persisted.published_at == published_at
+        assert persisted.hero_image["kind"] == "licensed_photograph"
+        assert (
+            session.scalar(
+                select(func.count())
+                .select_from(PlantProfileRevision)
+                .where(PlantProfileRevision.plant_profile_id == profile_id)
+            )
+            == 0
+        )
 
 
 def _make_peppermint_version_one() -> None:
