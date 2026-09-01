@@ -32,6 +32,7 @@ export type ApiRevisionContent = Pick<ApiPlantDetail,
   | "preparation"
   | "safety_notes"
   | "evidence_notes"
+  | "article_details"
   | "readiness_status"
   | "hero_image"
 > & { readiness_reason?: string | null }

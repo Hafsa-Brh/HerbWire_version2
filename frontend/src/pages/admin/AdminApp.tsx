@@ -229,12 +229,14 @@ function PlantReviewSection({ plant, sources, section, status, version }: { plan
   if (section === "traditional") return <div className="grid gap-4">
     <ReviewContentBlock title="Qualified traditional uses"><div className="grid gap-4">{plant.traditional_uses.length ? plant.traditional_uses.map((use) => <article key={use.tradition + use.statement}><p className="font-bold text-deep">{use.tradition}</p><p className="mt-1">{use.statement}</p><p className="mt-2 border-l-2 border-gold pl-3 text-xs">Qualification: {use.limitation}</p></article>) : <p>No traditional-use statements recorded.</p>}</div></ReviewContentBlock>
     <ReviewContentBlock title="Preparation traditions"><p>{plant.preparation || "No preparation information recorded."}</p></ReviewContentBlock>
+    <RichReviewDetails plant={plant} sources={sources} mode="preparation" />
     <p className="border border-gold/40 bg-gold/10 p-4 font-sans text-xs leading-relaxed text-deep">Traditional use does not establish clinical effectiveness and does not replace professional medical advice.</p>
   </div>
 
   if (section === "safety") return <div className="grid gap-4">
     <ReviewContentBlock title="Safety, contraindications, and cautions"><ul className="grid gap-3">{plant.safety_notes.length ? plant.safety_notes.map((note) => <li key={note.category + note.statement} className="border-l-2 border-rust pl-3"><strong className="text-deep">{note.category}:</strong> {note.statement}</li>) : <li>No safety evidence recorded.</li>}</ul></ReviewContentBlock>
     <ReviewContentBlock title="Evidence strength and limitations"><p>{plant.evidence_notes || "No evidence limitations recorded."}</p></ReviewContentBlock>
+    <RichReviewDetails plant={plant} sources={sources} mode="evidence" />
   </div>
 
   return <div className="grid gap-4">
@@ -242,6 +244,24 @@ function PlantReviewSection({ plant, sources, section, status, version }: { plan
     <ReviewContentBlock title="Distribution readiness"><p>{plant.distribution_summary || "No distribution summary recorded."}</p><ul aria-label="Distribution regions" className="mt-3 grid gap-1 text-xs">{plant.distribution.map((region) => <li key={region.status + region.code}><strong className="capitalize text-deep">{region.status}:</strong> {region.name}</li>)}</ul><PlantDistributionMap plant={distributionPlant} /></ReviewContentBlock>
     <ReviewContentBlock title="Information sources"><ol className="grid gap-3">{informationSources.length ? informationSources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer" className="font-bold text-deep hover:text-leaf">{source.title}</a><span className="block text-xs">{source.publisher} / {source.source_type} / {source.license_status}</span></li>) : <li>No information sources linked.</li>}</ol></ReviewContentBlock>
     <p className="font-sans text-xs leading-relaxed text-muted">Image rights and attribution are reviewed separately in the Overview section.</p>
+  </div>
+}
+
+
+function RichReviewDetails({ plant, sources, mode }: { plant: ReviewablePlant; sources: ApiPlantDetail["sources"]; mode: "preparation" | "evidence" }) {
+  const details = plant.article_details
+  const preparationForms = details?.preparation_forms ?? []
+  const evidenceFindings = details?.evidence_findings ?? []
+  const mechanisms = details?.mechanisms ?? []
+  const specialPopulations = details?.special_populations ?? []
+  const interactions = details?.interactions ?? []
+  const links = (ids: string[]) => <div className="mt-2 flex flex-wrap gap-2">{ids.map((id) => { const source = sources.find((item) => item.external_identifier === id); return source ? <a key={id} href={source.url} target="_blank" rel="noreferrer" className="font-sans text-[10px] font-bold uppercase text-leaf">{source.publisher}: {source.title}</a> : null })}</div>
+  if (mode === "preparation") return preparationForms.length ? <ReviewContentBlock title="Preparation-specific forms"><div className="grid gap-4">{preparationForms.map((form) => <article key={form.label}><p className="font-bold text-deep">{form.label} <span className="font-normal text-muted">/ {form.route} / {form.plant_part}</span></p><p className="mt-1">{form.description}</p><p className="mt-2 border-l-2 border-gold pl-3 text-xs">{form.equivalence_warning}</p>{links(form.source_ids)}</article>)}</div></ReviewContentBlock> : null
+  return <div className="grid gap-4">
+    {evidenceFindings.length ? <ReviewContentBlock title="Evidence findings">{evidenceFindings.map((item) => <article key={item.heading} className="mb-4 last:mb-0"><p className="font-bold text-deep">{item.heading} <span className="font-normal text-muted">/ {item.evidence_level.replace("_", " ")} / {item.preparation}</span></p><p className="mt-1">{item.summary}</p><p className="mt-2 text-xs"><strong>Limitations:</strong> {item.limitations}</p>{links(item.source_ids)}</article>)}</ReviewContentBlock> : null}
+    {mechanisms.length ? <ReviewContentBlock title="How it may work">{mechanisms.map((item) => <article key={item.preparation} className="mb-3 last:mb-0"><strong className="text-deep">{item.preparation}:</strong> {item.summary}<p className="mt-1 text-xs">{item.qualification}</p>{links(item.source_ids)}</article>)}</ReviewContentBlock> : null}
+    {specialPopulations.length ? <ReviewContentBlock title="Special populations">{specialPopulations.map((item) => <article key={item.population} className="mb-3 last:mb-0"><strong className="text-deep">{item.population}:</strong> {item.guidance}{links(item.source_ids)}</article>)}</ReviewContentBlock> : null}
+    {interactions.length ? <ReviewContentBlock title="Interactions">{interactions.map((item) => <article key={item.interaction}><strong className="text-deep">{item.interaction}:</strong> {item.statement}<p className="mt-1 text-xs">Evidence: {item.evidence_level}</p>{links(item.source_ids)}</article>)}</ReviewContentBlock> : null}
   </div>
 }
 

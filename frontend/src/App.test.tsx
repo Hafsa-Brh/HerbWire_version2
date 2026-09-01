@@ -70,8 +70,9 @@ const plantDetail = {
   preparation: "Documented infusion tradition without dosage.",
   safety_notes: [{ category: "Safety", statement: "Allergy caution.", source: "test-source" }],
   evidence_notes: "Traditional use is not clinical proof.",
+  article_details: { preparation_forms: [{ label: "Enteric-coated peppermint oil", plant_part: "essential oil", route: "oral", description: "Studied oral oil product.", equivalence_warning: "Not equivalent to peppermint leaf tea.", source_ids: ["test-info"] }], evidence_findings: [{ heading: "Adult irritable bowel syndrome", preparation: "enteric-coated oral oil", evidence_level: "limited", summary: "A source-led evidence summary.", limitations: "Preparation-specific evidence remains limited.", source_ids: ["test-info"] }], mechanisms: [{ preparation: "peppermint oil", summary: "A proposed smooth-muscle action.", qualification: "A proposed mechanism does not prove benefit.", source_ids: ["test-info"] }], special_populations: [{ population: "Infants and young children", guidance: "Preparation-specific caution.", source_ids: ["test-info"] }], interactions: [{ interaction: "Other medicines", evidence_level: "uncertain", statement: "Seek professional advice.", source_ids: ["test-info"] }], section_sources: { evidence: ["test-info"], safety: ["test-info"] } },
   last_reviewed_at: "2026-08-30T12:00:00Z",
-  sources: [{ id: "source-record-1", url: "https://example.org/source", canonical_url: "https://example.org/source", title: "Source title", publisher: "Source publisher", source_type: "taxonomy", original_language: "en", license_status: "Citation and paraphrase only.", supports: { taxonomy: true, distribution: true, traditional_use: true }, accessed_at: "2026-08-30T12:00:00Z" }, { id: "source-record-2", url: "https://commons.wikimedia.org/wiki/File:Peppermint.jpg", canonical_url: "https://commons.wikimedia.org/wiki/File:Peppermint.jpg", title: "Peppermint image source", publisher: "Wikimedia Commons", source_type: "licensed_media", original_language: "en", license_status: "CC BY-SA 4.0", supports: { media: true }, accessed_at: "2026-08-30T12:00:00Z" }],
+  sources: [{ id: "source-record-1", external_identifier: "test-info", url: "https://example.org/source", canonical_url: "https://example.org/source", title: "Source title", publisher: "Source publisher", source_type: "taxonomy", original_language: "en", license_status: "Citation and paraphrase only.", supports: { taxonomy: true, distribution: true, traditional_use: true }, accessed_at: "2026-08-30T12:00:00Z" }, { id: "source-record-2", external_identifier: "test-media", url: "https://commons.wikimedia.org/wiki/File:Peppermint.jpg", canonical_url: "https://commons.wikimedia.org/wiki/File:Peppermint.jpg", title: "Peppermint image source", publisher: "Wikimedia Commons", source_type: "licensed_media", original_language: "en", license_status: "CC BY-SA 4.0", supports: { media: true }, accessed_at: "2026-08-30T12:00:00Z" }],
 }
 
 const draftReview = { id: "review-1", content_type: "plant_profile", status: "needs_review", reviewer_name: null, decision_reason: null, review_payload: { seed_slug: "german-chamomile" }, created_at: "2026-08-30T12:00:00Z", decided_at: null, plant_profile: { ...plantDetail, ...draftPlant } }
@@ -399,6 +400,11 @@ describe("Milestone 2 final UI and functionality", () => {
     expect(within(overview).queryByText(/Documented infusion tradition/i)).not.toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Botanical identity" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Preparation traditions" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Preparation and product forms" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "What have we learned?" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "How it may work" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Who should avoid it or seek advice?" })).toBeInTheDocument()
+    expect(screen.getByText("Not equivalent to peppermint leaf tea.")).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Qualified traditional uses" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Safety and contraindications" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Geographical distribution" })).toBeInTheDocument()

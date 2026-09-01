@@ -1,5 +1,6 @@
 export type ApiSourceRecord = {
   id: string
+  external_identifier: string
   url: string
   canonical_url: string
   title: string
@@ -45,7 +46,17 @@ export type ApiDistributionRegion = {
 export type ApiSafetyNote = {
   category: string
   statement: string
-  source?: string
+  route?: string
+  source_ids?: string[]
+}
+
+export type ApiArticleDetails = {
+  preparation_forms?: Array<{ label: string; plant_part: string; route: string; description: string; equivalence_warning: string; source_ids: string[] }>
+  evidence_findings?: Array<{ heading: string; preparation: string; evidence_level: string; summary: string; limitations: string; source_ids: string[] }>
+  mechanisms?: Array<{ preparation: string; summary: string; qualification: string; source_ids: string[] }>
+  special_populations?: Array<{ population: string; guidance: string; source_ids: string[] }>
+  interactions?: Array<{ interaction: string; evidence_level: string; statement: string; source_ids: string[] }>
+  section_sources?: Record<string, string[]>
 }
 
 export type ApiPlantListItem = {
@@ -81,12 +92,13 @@ export type ApiPlantPage = {
 export type ApiPlantDetail = ApiPlantListItem & {
   introduction: string
   botanical_description: string
-  traditional_uses: Array<{ tradition: string; statement: string; limitation: string }>
+  traditional_uses: Array<{ tradition: string; statement: string; limitation: string; preparation?: string; evidence_class?: string; source_ids?: string[] }>
   parts_used: string[]
   distribution: ApiDistributionRegion[]
   preparation: string
   safety_notes: ApiSafetyNote[]
   evidence_notes: string
+  article_details: ApiArticleDetails
   last_reviewed_at: string | null
   sources: ApiSourceRecord[]
 }
