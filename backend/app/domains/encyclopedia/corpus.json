@@ -6773,6 +6773,173 @@
         }
       ],
       "evidence_notes": "Many clinical trials exist, but sample sizes are often small and preparations vary. Some products may help with insomnia or stress; evidence for anxiety is unclear, and evidence is insufficient for most other promoted uses. Long-term safety also remains unresolved.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Root preparations",
+            "plant_part": "Root",
+            "route": "oral",
+            "description": "Traditional and commercial products include root powder, capsules, teas, and extracts; many clinical studies use a named root extract rather than unstandardized plant material.",
+            "equivalence_warning": "Results from one root extract cannot be assumed to apply to leaf or combined root-and-leaf products.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "label": "Leaf preparations",
+            "plant_part": "Leaf",
+            "route": "oral",
+            "description": "Some commercial supplements contain leaf material or leaf extracts, which can differ in their withanolide profile from root preparations.",
+            "equivalence_warning": "Leaf products are not interchangeable with root preparations used in many traditional contexts and trials.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "label": "Combined root-and-leaf extracts",
+            "plant_part": "Root and leaf",
+            "route": "oral",
+            "description": "Combined extracts are marketed for stress, sleep, and other purposes, but formulation and standardization vary.",
+            "equivalence_warning": "A combined extract cannot inherit evidence or safety conclusions from a differently composed product.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Stress and sleep",
+            "preparation": "Varied oral ashwagandha preparations",
+            "evidence_level": "preliminary",
+            "summary": "Some preparations may improve perceived stress or insomnia outcomes in short studies.",
+            "limitations": "Trials are often small, use different extracts, and provide limited evidence about long-term effects or generalizability.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "heading": "Anxiety",
+            "preparation": "Varied oral extracts",
+            "evidence_level": "uncertain",
+            "summary": "Research has examined anxiety outcomes, but the evidence remains unclear.",
+            "limitations": "Stress and anxiety are not interchangeable outcomes, and inconsistent preparations limit comparison.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "heading": "Other promoted uses",
+            "preparation": "Root, leaf, or combined supplements",
+            "evidence_level": "uncertain",
+            "summary": "Evidence is insufficient for many promoted uses, including athletic performance, cognition, diabetes, menopause, and female infertility.",
+            "limitations": "Promotion is not evidence of clinical benefit, and small studies do not establish broad effectiveness.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          }
+        ],
+        "mechanisms": [
+          {
+            "preparation": "Ashwagandha plant preparations",
+            "summary": "The plant contains withanolides associated in laboratory research with anti-inflammatory and antioxidant activity.",
+            "qualification": "These biological observations do not establish that a particular supplement produces a clinical benefit.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          }
+        ],
+        "special_populations": [
+          {
+            "population": "Pregnancy",
+            "guidance": "Ashwagandha should be avoided during pregnancy.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "population": "Breastfeeding",
+            "guidance": "NCCIH advises against use while breastfeeding because safety is not established.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "population": "People awaiting surgery",
+            "guidance": "Use is not recommended before surgery; disclose supplement use to the clinical team.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "population": "People with autoimmune or thyroid disorders",
+            "guidance": "NCCIH does not recommend ashwagandha for these groups without clinical guidance.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "population": "People with hormone-sensitive prostate cancer",
+            "guidance": "Avoid use because some preparations may increase testosterone levels.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Diabetes and blood-pressure medicines",
+            "evidence_level": "potential",
+            "statement": "Ashwagandha might interact with medicines used for diabetes or high blood pressure.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "interaction": "Immunosuppressants, sedatives, and anti-seizure medicines",
+            "evidence_level": "potential",
+            "statement": "NCCIH identifies potential interactions with these medication classes.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          },
+          {
+            "interaction": "Thyroid hormone medicines",
+            "evidence_level": "potential",
+            "statement": "An interaction with thyroid hormone medication is possible and requires professional review.",
+            "source_ids": [
+              "nccih-ashwagandha"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-ashwagandha",
+            "nccih-ashwagandha"
+          ],
+          "botanical": [
+            "powo-ashwagandha"
+          ],
+          "preparations": [
+            "nccih-ashwagandha"
+          ],
+          "traditional_uses": [
+            "nccih-ashwagandha"
+          ],
+          "evidence": [
+            "nccih-ashwagandha"
+          ],
+          "mechanism": [
+            "nccih-ashwagandha"
+          ],
+          "safety": [
+            "nccih-ashwagandha"
+          ],
+          "distribution": [
+            "powo-ashwagandha",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AWithania%20somnifera%201DS-II%203-7489.jpg",
@@ -6832,7 +6999,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -6938,6 +7105,162 @@
         }
       ],
       "evidence_notes": "Many studies have examined green tea and its extracts, but definite conclusions are unavailable for most promoted purposes. Cancer findings are inconsistent, and reported effects on body weight or cholesterol are modest and product-dependent.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Brewed green tea",
+            "plant_part": "Processed young leaves and leaf buds",
+            "route": "oral beverage",
+            "description": "Green tea leaves are heated and dried without fermentation and are commonly infused as a caffeinated beverage.",
+            "equivalence_warning": "Beverage exposure is not equivalent to concentrated green-tea extract in a capsule or tablet.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "label": "Concentrated green-tea extract",
+            "plant_part": "Leaf extract",
+            "route": "oral",
+            "description": "Capsules and tablets concentrate leaf constituents and are the preparation used in many supplement studies.",
+            "equivalence_warning": "Extract safety, including reported liver injury, must not be generalized to ordinary brewed tea or ignored because tea is also a food.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "label": "Specific prescription topical extract",
+            "plant_part": "Defined green-tea extract",
+            "route": "topical",
+            "description": "A specific FDA-approved prescription ointment contains green-tea extract for external genital and perianal warts.",
+            "equivalence_warning": "This regulated topical medicine does not establish effectiveness for beverages, supplements, or homemade topical products.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Cancer prevention",
+            "preparation": "Green-tea beverages and extracts",
+            "evidence_level": "uncertain",
+            "summary": "Human studies examining cancer risk have produced inconsistent results.",
+            "limitations": "Observational and clinical evidence differ, and results cannot support a general cancer-prevention claim.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "heading": "Body weight",
+            "preparation": "Products containing catechins and caffeine",
+            "evidence_level": "limited",
+            "summary": "Green-tea constituents may have only a modest effect on body weight.",
+            "limitations": "Effects vary with product composition and physical activity, and combination products complicate attribution.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "heading": "Blood lipids",
+            "preparation": "Primarily green-tea extract supplements",
+            "evidence_level": "limited",
+            "summary": "Trials report small reductions in total and LDL cholesterol without clear effects on HDL cholesterol or triglycerides.",
+            "limitations": "Most studies evaluated extracts rather than brewed tea, so findings are preparation-specific.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "heading": "Prescription topical use",
+            "preparation": "A specific standardized topical ointment",
+            "evidence_level": "well_established",
+            "summary": "The FDA has approved one defined green-tea extract ointment as a prescription drug for external genital and perianal warts.",
+            "limitations": "Approval applies to that medicine and indication only, not to other green-tea products.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          }
+        ],
+        "mechanisms": [
+          {
+            "preparation": "Green-tea beverages and extracts",
+            "summary": "Catechins and caffeine are among the constituents investigated for metabolic effects.",
+            "qualification": "A plausible biological action does not establish meaningful weight loss or benefit from every green-tea product.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          }
+        ],
+        "special_populations": [
+          {
+            "population": "Pregnancy",
+            "guidance": "Green tea contributes caffeine; pregnancy-related caffeine exposure should be reviewed with a health professional.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "population": "Breastfeeding",
+            "guidance": "Caffeine passes into breast milk, and high maternal intake may contribute to infant fussiness or poor sleep.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Nadolol",
+            "evidence_level": "documented",
+            "statement": "High green-tea exposure can reduce blood levels and effectiveness of nadolol.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "interaction": "Atorvastatin",
+            "evidence_level": "documented",
+            "statement": "Green-tea extract can reduce atorvastatin blood levels.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          },
+          {
+            "interaction": "Raloxifene",
+            "evidence_level": "documented",
+            "statement": "A clinical study found reduced raloxifene exposure when taken with green tea.",
+            "source_ids": [
+              "nccih-green-tea"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-green-tea",
+            "nccih-green-tea"
+          ],
+          "botanical": [
+            "powo-green-tea"
+          ],
+          "preparations": [
+            "nccih-green-tea"
+          ],
+          "traditional_uses": [
+            "nccih-green-tea"
+          ],
+          "evidence": [
+            "nccih-green-tea"
+          ],
+          "mechanism": [
+            "nccih-green-tea"
+          ],
+          "safety": [
+            "nccih-green-tea"
+          ],
+          "distribution": [
+            "powo-green-tea",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ACsinensis.jpg",
@@ -6997,7 +7320,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -7482,6 +7805,119 @@
         }
       ],
       "evidence_notes": "EMA's conclusions for minor skin inflammation, minor wounds, and mild mouth or throat inflammation are based on traditional use and plausibility. Clinical evidence is insufficient for broad wound-healing, infection, or internal-treatment claims.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Flower infusion for skin",
+            "plant_part": "Dried, comminuted flowers",
+            "route": "topical",
+            "description": "EMA-reviewed preparations include infusions applied to the skin for minor inflammation and as an aid in healing minor wounds.",
+            "equivalence_warning": "This traditional-use assessment does not cover deep, infected, extensive, or otherwise serious wounds.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          },
+          {
+            "label": "Liquid or semi-solid skin preparation",
+            "plant_part": "Calendula flower extract",
+            "route": "topical",
+            "description": "Liquid extracts, ointments, and other semi-solid preparations may be applied locally when they match an authorized product specification.",
+            "equivalence_warning": "Cosmetics and multi-herb products are not automatically equivalent to single-herb medicines assessed by EMA.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          },
+          {
+            "label": "Infusion for mouth or throat",
+            "plant_part": "Dried calendula flowers",
+            "route": "oromucosal",
+            "description": "Traditional herbal medicines may use a flower infusion locally for minor inflammation of the mouth or throat.",
+            "equivalence_warning": "A mouth rinse or gargle is not evidence for swallowing calendula to treat internal disease.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Minor skin inflammation and wounds",
+            "preparation": "Local calendula flower preparations",
+            "evidence_level": "traditional_use",
+            "summary": "HMPC accepts traditional use for minor skin inflammation and as an aid in healing minor wounds.",
+            "limitations": "Clinical studies had design problems, so the conclusion rests on long-standing use and plausibility rather than firm clinical efficacy evidence.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          },
+          {
+            "heading": "Minor mouth or throat inflammation",
+            "preparation": "Local calendula flower infusion",
+            "evidence_level": "traditional_use",
+            "summary": "HMPC accepts local traditional use for minor inflammation of the mouth or throat.",
+            "limitations": "The assessment is limited to defined local flower preparations and does not support systemic treatment claims.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Children under 6 years",
+            "guidance": "EMA does not support calendula flower medicines for minor skin inflammation or wounds in this age group.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          },
+          {
+            "population": "Children under 12 years",
+            "guidance": "EMA does not support calendula mouth or throat preparations in this age group.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          },
+          {
+            "population": "People allergic to Asteraceae plants",
+            "guidance": "Calendula medicines must not be used by people hypersensitive to plants in the Asteraceae family.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Safety is not established for every medicinal preparation; use requires product-specific professional guidance.",
+            "source_ids": [
+              "ema-calendulae-flos"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-calendula",
+            "ema-calendulae-flos"
+          ],
+          "botanical": [
+            "powo-calendula"
+          ],
+          "preparations": [
+            "ema-calendulae-flos"
+          ],
+          "traditional_uses": [
+            "ema-calendulae-flos"
+          ],
+          "evidence": [
+            "ema-calendulae-flos"
+          ],
+          "safety": [
+            "ema-calendulae-flos"
+          ],
+          "distribution": [
+            "powo-calendula",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ARingelblume%20(Calendula%20officinalis)%20Bl%C3%BCte%20focus%20stack-20220619-RM-165610.jpg",
@@ -7541,7 +7977,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -7720,6 +8156,105 @@
         }
       ],
       "evidence_notes": "High-quality evidence is insufficient for firm conclusions. Trials for liver diseases are conflicting or too limited, NCCIH-funded studies did not show benefit for hepatitis C or nonalcoholic steatohepatitis, and evidence for blood sugar or milk production remains limited.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Whole or ground fruit",
+            "plant_part": "Fruits commonly called seeds",
+            "route": "oral",
+            "description": "Traditional products use the dried fruit whole or ground, including in teas or powders.",
+            "equivalence_warning": "Whole fruit and tea are not chemically or pharmacokinetically equivalent to a standardized silymarin extract.",
+            "source_ids": [
+              "nccih-milk-thistle"
+            ]
+          },
+          {
+            "label": "Silymarin extract",
+            "plant_part": "Fruit extract",
+            "route": "oral",
+            "description": "Modern supplements and most clinical trials use extracts characterized by silymarin, a mixture of compounds.",
+            "equivalence_warning": "Silymarin content and contamination vary among commercial products, so one extract cannot represent every supplement.",
+            "source_ids": [
+              "nccih-milk-thistle"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Liver conditions",
+            "preparation": "Oral silymarin or milk-thistle extracts",
+            "evidence_level": "uncertain",
+            "summary": "Clinical trials across several liver conditions have been conflicting or too limited for conclusions.",
+            "limitations": "Two NCCIH-funded trials found no benefit for hepatitis C or nonalcoholic steatohepatitis, and products differ substantially.",
+            "source_ids": [
+              "nccih-milk-thistle"
+            ]
+          },
+          {
+            "heading": "Blood-glucose outcomes",
+            "preparation": "Oral milk-thistle extracts",
+            "evidence_level": "limited",
+            "summary": "A small group of studies suggests possible blood-glucose effects in people with type 2 diabetes.",
+            "limitations": "Much of the research came from one geographic region, and broader applicability is uncertain.",
+            "source_ids": [
+              "nccih-milk-thistle"
+            ]
+          },
+          {
+            "heading": "Breast-milk production and other claims",
+            "preparation": "Varied oral products",
+            "evidence_level": "uncertain",
+            "summary": "Evidence does not establish an effect on breast-milk production or most other promoted conditions.",
+            "limitations": "There is not enough high-quality evidence for definite conclusions.",
+            "source_ids": [
+              "nccih-milk-thistle"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "People allergic to Asteraceae plants",
+            "guidance": "Allergic reactions are more likely in people sensitive to ragweed, chrysanthemum, marigold, daisy, or related plants.",
+            "source_ids": [
+              "nccih-milk-thistle"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Little is known about safety during pregnancy or breastfeeding.",
+            "source_ids": [
+              "nccih-milk-thistle"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-milk-thistle",
+            "nccih-milk-thistle"
+          ],
+          "botanical": [
+            "powo-milk-thistle"
+          ],
+          "preparations": [
+            "nccih-milk-thistle"
+          ],
+          "traditional_uses": [
+            "nccih-milk-thistle"
+          ],
+          "evidence": [
+            "nccih-milk-thistle"
+          ],
+          "safety": [
+            "nccih-milk-thistle"
+          ],
+          "distribution": [
+            "powo-milk-thistle",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AMilk%20thistle.jpg",
@@ -7779,7 +8314,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -7860,6 +8395,134 @@
         }
       ],
       "evidence_notes": "Ginkgo has been studied extensively, yet no conclusive evidence supports it for a health condition. Large trials did not show prevention or slowing of dementia, evidence for cognitive performance in healthy people is uncertain, and results for other promoted uses remain inconsistent.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Processed leaf extract",
+            "plant_part": "Leaves",
+            "route": "oral",
+            "description": "Modern research and supplements generally use processed ginkgo leaf extracts, often standardized to selected constituents.",
+            "equivalence_warning": "One standardized extract is not equivalent to every leaf powder, tincture, or crude plant product.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          },
+          {
+            "label": "Crude or unprocessed plant material",
+            "plant_part": "Leaves or other crude material",
+            "route": "oral",
+            "description": "Crude ginkgo material has a different constituent and safety profile from processed leaf extracts.",
+            "equivalence_warning": "Safety findings from a processed extract must not be applied to raw or unprocessed material.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          },
+          {
+            "label": "Ginkgo seeds",
+            "plant_part": "Fresh or roasted seeds",
+            "route": "oral",
+            "description": "Seeds are distinct from leaf extracts; fresh seeds are toxic and serious effects have also followed roasted seeds.",
+            "equivalence_warning": "Seed use is not equivalent to processed leaf extracts evaluated in most modern studies.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Prevention of dementia",
+            "preparation": "Oral ginkgo leaf extract",
+            "evidence_level": "well_established",
+            "summary": "Large trials found that ginkgo did not prevent dementia or slow cognitive decline.",
+            "limitations": "A negative prevention finding does not answer every question about symptom management, but it rules out the promoted prevention claim.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          },
+          {
+            "heading": "Dementia symptoms",
+            "preparation": "Oral ginkgo leaf extract",
+            "evidence_level": "uncertain",
+            "summary": "Some analyses suggest modest symptom effects at relatively high amounts, but findings are inconsistent.",
+            "limitations": "Differences in extract, trial quality, and population prevent a firm conclusion.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          },
+          {
+            "heading": "Cognition in healthy people",
+            "preparation": "Oral ginkgo supplements",
+            "evidence_level": "uncertain",
+            "summary": "It is unclear whether ginkgo improves cognitive performance in healthy people.",
+            "limitations": "Much of the research is low quality and cannot support a general brain-health claim.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          },
+          {
+            "heading": "Other promoted conditions",
+            "preparation": "Oral ginkgo leaf extract",
+            "evidence_level": "uncertain",
+            "summary": "Small research bodies address anxiety and vertigo, while studies do not support several cardiovascular, tinnitus, or multiple-sclerosis claims.",
+            "limitations": "No conclusive evidence establishes ginkgo as effective for a health condition.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Pregnancy",
+            "guidance": "Ginkgo may be unsafe because it might contribute to early labor or increased bleeding near delivery.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          },
+          {
+            "population": "Breastfeeding",
+            "guidance": "Safety during breastfeeding is not established.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Warfarin and other anticoagulants",
+            "evidence_level": "documented concern",
+            "statement": "Ginkgo may increase bleeding risk in people taking anticoagulant medicines such as warfarin.",
+            "source_ids": [
+              "nccih-ginkgo"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-ginkgo",
+            "nccih-ginkgo"
+          ],
+          "botanical": [
+            "powo-ginkgo"
+          ],
+          "preparations": [
+            "nccih-ginkgo"
+          ],
+          "traditional_uses": [
+            "nccih-ginkgo"
+          ],
+          "evidence": [
+            "nccih-ginkgo"
+          ],
+          "safety": [
+            "nccih-ginkgo"
+          ],
+          "distribution": [
+            "powo-ginkgo",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AGINKGOBAUM-2.jpg",
@@ -7919,7 +8582,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -8039,6 +8702,121 @@
         }
       ],
       "evidence_notes": "Evidence depends on preparation. EMA recognizes well-established use for certain extracts in mild nervous tension and sleep disorders, while other preparations rely on traditional use. Broader research on insomnia is inconsistent and does not support treatment of persistent sleep or anxiety disorders without assessment.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Valerian-root herbal tea",
+            "plant_part": "Dried roots, rhizomes, and stolons",
+            "route": "oral",
+            "description": "Comminuted dried underground parts may be prepared as an oral herbal tea in traditional-use products.",
+            "equivalence_warning": "Tea is not equivalent to an ethanolic dry extract used in a different evidence category.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          },
+          {
+            "label": "Dry ethanolic extract",
+            "plant_part": "Valerian root",
+            "route": "oral",
+            "description": "Specific dry ethanolic extracts are used in tablets or capsules and have a distinct EMA assessment.",
+            "equivalence_warning": "Evidence for a specified extract cannot be transferred to every capsule, tincture, or combination sleep product.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          },
+          {
+            "label": "Liquid extract or tincture",
+            "plant_part": "Valerian root",
+            "route": "oral",
+            "description": "Traditional medicines may contain liquid root extracts or drops prepared with a named solvent.",
+            "equivalence_warning": "Different extraction solvents and ratios yield non-equivalent preparations.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Mild nervous tension and sleep disorders",
+            "preparation": "Specific oral valerian-root extracts",
+            "evidence_level": "well_established",
+            "summary": "EMA recognizes well-established use for certain specified extracts for mild nervous tension and sleep disorders.",
+            "limitations": "The conclusion applies only to defined preparations and does not establish treatment for chronic insomnia or anxiety disorders.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          },
+          {
+            "heading": "Traditional valerian-root preparations",
+            "preparation": "Tea and other named oral preparations",
+            "evidence_level": "traditional_use",
+            "summary": "Other valerian-root preparations are accepted on the basis of long-standing traditional use.",
+            "limitations": "Traditional-use registration reflects plausibility and use history, not the same clinical evidence standard as a well-established preparation.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Children under 12 years",
+            "guidance": "Valerian-root medicines are not recommended because adequate safety information is unavailable.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Use is not recommended because adequate safety data are unavailable.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          },
+          {
+            "population": "Drivers and machine operators",
+            "guidance": "Valerian may impair alertness; people affected should not drive or operate machinery.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Alcohol and other sedating products",
+            "evidence_level": "precautionary",
+            "statement": "Because valerian can impair alertness, combining it with alcohol or other sedating products warrants professional review.",
+            "source_ids": [
+              "ema-valerianae-radix"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-valerian",
+            "ema-valerianae-radix"
+          ],
+          "botanical": [
+            "powo-valerian"
+          ],
+          "preparations": [
+            "ema-valerianae-radix"
+          ],
+          "traditional_uses": [
+            "ema-valerianae-radix"
+          ],
+          "evidence": [
+            "ema-valerianae-radix"
+          ],
+          "safety": [
+            "ema-valerianae-radix"
+          ],
+          "distribution": [
+            "powo-valerian",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3AValeriana%20officinalis%20-%20Niitv%C3%A4lja.jpg",
@@ -8098,7 +8876,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -8179,6 +8957,121 @@
         }
       ],
       "evidence_notes": "EMA's mild-stress and sleep-aid conclusions are based on longstanding traditional use. Clinical studies are few and inconclusive, so the monograph does not establish treatment of anxiety disorders, chronic insomnia, or other psychiatric conditions.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Passionflower herbal tea",
+            "plant_part": "Dried aerial parts",
+            "route": "oral",
+            "description": "EMA-reviewed traditional preparations include comminuted dried aerial parts prepared as herbal tea.",
+            "equivalence_warning": "Tea from Passiflora incarnata aerial parts is not equivalent to ornamental passionflower species or passion-fruit products.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          },
+          {
+            "label": "Dry extract",
+            "plant_part": "Dried aerial parts",
+            "route": "oral",
+            "description": "Dry extracts are produced with a specified solvent and supplied in solid oral forms.",
+            "equivalence_warning": "A dry extract cannot inherit evidence from a differently prepared liquid extract or multi-herb combination.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          },
+          {
+            "label": "Liquid extract",
+            "plant_part": "Dried aerial parts",
+            "route": "oral",
+            "description": "Liquid extracts and drops are among the oral traditional medicinal forms assessed by EMA.",
+            "equivalence_warning": "Combination calming or sleep products are outside the single-herb assessment unless evaluated separately.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Mild mental stress",
+            "preparation": "Named oral passionflower-herb preparations",
+            "evidence_level": "traditional_use",
+            "summary": "HMPC accepts traditional use for relief of mild symptoms of mental stress.",
+            "limitations": "The conclusion is based on long-standing use, not proof that passionflower treats an anxiety disorder.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          },
+          {
+            "heading": "Aid to sleep",
+            "preparation": "Named oral passionflower-herb preparations",
+            "evidence_level": "traditional_use",
+            "summary": "HMPC accepts traditional use as an aid to sleep.",
+            "limitations": "Clinical evidence is limited and does not establish treatment of chronic insomnia; combination products cannot identify the effect of passionflower alone.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Children under 12 years",
+            "guidance": "EMA does not recommend passionflower medicines because sufficient safety data are unavailable.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Use is not recommended because safety data are insufficient.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          },
+          {
+            "population": "Drivers and machine operators",
+            "guidance": "Sedative effects may impair driving or operation of machinery.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Sedating medicines, alcohol, or anesthesia",
+            "evidence_level": "theoretical",
+            "statement": "Additive sedation is a precaution; disclose passionflower use before surgery and when using other sedating products.",
+            "source_ids": [
+              "ema-passiflorae-herba"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-passionflower",
+            "ema-passiflorae-herba"
+          ],
+          "botanical": [
+            "powo-passionflower"
+          ],
+          "preparations": [
+            "ema-passiflorae-herba"
+          ],
+          "traditional_uses": [
+            "ema-passiflorae-herba"
+          ],
+          "evidence": [
+            "ema-passiflorae-herba"
+          ],
+          "safety": [
+            "ema-passiflorae-herba"
+          ],
+          "distribution": [
+            "powo-passionflower",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3APassiflora%20incarnata%20flower%20and%20bud.jpg",
@@ -8238,7 +9131,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -8470,6 +9363,143 @@
         }
       ],
       "evidence_notes": "Many studies examine prevention of recurrent urinary-tract infections, especially in women, but some are low quality and findings remain inconsistent. Some products may lower recurrence risk in selected groups; evidence for other conditions is sparse, and cranberry does not treat an existing UTI.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Cranberry food or juice",
+            "plant_part": "Fruit",
+            "route": "oral food or beverage",
+            "description": "Cranberry is consumed as whole fruit or juice; juice products differ in cranberry concentration and other ingredients.",
+            "equivalence_warning": "A food or juice beverage is not equivalent to a standardized capsule or extract.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          },
+          {
+            "label": "Cranberry powder or capsule",
+            "plant_part": "Processed fruit",
+            "route": "oral",
+            "description": "Powders and capsules concentrate processed fruit material and may vary in proanthocyanidin content.",
+            "equivalence_warning": "Processing can reduce or alter proanthocyanidins, so one supplement cannot stand in for every cranberry product.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          },
+          {
+            "label": "Standardized cranberry extract",
+            "plant_part": "Fruit extract",
+            "route": "oral",
+            "description": "Some research uses extracts characterized by selected fruit constituents for prevention studies.",
+            "equivalence_warning": "Preventive research does not make an extract a treatment for an active urinary-tract infection.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Recurrent urinary-tract infection prevention",
+            "preparation": "Varied oral cranberry products",
+            "evidence_level": "limited",
+            "summary": "Cranberry products may reduce symptomatic recurrent UTIs in some women with prior infections.",
+            "limitations": "Findings are inconsistent, some studies are low quality, and product composition varies.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          },
+          {
+            "heading": "Existing urinary-tract infection",
+            "preparation": "Any cranberry food or supplement",
+            "evidence_level": "well_established",
+            "summary": "Cranberry is not recommended as treatment for an existing UTI.",
+            "limitations": "Symptoms require diagnosis and effective care; preventive findings cannot be converted into a treatment claim.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          },
+          {
+            "heading": "Other populations and conditions",
+            "preparation": "Varied cranberry products",
+            "evidence_level": "uncertain",
+            "summary": "Studies in pregnancy, long-term care, surgical populations, and other higher-risk groups have been inconsistent or negative.",
+            "limitations": "Evidence in one population cannot be generalized to another, and research on non-urinary uses is sparse.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          }
+        ],
+        "mechanisms": [
+          {
+            "preparation": "Cranberry fruit products containing proanthocyanidins",
+            "summary": "Proanthocyanidins are thought to reduce bacterial adherence to the bladder wall, potentially affecting the start of some UTIs.",
+            "qualification": "This proposed preventive mechanism does not treat an established infection, and processing changes constituent exposure.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          }
+        ],
+        "special_populations": [
+          {
+            "population": "People with symptoms of a UTI",
+            "guidance": "Seek diagnosis and treatment rather than substituting cranberry for proven care.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          },
+          {
+            "population": "Young children",
+            "guidance": "Very large oral amounts may cause stomach upset or diarrhea, with particular concern in young children.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Food-level use appears better studied than larger medicinal amounts; evidence for higher exposure is not conclusive.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Warfarin",
+            "evidence_level": "conflicting",
+            "statement": "Evidence of an interaction is conflicting; people taking warfarin should discuss cranberry products with a health professional.",
+            "source_ids": [
+              "nccih-cranberry"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-cranberry",
+            "nccih-cranberry"
+          ],
+          "botanical": [
+            "powo-cranberry"
+          ],
+          "preparations": [
+            "nccih-cranberry"
+          ],
+          "traditional_uses": [
+            "nccih-cranberry"
+          ],
+          "evidence": [
+            "nccih-cranberry"
+          ],
+          "mechanism": [
+            "nccih-cranberry"
+          ],
+          "safety": [
+            "nccih-cranberry"
+          ],
+          "distribution": [
+            "powo-cranberry",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ACranberry%20bog.jpg",
@@ -8529,7 +9559,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },
@@ -8600,6 +9630,115 @@
         }
       ],
       "evidence_notes": "Many studies have examined urinary symptoms associated with prostate enlargement. Reviews and NIH-funded trials conclude that saw palmetto alone provides little or no benefit, including at higher amounts. Evidence for chronic pelvic pain, hair loss, and other uses is insufficient.",
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Dried or powdered fruit",
+            "plant_part": "Fruits commonly called berries",
+            "route": "oral",
+            "description": "Saw-palmetto fruit may be dried or powdered for oral supplement products.",
+            "equivalence_warning": "Whole or powdered fruit is not equivalent to a solvent extract used in a clinical trial.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          },
+          {
+            "label": "Lipid or solvent fruit extract",
+            "plant_part": "Fruit extract",
+            "route": "oral",
+            "description": "Most modern studies use fruit extracts prepared and standardized by a named process.",
+            "equivalence_warning": "Comparative review has not shown that hexane extraction changes the conclusion for urinary symptoms, and extracts remain product-specific.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          },
+          {
+            "label": "Topical saw-palmetto product",
+            "plant_part": "Fruit-derived preparation",
+            "route": "topical",
+            "description": "A few small studies have examined topical products for male-pattern hair loss.",
+            "equivalence_warning": "Topical findings cannot be transferred to oral products or prostate-related claims.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Urinary symptoms associated with prostate enlargement",
+            "preparation": "Oral saw-palmetto fruit extracts",
+            "evidence_level": "well_established",
+            "summary": "A 2023 review and NIH-funded trials found little or no benefit from saw palmetto alone for these symptoms.",
+            "limitations": "Combination products cannot establish an effect for saw palmetto alone, and urinary symptoms still require clinical assessment.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          },
+          {
+            "heading": "Chronic prostatitis or pelvic pain",
+            "preparation": "Oral saw-palmetto products",
+            "evidence_level": "limited",
+            "summary": "A review of a small evidence base did not find a significant benefit.",
+            "limitations": "Few studies and product differences limit certainty.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          },
+          {
+            "heading": "Male-pattern hair loss",
+            "preparation": "Oral or topical saw-palmetto products",
+            "evidence_level": "uncertain",
+            "summary": "A few small studies have examined hair-loss outcomes.",
+            "limitations": "Evidence is too limited to support a conclusion, and oral and topical products are not equivalent.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "People with urinary symptoms",
+            "guidance": "Urinary symptoms can have multiple causes and require medical assessment; saw palmetto is not a substitute for diagnosis.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Saw palmetto may be unsafe during pregnancy or breastfeeding; most safety research has involved men.",
+            "source_ids": [
+              "nccih-saw-palmetto"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-saw-palmetto",
+            "nccih-saw-palmetto"
+          ],
+          "botanical": [
+            "powo-saw-palmetto"
+          ],
+          "preparations": [
+            "nccih-saw-palmetto"
+          ],
+          "traditional_uses": [
+            "nccih-saw-palmetto"
+          ],
+          "evidence": [
+            "nccih-saw-palmetto"
+          ],
+          "safety": [
+            "nccih-saw-palmetto"
+          ],
+          "distribution": [
+            "powo-saw-palmetto",
+            "gbif-wcvp-dataset"
+          ]
+        }
+      },
       "media": {
         "kind": "licensed_photograph",
         "source_page": "https://commons.wikimedia.org/wiki/File%3ASerenoa%20repens%20USDA1.jpg",
@@ -8659,7 +9798,7 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
       "hold_reason": null
     },

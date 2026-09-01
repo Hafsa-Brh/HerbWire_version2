@@ -337,3 +337,100 @@ def test_recovery_batch_two_is_rich_versioned_and_preparation_specific() -> None
         interaction.evidence_level
         for interaction in profiles["echinacea"].article_details.interactions
     } == {"conflicting", "theoretical"}
+
+
+def test_recovery_batch_three_is_rich_versioned_and_preparation_specific() -> None:
+    manifest = load_corpus()
+    expected = {
+        "ashwagandha",
+        "green-tea",
+        "calendula",
+        "milk-thistle",
+        "ginkgo",
+        "valerian",
+        "passionflower",
+        "cranberry",
+        "saw-palmetto",
+    }
+    profiles = {
+        profile.slug: profile
+        for profile in manifest.profiles
+        if profile.slug in expected
+    }
+
+    assert set(profiles) == expected
+    for profile in profiles.values():
+        details = profile.article_details
+        linked = {reference.source_id for reference in profile.source_refs}
+        media_ids = {
+            reference.source_id
+            for reference in profile.source_refs
+            if reference.support_role == "licensed_media"
+        }
+        assert profile.content_version == 4
+        assert details.preparation_forms
+        assert details.evidence_findings
+        assert details.special_populations
+        assert {
+            "overview",
+            "botanical",
+            "preparations",
+            "evidence",
+            "safety",
+            "distribution",
+        } <= set(details.section_sources)
+        assert all(
+            set(source_ids) <= linked for source_ids in details.section_sources.values()
+        )
+        assert all(
+            not (set(source_ids) & media_ids)
+            for source_ids in details.section_sources.values()
+        )
+        assert all(item.equivalence_warning for item in details.preparation_forms)
+        assert all(item.limitations for item in details.evidence_findings)
+        claim_items = [
+            *details.preparation_forms,
+            *details.evidence_findings,
+            *details.mechanisms,
+            *details.special_populations,
+            *details.interactions,
+        ]
+        assert all(
+            item.source_ids and set(item.source_ids) <= linked for item in claim_items
+        )
+
+    assert {"Root", "Leaf"} <= {
+        form.plant_part
+        for form in profiles["ashwagandha"].article_details.preparation_forms
+    }
+    assert {"oral beverage", "oral", "topical"} == {
+        form.route for form in profiles["green-tea"].article_details.preparation_forms
+    }
+    assert {"Children under 6 years", "Children under 12 years"} <= {
+        note.population
+        for note in profiles["calendula"].article_details.special_populations
+    }
+    assert any(
+        "silymarin" in form.label.lower()
+        for form in profiles["milk-thistle"].article_details.preparation_forms
+    )
+    assert any(
+        "seeds" in form.label.lower()
+        for form in profiles["ginkgo"].article_details.preparation_forms
+    )
+    assert all(
+        "root" in form.plant_part.lower()
+        for form in profiles["valerian"].article_details.preparation_forms
+    )
+    assert all(
+        "aerial parts" in form.plant_part.lower()
+        for form in profiles["passionflower"].article_details.preparation_forms
+    )
+    assert any(
+        "not recommended as treatment" in finding.summary.lower()
+        for finding in profiles["cranberry"].article_details.evidence_findings
+    )
+    assert any(
+        form.route == "topical"
+        for form in profiles["saw-palmetto"].article_details.preparation_forms
+    )
