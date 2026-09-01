@@ -410,6 +410,109 @@ def test_pending_revision_workflow_preserves_public_content_until_promotion(
         assert session.scalar(select(func.count(PlantProfileRevision.id))) == 2
 
 
+def test_batch_two_scoped_import_creates_only_pending_rich_revisions(client) -> None:
+    batch_two = {
+        "aloe-vera",
+        "rosemary",
+        "thyme",
+        "sage",
+        "fenugreek",
+        "cinnamon",
+        "clove",
+        "licorice",
+        "echinacea",
+    }
+    batch_one = {
+        "german-chamomile",
+        "ginger",
+        "turmeric",
+        "garlic",
+        "fennel",
+        "asian-ginseng",
+        "black-cohosh",
+        "boswellia",
+        "devils-claw",
+    }
+
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        canonicals = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug.in_(batch_two))
+            )
+        )
+        assert {profile.slug for profile in canonicals} == batch_two
+        for profile in canonicals:
+            profile.version = 3
+            profile.status = "published"
+            profile.article_details = {}
+            profile.approved_at = datetime.now(timezone.utc)
+            profile.published_at = datetime.now(timezone.utc)
+        session.commit()
+
+    with get_session_factory()() as session:
+        first = seed_curated_profiles(session, slugs=batch_two)
+        second = seed_curated_profiles(session, slugs=batch_two)
+        revisions = list(
+            session.scalars(
+                select(PlantProfileRevision)
+                .join(PlantProfile)
+                .where(PlantProfile.slug.in_(batch_two))
+            )
+        )
+        canonicals = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug.in_(batch_two))
+            )
+        )
+        batch_one_revisions = session.scalar(
+            select(func.count(PlantProfileRevision.id))
+            .join(PlantProfile)
+            .where(PlantProfile.slug.in_(batch_one))
+        )
+
+    assert first["revisions_created"] == 9
+    assert second["revisions_created"] == 0
+    assert second["revisions_unchanged"] == 9
+    assert len(revisions) == 9
+    assert {revision.version for revision in revisions} == {4}
+    assert {revision.status for revision in revisions} == {"needs_review"}
+    assert all(
+        revision.content_payload["profile"]["article_details"]["preparation_forms"]
+        for revision in revisions
+    )
+    assert all(
+        revision.content_payload["profile"]["article_details"]["evidence_findings"]
+        for revision in revisions
+    )
+    assert all(profile.version == 3 for profile in canonicals)
+    assert all(profile.status == "published" for profile in canonicals)
+    assert all(profile.article_details == {} for profile in canonicals)
+    assert batch_one_revisions == 0
+
+    public = client.get("/api/v1/plants/aloe-vera")
+    assert public.status_code == 200
+    assert public.json()["version"] == 3
+    assert public.json()["article_details"] == {}
+
+    login_client(client)
+    queue = client.get("/api/v1/admin/revisions")
+    assert queue.status_code == 200
+    batch_two_items = [item for item in queue.json() if item["slug"] in batch_two]
+    assert {item["slug"] for item in batch_two_items} == batch_two
+    assert all(item["status"] == "needs_review" for item in batch_two_items)
+    assert all(item["current_version"] == 3 for item in batch_two_items)
+    assert all(item["proposed_version"] == 4 for item in batch_two_items)
+    assert all(
+        item["proposed_content"]["article_details"]["preparation_forms"]
+        for item in batch_two_items
+    )
+    assert all(
+        item["proposed_content"]["article_details"]["evidence_findings"]
+        for item in batch_two_items
+    )
+
+
 def test_legacy_approved_revision_without_article_details_promotes(client) -> None:
     with get_session_factory()() as session:
         seed_curated_profiles(session)

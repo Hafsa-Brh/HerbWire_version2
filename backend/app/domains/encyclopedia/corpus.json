@@ -3400,9 +3400,126 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Inner-leaf gel",
+            "plant_part": "Clear gel from the inner leaf",
+            "route": "topical",
+            "description": "Topical aloe products generally use the clear inner-leaf gel; human research has examined this material for burns and several skin or mouth conditions.",
+            "equivalence_warning": "Inner-leaf gel is not equivalent to aloe latex or non-decolorized whole-leaf extract.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          },
+          {
+            "label": "Oral aloe gel",
+            "plant_part": "Inner-leaf gel",
+            "route": "oral",
+            "description": "A small body of research concerns specifically identified oral gel products, including short-term safety studies.",
+            "equivalence_warning": "Findings for oral gel do not establish the safety of latex or whole-leaf preparations.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          },
+          {
+            "label": "Aloe latex and whole-leaf products",
+            "plant_part": "Yellow latex from the outer leaf layer or crushed whole leaf",
+            "route": "oral",
+            "description": "Latex and whole-leaf extracts contain constituents not present at the same exposure in purified inner gel and carry distinct safety concerns.",
+            "equivalence_warning": "These materials must not be treated as interchangeable with topical or purified oral gel.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Topical gel for burns",
+            "preparation": "Topical inner-leaf gel",
+            "evidence_level": "preliminary",
+            "summary": "Clinical research suggests that topical gel may speed burn healing and reduce burn-related pain.",
+            "limitations": "Results are preparation-specific and do not establish benefit for every aloe product or every wound.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          },
+          {
+            "heading": "Topical gel for other conditions",
+            "preparation": "Topical gel used alone or alongside other care",
+            "evidence_level": "limited",
+            "summary": "Small studies report possible benefit for acne and several skin or oral conditions.",
+            "limitations": "The evidence base is small, and some studies combined aloe with other treatment.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          },
+          {
+            "heading": "Oral aloe products",
+            "preparation": "Specific oral gel or leaf-extract products",
+            "evidence_level": "uncertain",
+            "summary": "Limited research has examined blood sugar, body weight, and other promoted uses.",
+            "limitations": "Reliable information is insufficient for many conditions, and results cannot be transferred between gel, latex, and whole-leaf extracts.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Aloe gel, latex, and whole-leaf extract taken by mouth may be unsafe; seek professional advice rather than assuming topical and oral products are equivalent.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          },
+          {
+            "population": "People using cardiac glycosides",
+            "guidance": "Overuse of aloe latex may increase adverse-effect risk from medicines such as digoxin.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Cardiac glycosides such as digoxin",
+            "evidence_level": "safety concern",
+            "statement": "Aloe latex overuse may increase adverse-effect risk; this warning does not describe topical gel use.",
+            "source_ids": [
+              "nccih-aloe-vera"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-aloe-vera",
+            "nccih-aloe-vera"
+          ],
+          "botanical": [
+            "powo-aloe-vera"
+          ],
+          "preparations": [
+            "nccih-aloe-vera"
+          ],
+          "traditional_uses": [
+            "nccih-aloe-vera"
+          ],
+          "evidence": [
+            "nccih-aloe-vera"
+          ],
+          "safety": [
+            "nccih-aloe-vera"
+          ],
+          "distribution": [
+            "powo-aloe-vera"
+          ]
+        }
+      }
     },
     {
       "batch": "A",
@@ -3872,9 +3989,124 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Rosemary leaf tea",
+            "plant_part": "Whole or cut dried leaves",
+            "route": "oral",
+            "description": "The EMA monograph includes rosemary leaf prepared as herbal tea for traditional medicinal use.",
+            "equivalence_warning": "Leaf tea is not equivalent to rosemary essential oil or a culinary serving.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          },
+          {
+            "label": "Powdered leaf and leaf extracts",
+            "plant_part": "Dried rosemary leaves",
+            "route": "oral",
+            "description": "Defined powdered-leaf and extract preparations are assessed within the rosemary-leaf monograph.",
+            "equivalence_warning": "A finding for a specified extract cannot be generalized to every supplement or essential-oil product.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          },
+          {
+            "label": "Bath preparations",
+            "plant_part": "Dried leaf preparation",
+            "route": "topical",
+            "description": "External rosemary-leaf preparations are used as bath additives in the traditional-use context.",
+            "equivalence_warning": "External bath use does not establish the effects or safety of swallowing rosemary oil.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Mild digestive complaints",
+            "preparation": "Oral rosemary-leaf preparations",
+            "evidence_level": "traditional_use",
+            "summary": "The EMA monograph recognizes traditional use for relief of mild dyspeptic complaints.",
+            "limitations": "The conclusion rests on longstanding use; clinical evidence is insufficient for a well-established efficacy claim.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          },
+          {
+            "heading": "Minor muscular or joint pain",
+            "preparation": "External rosemary-leaf bath preparations",
+            "evidence_level": "traditional_use",
+            "summary": "The monograph recognizes traditional external use for relief of minor muscular and articular pain.",
+            "limitations": "This narrow traditional-use conclusion does not establish treatment of inflammatory or structural disease.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          },
+          {
+            "heading": "Minor peripheral circulatory complaints",
+            "preparation": "External rosemary-leaf bath preparations",
+            "evidence_level": "traditional_use",
+            "summary": "Traditional external use is documented for minor peripheral circulatory complaints.",
+            "limitations": "Long use supports plausibility, but controlled clinical evidence remains inadequate.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Children under 12",
+            "guidance": "Rosemary-leaf medicines are not recommended because adequate use information is unavailable for this age group.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Use is not recommended because safety has not been established.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          },
+          {
+            "population": "People with biliary or liver conditions",
+            "guidance": "People with bile-duct obstruction, gallbladder inflammation, gallstones, or liver disease should seek professional advice and follow product contraindications.",
+            "source_ids": [
+              "ema-rosmarini-folium"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-rosemary",
+            "ema-rosmarini-folium"
+          ],
+          "botanical": [
+            "powo-rosemary"
+          ],
+          "preparations": [
+            "ema-rosmarini-folium"
+          ],
+          "traditional_uses": [
+            "ema-rosmarini-folium"
+          ],
+          "evidence": [
+            "ema-rosmarini-folium"
+          ],
+          "safety": [
+            "ema-rosmarini-folium"
+          ],
+          "distribution": [
+            "powo-rosemary"
+          ]
+        }
+      }
     },
     {
       "batch": "A",
@@ -4035,9 +4267,107 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Thyme herbal tea",
+            "plant_part": "Dried leaves and flowers",
+            "route": "oral",
+            "description": "The EMA monograph includes dried thyme herb prepared as a tea taken by mouth.",
+            "equivalence_warning": "Thyme-herb tea is not equivalent to concentrated thyme essential oil.",
+            "source_ids": [
+              "ema-thymi-herba"
+            ]
+          },
+          {
+            "label": "Expressed juice",
+            "plant_part": "Fresh flowering aerial parts",
+            "route": "oral",
+            "description": "Expressed thyme-herb juice is among the defined single-herb preparations assessed by EMA.",
+            "equivalence_warning": "Combination cough products require separate evaluation.",
+            "source_ids": [
+              "ema-thymi-herba"
+            ]
+          },
+          {
+            "label": "Dry, liquid, or soft extracts",
+            "plant_part": "Thyme herb: leaves and flowers",
+            "route": "oral",
+            "description": "Specified oral extract preparations are included when their manufacturing definition matches the monograph.",
+            "equivalence_warning": "Results and safety cannot be transferred automatically between extracts or to thyme oil.",
+            "source_ids": [
+              "ema-thymi-herba"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Productive cough associated with a cold",
+            "preparation": "Defined oral thyme-herb preparations",
+            "evidence_level": "traditional_use",
+            "summary": "EMA recognizes traditional use as an expectorant for productive cough associated with a cold.",
+            "limitations": "Small studies and inadequate preparation descriptions did not establish robust clinical efficacy; the conclusion is based on longstanding use.",
+            "source_ids": [
+              "ema-thymi-herba"
+            ]
+          },
+          {
+            "heading": "Other promoted uses",
+            "preparation": "Thyme herb or combination products",
+            "evidence_level": "uncertain",
+            "summary": "The single-herb monograph does not establish broader respiratory, digestive, or antimicrobial treatment claims.",
+            "limitations": "Combination products and concentrated essential oil are outside this thyme-herb assessment.",
+            "source_ids": [
+              "ema-thymi-herba"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Children and adolescents",
+            "guidance": "Age suitability depends on the authorized preparation and product information; persistent or worsening cough requires assessment rather than prolonged self-treatment.",
+            "source_ids": [
+              "ema-thymi-herba"
+            ]
+          },
+          {
+            "population": "People allergic to Lamiaceae plants",
+            "guidance": "Thyme medicines should not be used by people with known allergy to thyme or related mint-family plants.",
+            "source_ids": [
+              "ema-thymi-herba"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-thyme",
+            "ema-thymi-herba"
+          ],
+          "botanical": [
+            "powo-thyme"
+          ],
+          "preparations": [
+            "ema-thymi-herba"
+          ],
+          "traditional_uses": [
+            "ema-thymi-herba"
+          ],
+          "evidence": [
+            "ema-thymi-herba"
+          ],
+          "safety": [
+            "ema-thymi-herba"
+          ],
+          "distribution": [
+            "powo-thyme"
+          ]
+        }
+      }
     },
     {
       "batch": "A",
@@ -4213,9 +4543,124 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Sage leaf tea and oral extracts",
+            "plant_part": "Dried sage leaves",
+            "route": "oral",
+            "description": "Defined leaf infusions, tinctures, and extracts are used in the EMA traditional-use context for mild digestive complaints or excessive sweating.",
+            "equivalence_warning": "Medicinal leaf preparations are not equivalent to culinary exposure or swallowed sage essential oil.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          },
+          {
+            "label": "Mouth and throat rinse",
+            "plant_part": "Dried leaf infusion or extract",
+            "route": "oromucosal",
+            "description": "Sage-leaf preparations may be applied locally as a rinse for minor mouth or throat inflammation in the traditional-use context.",
+            "equivalence_warning": "A local rinse does not establish systemic efficacy.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          },
+          {
+            "label": "Topical leaf preparation",
+            "plant_part": "Dried leaf or leaf extract",
+            "route": "topical",
+            "description": "Defined sage-leaf preparations may be applied to minor skin inflammation under the monograph's traditional-use conditions.",
+            "equivalence_warning": "Topical leaf preparations are not interchangeable with concentrated sage oil.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Mild digestive complaints",
+            "preparation": "Oral sage-leaf preparations",
+            "evidence_level": "traditional_use",
+            "summary": "EMA documents traditional use for mild dyspeptic complaints such as heartburn or bloating.",
+            "limitations": "The conclusion is based on longstanding use rather than sufficient clinical trials.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          },
+          {
+            "heading": "Excessive sweating",
+            "preparation": "Specified oral sage-leaf preparations",
+            "evidence_level": "traditional_use",
+            "summary": "Traditional use is recognized for relief of excessive sweating.",
+            "limitations": "This does not establish a cause-specific treatment or broad clinical efficacy.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          },
+          {
+            "heading": "Local mouth, throat, and skin use",
+            "preparation": "Oromucosal rinse or topical leaf preparation",
+            "evidence_level": "traditional_use",
+            "summary": "EMA documents narrow traditional uses for minor mouth or throat inflammation and minor skin inflammation.",
+            "limitations": "These conclusions concern defined local leaf preparations and do not apply to concentrated essential oil.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Medicinal use is not recommended because adequate safety has not been established.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          },
+          {
+            "population": "Children and adolescents",
+            "guidance": "Use should follow the age limits and directions of an authorized product; do not infer safety from culinary use.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          },
+          {
+            "population": "People with seizure disorders",
+            "guidance": "Concentrated thujone-containing exposures require particular caution and are not equivalent to the assessed leaf preparations.",
+            "source_ids": [
+              "ema-salviae-officinalis-folium"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-sage",
+            "ema-salviae-officinalis-folium"
+          ],
+          "botanical": [
+            "powo-sage"
+          ],
+          "preparations": [
+            "ema-salviae-officinalis-folium"
+          ],
+          "traditional_uses": [
+            "ema-salviae-officinalis-folium"
+          ],
+          "evidence": [
+            "ema-salviae-officinalis-folium"
+          ],
+          "safety": [
+            "ema-salviae-officinalis-folium"
+          ],
+          "distribution": [
+            "powo-sage"
+          ]
+        }
+      }
     },
     {
       "batch": "B",
@@ -4718,9 +5163,131 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Culinary seed and leaves",
+            "plant_part": "Seeds or leaves",
+            "route": "oral food use",
+            "description": "Fenugreek seeds and leaves are eaten as foods, and seeds are used as a spice and flavoring.",
+            "equivalence_warning": "Safety in customary food amounts does not establish safety for concentrated medicinal or supplement amounts.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          },
+          {
+            "label": "Seed tea, powder, or extract",
+            "plant_part": "Fenugreek seeds",
+            "route": "oral",
+            "description": "Modern products and studies use varied seed teas, powders, and extracts.",
+            "equivalence_warning": "Results from one seed preparation cannot be transferred reliably to another or to ordinary food exposure.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          },
+          {
+            "label": "Lactation-promoted products",
+            "plant_part": "Fenugreek seed preparation",
+            "route": "oral",
+            "description": "Some products are promoted to increase milk supply, but studies have produced mixed results.",
+            "equivalence_warning": "Promotion for lactation is not proof of benefit or safety during breastfeeding.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Blood sugar in type 2 diabetes",
+            "preparation": "Varied oral seed preparations",
+            "evidence_level": "limited",
+            "summary": "Research suggests possible blood-sugar reduction.",
+            "limitations": "Many studies were not high quality, and preparation differences limit interpretation.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          },
+          {
+            "heading": "Menstrual cramps",
+            "preparation": "Oral fenugreek preparations",
+            "evidence_level": "uncertain",
+            "summary": "A small number of studies have examined menstrual pain.",
+            "limitations": "Evidence quality is low and the effect remains uncertain.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          },
+          {
+            "heading": "Milk production",
+            "preparation": "Oral fenugreek products",
+            "evidence_level": "uncertain",
+            "summary": "Studies in breastfeeding women have reported mixed results.",
+            "limitations": "There is not enough high-quality evidence to conclude that fenugreek increases milk supply.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Pregnancy",
+            "guidance": "Amounts greater than those commonly found in food are unsafe and have been linked to increased birth-defect risk.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          },
+          {
+            "population": "Breastfeeding",
+            "guidance": "Benefits for milk production are uncertain, and safety of amounts greater than food exposure is insufficiently known.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          },
+          {
+            "population": "Children",
+            "guidance": "Food amounts are generally regarded as safe, but safety of larger supplemental amounts has not been established.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          },
+          {
+            "population": "People at risk of low blood sugar or allergy",
+            "guidance": "Large exposures may lower blood sugar harmfully, and serious allergic reactions are possible.",
+            "source_ids": [
+              "nccih-fenugreek"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-fenugreek",
+            "nccih-fenugreek"
+          ],
+          "botanical": [
+            "powo-fenugreek"
+          ],
+          "preparations": [
+            "nccih-fenugreek"
+          ],
+          "traditional_uses": [
+            "nccih-fenugreek"
+          ],
+          "evidence": [
+            "nccih-fenugreek"
+          ],
+          "safety": [
+            "nccih-fenugreek"
+          ],
+          "distribution": [
+            "powo-fenugreek"
+          ]
+        }
+      }
     },
     {
       "batch": "B",
@@ -4894,9 +5461,134 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Ceylon cinnamon as food",
+            "plant_part": "Dried inner bark of Cinnamomum verum",
+            "route": "oral food use",
+            "description": "Ceylon cinnamon bark is used as a culinary spice and flavoring.",
+            "equivalence_warning": "Food-level exposure is not equivalent to a concentrated powder, capsule, extract, or oil.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          },
+          {
+            "label": "Ceylon cinnamon supplements",
+            "plant_part": "Bark powder or extract",
+            "route": "oral",
+            "description": "Supplements may contain powder or extracts, but product labels and studies do not always identify species or plant part clearly.",
+            "equivalence_warning": "Evidence from cassia cinnamon cannot automatically be applied to Ceylon cinnamon.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          },
+          {
+            "label": "Topical cinnamon products",
+            "plant_part": "Oil, powder, or extract from a named cinnamon species",
+            "route": "topical",
+            "description": "Some cinnamon products are applied to skin or used in nasal or aromatic formulations.",
+            "equivalence_warning": "Topical or intranasal findings do not establish oral benefit, and concentrated products may irritate skin.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Diabetes and weight loss",
+            "preparation": "Varied cinnamon supplements",
+            "evidence_level": "uncertain",
+            "summary": "Research does not clearly support cinnamon for diabetes or weight loss.",
+            "limitations": "Studies often fail to identify the species, plant part, or preparation, making results difficult to interpret.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          },
+          {
+            "heading": "Allergic rhinitis",
+            "preparation": "Specific Ceylon cinnamon nasal spray",
+            "evidence_level": "preliminary",
+            "summary": "An early study suggested possible symptom improvement.",
+            "limitations": "More reliable evidence is needed, and the finding does not apply to oral cinnamon products.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          },
+          {
+            "heading": "Cassia cinnamon as mosquito repellent",
+            "preparation": "Topical cassia cinnamon product",
+            "evidence_level": "uncertain",
+            "summary": "Effectiveness as a mosquito repellent remains unclear.",
+            "limitations": "Cassia is a different cinnamon source and this finding cannot be generalized to Cinnamomum verum bark.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "People with liver disease",
+            "guidance": "Some cassia products contain high coumarin levels; prolonged exposure may be a concern for sensitive people, including those with liver disease. Ceylon cinnamon generally contains only trace coumarin.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Food amounts appear acceptable, but larger medicinal amounts of Ceylon cinnamon are considered unsafe during pregnancy and larger amounts during breastfeeding are insufficiently studied.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Certain anticancer medicines",
+            "evidence_level": "theoretical",
+            "statement": "NCCIH reports theoretical reasons for interaction with an anticancer medicine; this is not a confirmed comprehensive interaction profile.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          },
+          {
+            "interaction": "Nicotine",
+            "evidence_level": "theoretical",
+            "statement": "Some cinnamon constituents have a theoretical interaction concern with nicotine.",
+            "source_ids": [
+              "nccih-cinnamon"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-cinnamon",
+            "nccih-cinnamon"
+          ],
+          "botanical": [
+            "powo-cinnamon"
+          ],
+          "preparations": [
+            "nccih-cinnamon"
+          ],
+          "traditional_uses": [
+            "nccih-cinnamon"
+          ],
+          "evidence": [
+            "nccih-cinnamon"
+          ],
+          "safety": [
+            "nccih-cinnamon"
+          ],
+          "distribution": [
+            "powo-cinnamon"
+          ]
+        }
+      }
     },
     {
       "batch": "B",
@@ -5040,9 +5732,114 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Culinary clove buds",
+            "plant_part": "Dried unopened flower buds",
+            "route": "oral food use",
+            "description": "Dried clove buds are used as a spice and are not the medicinal preparation assessed in the EMA clove-oil monograph.",
+            "equivalence_warning": "Food use is not equivalent to exposure from concentrated flower-bud essential oil.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          },
+          {
+            "label": "Clove-bud essential oil for tooth area",
+            "plant_part": "Essential oil from flower buds",
+            "route": "local dental use",
+            "description": "The EMA monograph concerns short-term local use of clove oil for temporary relief of toothache.",
+            "equivalence_warning": "This narrow local use does not support swallowing the oil or treating the cause of dental pain.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          },
+          {
+            "label": "Clove-bud essential oil for mouth or throat",
+            "plant_part": "Essential oil from flower buds",
+            "route": "oromucosal",
+            "description": "Defined diluted local preparations are used in the traditional context for minor inflammation of the mouth or throat.",
+            "equivalence_warning": "Concentrated oil can irritate tissue and is not interchangeable with culinary clove.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Temporary toothache relief",
+            "preparation": "Local clove-bud essential-oil preparation",
+            "evidence_level": "traditional_use",
+            "summary": "EMA documents traditional short-term local use for temporary relief of toothache.",
+            "limitations": "The conclusion rests on longstanding use, not controlled clinical proof, and does not replace dental assessment.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          },
+          {
+            "heading": "Minor mouth or throat inflammation",
+            "preparation": "Local clove-bud essential-oil preparation",
+            "evidence_level": "traditional_use",
+            "summary": "The monograph recognizes a narrow traditional local-use context.",
+            "limitations": "Clinical evidence is insufficient for broader infection, pain, or systemic treatment claims.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "Children",
+            "guidance": "Accidental ingestion of concentrated clove oil can be dangerous, particularly for children, and requires urgent poison-control or medical advice.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          },
+          {
+            "population": "Pregnancy and breastfeeding",
+            "guidance": "Safety of medicinal clove-oil exposure is not established; professional advice and product-specific directions are required.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          },
+          {
+            "population": "People with persistent dental or throat symptoms",
+            "guidance": "Traditional temporary relief does not treat the underlying cause; persistent or worsening symptoms need professional assessment.",
+            "source_ids": [
+              "ema-caryophylli-floris-aetheroleum"
+            ]
+          }
+        ],
+        "interactions": [],
+        "section_sources": {
+          "overview": [
+            "powo-clove",
+            "ema-caryophylli-floris-aetheroleum"
+          ],
+          "botanical": [
+            "powo-clove"
+          ],
+          "preparations": [
+            "ema-caryophylli-floris-aetheroleum"
+          ],
+          "traditional_uses": [
+            "ema-caryophylli-floris-aetheroleum"
+          ],
+          "evidence": [
+            "ema-caryophylli-floris-aetheroleum"
+          ],
+          "safety": [
+            "ema-caryophylli-floris-aetheroleum"
+          ],
+          "distribution": [
+            "powo-clove"
+          ]
+        }
+      }
     },
     {
       "batch": "B",
@@ -5230,9 +6027,153 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Glycyrrhizin-containing licorice root",
+            "plant_part": "Roots and rhizomes",
+            "route": "oral",
+            "description": "Tea, powder, extract, food flavoring, and other root products may retain glycyrrhizin, the constituent associated with serious cardiovascular and electrolyte effects.",
+            "equivalence_warning": "These products are not equivalent to deglycyrrhizinated licorice.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "label": "Deglycyrrhizinated licorice",
+            "plant_part": "Processed root extract with most glycyrrhizin removed",
+            "route": "oral",
+            "description": "Deglycyrrhizinated products have a different constituent and risk profile from ordinary root extract.",
+            "equivalence_warning": "Removing glycyrrhizin does not prove effectiveness or make every DGL product interchangeable.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "label": "Gargle, mouth rinse, or lozenge",
+            "plant_part": "Licorice-root extract",
+            "route": "oromucosal",
+            "description": "Small studies have examined local oral preparations for canker sores or sore throat following intubation.",
+            "equivalence_warning": "Local findings do not establish benefit from swallowed root products.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "label": "Topical licorice preparation",
+            "plant_part": "Licorice-root extract",
+            "route": "topical",
+            "description": "Preliminary studies have examined topical gels for selected skin conditions and burns.",
+            "equivalence_warning": "Topical findings do not establish systemic effects or long-term safety.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Canker sores",
+            "preparation": "Licorice mouth rinse, gargle, or topical oral preparation",
+            "evidence_level": "preliminary",
+            "summary": "Small studies suggest possible reductions in ulcer size or pain.",
+            "limitations": "Preparations and study designs vary, and the evidence is not sufficient for a broad treatment conclusion.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "heading": "Post-intubation sore throat",
+            "preparation": "Gargle or lozenge used before surgery",
+            "evidence_level": "preliminary",
+            "summary": "Some research suggests possible prevention or reduction of sore throat after intubation.",
+            "limitations": "This perioperative finding requires clinical context and does not justify unsupervised use around surgery.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "heading": "Topical skin uses",
+            "preparation": "Topical licorice-root gel",
+            "evidence_level": "preliminary",
+            "summary": "Early evidence suggests possible effects on eczema symptoms or burn healing.",
+            "limitations": "More research is needed to confirm effectiveness and safety.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "heading": "Digestive and systemic claims",
+            "preparation": "Oral licorice products",
+            "evidence_level": "uncertain",
+            "summary": "There is not enough high-quality evidence to support licorice for any health condition.",
+            "limitations": "Evidence from blends cannot establish an effect for licorice alone.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "People with hypertension or heart or kidney disease",
+            "guidance": "Glycyrrhizin-related serious effects can occur even at lower exposure, particularly with high salt intake or these conditions.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "population": "Pregnancy",
+            "guidance": "Large oral amounts are unsafe and have been associated with increased risk of preterm delivery.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          },
+          {
+            "population": "Breastfeeding",
+            "guidance": "Safety is insufficiently known.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Corticosteroids",
+            "evidence_level": "reported",
+            "statement": "Interactions between licorice and corticosteroids have been reported.",
+            "source_ids": [
+              "nccih-licorice-root"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-licorice",
+            "nccih-licorice-root"
+          ],
+          "botanical": [
+            "powo-licorice"
+          ],
+          "preparations": [
+            "nccih-licorice-root"
+          ],
+          "traditional_uses": [
+            "nccih-licorice-root"
+          ],
+          "evidence": [
+            "nccih-licorice-root"
+          ],
+          "safety": [
+            "nccih-licorice-root"
+          ],
+          "distribution": [
+            "powo-licorice"
+          ]
+        }
+      }
     },
     {
       "batch": "B",
@@ -5389,9 +6330,166 @@
           "provenance_notes": "Country-level map statuses are aggregated from WCVP TDWG Level 3 records via GBIF and the official WGSRPD ISO cross-reference tables; botanical-region precision is preserved in the source attribution and map caveat."
         }
       ],
-      "content_version": 3,
+      "content_version": 4,
       "readiness_status": "ready_for_review",
-      "hold_reason": null
+      "hold_reason": null,
+      "article_details": {
+        "preparation_forms": [
+          {
+            "label": "Echinacea purpurea extract",
+            "plant_part": "Aerial parts, roots, or a named combination",
+            "route": "oral",
+            "description": "Some research concerns short-term oral extracts of E. purpurea with a defined plant part and formulation.",
+            "equivalence_warning": "Results cannot be generalized to every echinacea species, plant part, or extract.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "label": "Mixed-species echinacea product",
+            "plant_part": "Named E. purpurea, E. angustifolia, or E. pallida material",
+            "route": "oral",
+            "description": "Commercial and research products may combine species and plant parts in different proportions.",
+            "equivalence_warning": "A mixed product is not interchangeable with a single-species E. purpurea preparation.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "label": "Topical echinacea product",
+            "plant_part": "Named echinacea extract",
+            "route": "topical",
+            "description": "Some products are promoted for skin conditions such as eczema.",
+            "equivalence_warning": "Evidence for topical use is unclear and cannot be inferred from oral cold studies.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          }
+        ],
+        "evidence_findings": [
+          {
+            "heading": "Chance of catching a cold",
+            "preparation": "Varied oral echinacea products",
+            "evidence_level": "limited",
+            "summary": "Taking echinacea may slightly reduce the chance of catching a cold.",
+            "limitations": "Species, plant parts, extracts, and study methods vary, and more research is needed to confirm the finding.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "heading": "Duration of a cold",
+            "preparation": "Varied oral echinacea products",
+            "evidence_level": "uncertain",
+            "summary": "It remains unclear whether echinacea shortens a cold.",
+            "limitations": "Product variability prevents broad conclusions for all echinacea preparations.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "heading": "Respiratory infections in children",
+            "preparation": "Specific oral echinacea product",
+            "evidence_level": "uncertain",
+            "summary": "One recent study suggested fewer infections and complications in children.",
+            "limitations": "Overall evidence is insufficient for a clear conclusion, and children can experience allergic rashes.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "heading": "Other conditions including eczema",
+            "preparation": "Topical or oral echinacea products",
+            "evidence_level": "uncertain",
+            "summary": "Helpfulness for other conditions remains unclear.",
+            "limitations": "Much less research exists outside common-cold and respiratory contexts.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          }
+        ],
+        "mechanisms": [],
+        "special_populations": [
+          {
+            "population": "People prone to allergic reactions",
+            "guidance": "Echinacea can cause allergic reactions that may be severe; product use requires particular caution when plant allergies are known.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "population": "Children",
+            "guidance": "Short-term E. purpurea extract may be tolerated by some children, but allergic rashes occurred in a trial and evidence of benefit is insufficient; professional advice is appropriate.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "population": "Pregnancy",
+            "guidance": "Limited studies suggest some short-term extracts may be tolerated early in pregnancy, but evidence is not enough to generalize across products; consult a health professional.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "population": "Breastfeeding",
+            "guidance": "Safety is insufficiently known.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          }
+        ],
+        "interactions": [
+          {
+            "interaction": "Medicines metabolized by the liver",
+            "evidence_level": "conflicting",
+            "statement": "Evidence about interaction with some liver-metabolized medicines is conflicting.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "interaction": "Immunosuppressants",
+            "evidence_level": "theoretical",
+            "statement": "A theoretical interaction concern exists; it is not a confirmed comprehensive interaction profile.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          },
+          {
+            "interaction": "Caffeine",
+            "evidence_level": "theoretical",
+            "statement": "A theoretical interaction concern has been raised.",
+            "source_ids": [
+              "nccih-echinacea"
+            ]
+          }
+        ],
+        "section_sources": {
+          "overview": [
+            "powo-echinacea",
+            "nccih-echinacea"
+          ],
+          "botanical": [
+            "powo-echinacea"
+          ],
+          "preparations": [
+            "nccih-echinacea"
+          ],
+          "traditional_uses": [
+            "nccih-echinacea"
+          ],
+          "evidence": [
+            "nccih-echinacea"
+          ],
+          "safety": [
+            "nccih-echinacea"
+          ],
+          "distribution": [
+            "powo-echinacea"
+          ]
+        }
+      }
     },
     {
       "batch": "B",
