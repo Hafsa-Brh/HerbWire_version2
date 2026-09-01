@@ -27,8 +27,8 @@ export function Metric({ label, value, detail, icon: Icon = Activity }: { label:
   return <div className="border border-line bg-paper p-5"><div className="flex items-center justify-between"><span className="hw-eyebrow">{label}</span><Icon size={17} className="text-leaf" /></div><p className="mt-5 font-serif text-4xl font-semibold tracking-[-.05em] text-deep">{value}</p><p className="mt-1 font-sans text-xs text-muted">{detail}</p></div>
 }
 
-export function Panel({ title, eyebrow, children }: { title: string; eyebrow: string; children: ReactNode }) {
-  return <div className="border border-line bg-paper p-5"><div className="mb-3 flex items-end justify-between"><div><p className="hw-eyebrow">{eyebrow}</p><h2 className="mt-1 font-serif text-2xl font-semibold text-deep">{title}</h2></div><ChevronRight size={16} className="text-leaf" /></div>{children}</div>
+export function Panel({ title, eyebrow, children, className = "" }: { title: string; eyebrow: string; children: ReactNode; className?: string }) {
+  return <div className={`border border-line bg-paper p-5 ${className}`}><div className="mb-3 flex items-end justify-between"><div><p className="hw-eyebrow">{eyebrow}</p><h2 className="mt-1 font-serif text-2xl font-semibold text-deep">{title}</h2></div><ChevronRight size={16} className="text-leaf" /></div>{children}</div>
 }
 
 export function AdminStateCard({ eyebrow = "Editorial desk", title, description, action }: { eyebrow?: string; title: string; description: string; action?: ReactNode }) {

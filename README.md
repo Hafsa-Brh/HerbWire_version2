@@ -4,18 +4,18 @@ HerbWire V2 is an English-only medicinal-plant encyclopedia and traditional-medi
 
 HerbWire does not diagnose, prescribe, recommend personalized treatment, provide dosage guidance, or present traditional use as proven clinical efficacy.
 
-## Milestone 2 scope
+## Milestone 2 and 2B scope
 
-Milestone 2 provides:
+Milestone 2 and 2B provide:
 
 - PostgreSQL-backed plant profiles, provenance records, editorial reviews, pipeline runs, and pipeline stage results.
-- Public homepage, plant index, published plant articles, and an honest New Discoveries empty state.
+- Public homepage, paged plant index, published plant articles, and an honest New Discoveries empty state.
 - A backend-authenticated local editorial desk with review, approval, hold/reject, and publication gating.
 - Published-article Flashes and persisted pipeline-stage performance views.
 - An idempotent newsletter subscription endpoint and database table. No external email provider is connected.
-- A deterministic local fixture pipeline that never auto-publishes.
+- A deterministic, schema-validated 30-profile encyclopedia corpus importer that preserves human editorial state and never auto-publishes.
 
-Production authentication, deployment, RAG, live Zyte collection, and Milestone 2B work are not included.
+Production authentication, deployment, RAG, and live Zyte collection are not included.
 
 ## Local setup
 
@@ -32,11 +32,22 @@ docker compose ps
 .\.venv\Scripts\python.exe -m alembic -c backend\alembic.ini upgrade head
 ```
 
-Seed the curated review profiles only when the local database is missing them:
+Seed the original curated review profiles only when a pre-Milestone 2B local database is missing them:
 
 ```powershell
 .\.venv\Scripts\python.exe -m backend.app.workers.seed_curated_plants
 ```
+
+Validate and import the Milestone 2B encyclopedia corpus in deterministic batches. Importing it again is idempotent and preserves approved/published article content and editorial status:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --validate-only
+.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --batch A
+.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --batch B
+.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --batch C
+```
+
+See [Encyclopedia corpus operations](docs/encyclopedia-corpus.md) before adding or updating a profile.
 
 Start FastAPI:
 
@@ -108,7 +119,7 @@ Public and authentication endpoints:
 
 - `GET /api/v1/health`
 - `GET /api/v1/version`
-- `GET /api/v1/plants`
+- `GET /api/v1/plants` (published-only paging, search, family, and diversity-tag filters)
 - `GET /api/v1/plants/{slug}`
 - `POST /api/v1/newsletter/subscriptions`
 - `POST /api/v1/auth/login`
@@ -119,4 +130,4 @@ Authenticated editorial endpoints include review queue actions, approved-profile
 
 ## External services
 
-Zyte configuration names exist for a future approved integration, but ordinary Milestone 2 tests and runtime do not call Zyte. No Heroku or Zyte deployment is part of this milestone.
+Zyte configuration names exist for a future approved integration, but ordinary Milestone 2B tests and runtime do not call Zyte. No Heroku or Zyte deployment is part of this milestone.

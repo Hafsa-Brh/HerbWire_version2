@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 
 class SourceRecordResponse(BaseModel):
     id: UUID
+    external_identifier: str
     url: str
     canonical_url: str
     title: str
@@ -21,13 +22,30 @@ class PlantListItemResponse(BaseModel):
     id: UUID
     slug: str
     accepted_scientific_name: str
+    botanical_author: str
+    taxon_identifier: str
+    known_synonyms: list
     display_common_name: str
     family_name: str | None
+    diversity_tags: list
     summary: str
     status: str
     hero_image: dict
     published_at: datetime | None
     source_count: int
+    growth_form: str
+    biome: str
+    distribution_summary: str
+    readiness_status: str
+    version: int
+
+
+class PlantPageResponse(BaseModel):
+    items: list[PlantListItemResponse]
+    total: int
+    page: int
+    page_size: int
+    pages: int
 
 
 class PlantDetailResponse(PlantListItemResponse):
@@ -39,8 +57,31 @@ class PlantDetailResponse(PlantListItemResponse):
     preparation: str
     safety_notes: list
     evidence_notes: str
+    article_details: dict
     last_reviewed_at: datetime | None
     sources: list[SourceRecordResponse]
+
+
+class PlantRevisionResponse(BaseModel):
+    id: UUID
+    plant_profile_id: UUID
+    slug: str
+    display_common_name: str
+    current_version: int
+    proposed_version: int
+    status: str
+    promotion_eligible: bool
+    promotion_error_code: str | None
+    promotion_error_message: str | None
+    content_checksum: str
+    current_content: PlantDetailResponse
+    proposed_content: dict
+    proposed_sources: list[SourceRecordResponse]
+    reviewer_name: str | None
+    decision_reason: str | None
+    created_at: datetime
+    reviewed_at: datetime | None
+    promoted_at: datetime | None
 
 
 class ReviewResponse(BaseModel):
@@ -62,8 +103,14 @@ class DecisionRequest(BaseModel):
 
 class SeedResponse(BaseModel):
     profiles_created: int
+    profiles_updated: int
+    profiles_protected: int
     profiles_total: int
     source_records_total: int
+    source_links_created: int
+    revisions_created: int = 0
+    revisions_unchanged: int = 0
+    older_versions_skipped: int = 0
 
 
 class PipelineStageResponse(BaseModel):

@@ -3,12 +3,16 @@ from datetime import datetime, timezone
 
 import pytest
 from backend.app.db.session import get_engine, get_session_factory
-from backend.app.domains.encyclopedia.service import seed_curated_profiles
+from backend.app.domains.encyclopedia.service import (
+    promote_profile_revision,
+    seed_curated_profiles,
+)
 from backend.app.domains.pipeline.fixture_pipeline import run_fixture_pipeline
 from backend.app.models.encyclopedia import (
     EditorialReview,
     NewsletterSubscription,
     PlantProfile,
+    PlantProfileRevision,
     SourceRecord,
 )
 from sqlalchemy import func, select, text
@@ -25,6 +29,7 @@ def clean_milestone2_tables():
         connection.execute(text("DELETE FROM pipeline_stage_results"))
         connection.execute(text("DELETE FROM pipeline_runs"))
         connection.execute(text("DELETE FROM editorial_reviews"))
+        connection.execute(text("DELETE FROM plant_profile_revisions"))
         connection.execute(text("DELETE FROM plant_profile_sources"))
         connection.execute(text("DELETE FROM plant_profiles"))
         connection.execute(text("DELETE FROM source_records"))
@@ -33,7 +38,8 @@ def clean_milestone2_tables():
                 """
                 DELETE FROM sources
                 WHERE identifier in (
-                    'kew-powo', 'ema-herbal', 'nccih', 'fixture-discovery'
+                    'kew-powo', 'ema-herbal', 'nccih', 'wikimedia-commons',
+                    'fixture-discovery'
                 )
                 """
             )
@@ -44,6 +50,7 @@ def clean_milestone2_tables():
         connection.execute(text("DELETE FROM pipeline_stage_results"))
         connection.execute(text("DELETE FROM pipeline_runs"))
         connection.execute(text("DELETE FROM editorial_reviews"))
+        connection.execute(text("DELETE FROM plant_profile_revisions"))
         connection.execute(text("DELETE FROM plant_profile_sources"))
         connection.execute(text("DELETE FROM plant_profiles"))
         connection.execute(text("DELETE FROM source_records"))
@@ -52,7 +59,8 @@ def clean_milestone2_tables():
                 """
                 DELETE FROM sources
                 WHERE identifier in (
-                    'kew-powo', 'ema-herbal', 'nccih', 'fixture-discovery'
+                    'kew-powo', 'ema-herbal', 'nccih', 'wikimedia-commons',
+                    'fixture-discovery'
                 )
                 """
             )
@@ -127,8 +135,10 @@ def test_public_endpoints_hide_review_profiles_until_published(client) -> None:
     response = client.get("/api/v1/plants")
 
     assert response.status_code == 200
-    assert all(item["status"] == "published" for item in response.json())
-    assert not any(item["slug"] == "german-chamomile" for item in response.json())
+    payload = response.json()
+    assert payload["total"] == 0
+    assert all(item["status"] == "published" for item in payload["items"])
+    assert not any(item["slug"] == "german-chamomile" for item in payload["items"])
 
     detail = client.get("/api/v1/plants/german-chamomile")
     assert detail.status_code == 404
@@ -169,6 +179,10 @@ def test_editorial_approval_then_publication_makes_profile_public(client) -> Non
     public_detail = client.get("/api/v1/plants/german-chamomile")
     assert public_detail.status_code == 200
     assert public_detail.json()["display_common_name"] == "German chamomile"
+    assert public_detail.json()["source_count"] == sum(
+        source["source_type"] != "licensed_media"
+        for source in public_detail.json()["sources"]
+    )
 
 
 def test_editorial_api_requires_authenticated_session(client) -> None:
@@ -202,6 +216,711 @@ def test_seed_is_idempotent() -> None:
     assert second["profiles_total"] == first["profiles_total"]
     assert second["source_records_total"] == first["source_records_total"]
     assert second["profiles_created"] == 0
+    assert second["source_links_created"] == 0
+    assert first["profiles_total"] == 30
+    assert first["source_records_total"] == 93
+
+
+def test_public_plant_paging_search_and_filters(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profiles = list(
+            session.scalars(
+                select(PlantProfile).order_by(PlantProfile.display_common_name)
+            ).all()
+        )
+        for profile in profiles[:13]:
+            profile.status = "published"
+            profile.approved_at = datetime.now(timezone.utc)
+            profile.published_at = datetime.now(timezone.utc)
+        session.commit()
+
+    first_page = client.get("/api/v1/plants?page=1&page_size=12")
+    second_page = client.get("/api/v1/plants?page=2&page_size=12")
+    search = client.get("/api/v1/plants?query=ginseng")
+    family = client.get("/api/v1/plants?family=Asteraceae")
+    tag = client.get("/api/v1/plants?tag=India")
+
+    assert first_page.status_code == 200
+    assert first_page.json()["total"] == 13
+    assert len(first_page.json()["items"]) == 12
+    assert len(second_page.json()["items"]) == 1
+    assert all(
+        "ginseng" in item["display_common_name"].lower()
+        for item in search.json()["items"]
+    )
+    assert all(item["family_name"] == "Asteraceae" for item in family.json()["items"])
+    assert all("India" in item["diversity_tags"] for item in tag.json()["items"])
+
+
+def test_import_rejects_changed_same_version_and_preserves_reviewed_profile() -> None:
+    reviewed_summary = "Human-reviewed summary that must survive re-import."
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.status = "published"
+        profile.approved_at = datetime.now(timezone.utc)
+        profile.published_at = datetime.now(timezone.utc)
+        profile.summary = reviewed_summary
+        session.commit()
+
+        profile_id = profile.id
+        content_version = profile.version
+        approved_at = profile.approved_at
+        published_at = profile.published_at
+
+        with pytest.raises(
+            ValueError, match="content changed without increasing content_version"
+        ):
+            seed_curated_profiles(session)
+        session.rollback()
+
+    with get_session_factory()() as session:
+        profiles = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug == "peppermint")
+            ).all()
+        )
+        assert len(profiles) == 1
+        persisted = profiles[0]
+        assert persisted.id == profile_id
+        assert persisted.summary == reviewed_summary
+        assert persisted.version == content_version
+        assert persisted.status == "published"
+        assert persisted.approved_at == approved_at
+        assert persisted.published_at == published_at
+        assert persisted.hero_image["kind"] == "licensed_photograph"
+        assert (
+            session.scalar(
+                select(func.count())
+                .select_from(PlantProfileRevision)
+                .where(PlantProfileRevision.plant_profile_id == profile_id)
+            )
+            == 0
+        )
+
+
+def _make_peppermint_version_one() -> None:
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.version = 1
+        profile.status = "published"
+        profile.summary = "Published version one summary."
+        profile.introduction = "Published version one introduction."
+        profile.approved_at = datetime.now(timezone.utc)
+        profile.published_at = datetime.now(timezone.utc)
+        session.commit()
+
+
+def test_pending_revision_workflow_preserves_public_content_until_promotion(
+    client,
+) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+
+    with get_session_factory()() as session:
+        first_import = seed_curated_profiles(session)
+        second_import = seed_curated_profiles(session)
+        revisions = list(
+            session.scalars(
+                select(PlantProfileRevision).where(
+                    PlantProfileRevision.plant_profile.has(slug="peppermint")
+                )
+            ).all()
+        )
+
+    assert first_import["revisions_created"] == 1
+    assert second_import["revisions_created"] == 0
+    assert second_import["revisions_unchanged"] >= 1
+    assert len(revisions) == 1
+    assert revisions[0].version == 4
+    assert revisions[0].status == "needs_review"
+
+    before = client.get("/api/v1/plants/peppermint")
+    assert before.status_code == 200
+    assert before.json()["version"] == 1
+    assert before.json()["introduction"] == "Published version one introduction."
+
+    login_client(client)
+    revision_queue = client.get("/api/v1/admin/revisions")
+    assert revision_queue.status_code == 200
+    peppermint = next(
+        item for item in revision_queue.json() if item["slug"] == "peppermint"
+    )
+    assert peppermint["current_version"] == 1
+    assert peppermint["proposed_version"] == 4
+    assert peppermint["current_content"]["introduction"] == (
+        "Published version one introduction."
+    )
+    assert len(peppermint["proposed_content"]["introduction"].split()) >= 50
+
+    gated = client.post(f"/api/v1/admin/revisions/{peppermint['id']}/promote")
+    assert gated.status_code == 409
+
+    approved = client.post(
+        f"/api/v1/admin/revisions/{peppermint['id']}/approve",
+        json={"reviewer_name": "Milestone 2B test editor"},
+    )
+    assert approved.status_code == 200
+    assert approved.json()["status"] == "approved"
+    still_public_v1 = client.get("/api/v1/plants/peppermint")
+    assert still_public_v1.json()["version"] == 1
+
+    promoted = client.post(f"/api/v1/admin/revisions/{peppermint['id']}/promote")
+    assert promoted.status_code == 200
+    assert promoted.json()["status"] == "promoted"
+    assert promoted.json()["current_version"] == 4
+
+    after = client.get("/api/v1/plants/peppermint")
+    assert after.status_code == 200
+    assert after.json()["version"] == 4
+    assert (
+        after.json()["introduction"] == peppermint["proposed_content"]["introduction"]
+    )
+    assert after.json()["source_count"] == sum(
+        source["source_type"] != "licensed_media" for source in after.json()["sources"]
+    )
+    assert after.json()["hero_image"]["attribution"]
+
+    with get_session_factory()() as session:
+        history = list(
+            session.scalars(
+                select(PlantProfileRevision)
+                .join(PlantProfile)
+                .where(PlantProfile.slug == "peppermint")
+                .order_by(PlantProfileRevision.version)
+            ).all()
+        )
+    assert [(item.version, item.status) for item in history] == [
+        (1, "superseded"),
+        (4, "promoted"),
+    ]
+
+    duplicate = client.post(f"/api/v1/admin/revisions/{peppermint['id']}/promote")
+    assert duplicate.status_code == 409
+    assert duplicate.json()["detail"]["code"] == "revision_already_promoted"
+    with get_session_factory()() as session:
+        assert session.scalar(select(func.count(PlantProfileRevision.id))) == 2
+
+
+def test_batch_two_scoped_import_creates_only_pending_rich_revisions(client) -> None:
+    batch_two = {
+        "aloe-vera",
+        "rosemary",
+        "thyme",
+        "sage",
+        "fenugreek",
+        "cinnamon",
+        "clove",
+        "licorice",
+        "echinacea",
+    }
+    batch_one = {
+        "german-chamomile",
+        "ginger",
+        "turmeric",
+        "garlic",
+        "fennel",
+        "asian-ginseng",
+        "black-cohosh",
+        "boswellia",
+        "devils-claw",
+    }
+
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        canonicals = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug.in_(batch_two))
+            )
+        )
+        assert {profile.slug for profile in canonicals} == batch_two
+        for profile in canonicals:
+            profile.version = 3
+            profile.status = "published"
+            profile.article_details = {}
+            profile.approved_at = datetime.now(timezone.utc)
+            profile.published_at = datetime.now(timezone.utc)
+        session.commit()
+
+    with get_session_factory()() as session:
+        first = seed_curated_profiles(session, slugs=batch_two)
+        second = seed_curated_profiles(session, slugs=batch_two)
+        revisions = list(
+            session.scalars(
+                select(PlantProfileRevision)
+                .join(PlantProfile)
+                .where(PlantProfile.slug.in_(batch_two))
+            )
+        )
+        canonicals = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug.in_(batch_two))
+            )
+        )
+        batch_one_revisions = session.scalar(
+            select(func.count(PlantProfileRevision.id))
+            .join(PlantProfile)
+            .where(PlantProfile.slug.in_(batch_one))
+        )
+
+    assert first["revisions_created"] == 9
+    assert second["revisions_created"] == 0
+    assert second["revisions_unchanged"] == 9
+    assert len(revisions) == 9
+    assert {revision.version for revision in revisions} == {4}
+    assert {revision.status for revision in revisions} == {"needs_review"}
+    assert all(
+        revision.content_payload["profile"]["article_details"]["preparation_forms"]
+        for revision in revisions
+    )
+    assert all(
+        revision.content_payload["profile"]["article_details"]["evidence_findings"]
+        for revision in revisions
+    )
+    assert all(profile.version == 3 for profile in canonicals)
+    assert all(profile.status == "published" for profile in canonicals)
+    assert all(profile.article_details == {} for profile in canonicals)
+    assert batch_one_revisions == 0
+
+    public = client.get("/api/v1/plants/aloe-vera")
+    assert public.status_code == 200
+    assert public.json()["version"] == 3
+    assert public.json()["article_details"] == {}
+
+    login_client(client)
+    queue = client.get("/api/v1/admin/revisions")
+    assert queue.status_code == 200
+    batch_two_items = [item for item in queue.json() if item["slug"] in batch_two]
+    assert {item["slug"] for item in batch_two_items} == batch_two
+    assert all(item["status"] == "needs_review" for item in batch_two_items)
+    assert all(item["current_version"] == 3 for item in batch_two_items)
+    assert all(item["proposed_version"] == 4 for item in batch_two_items)
+    assert all(
+        item["proposed_content"]["article_details"]["preparation_forms"]
+        for item in batch_two_items
+    )
+    assert all(
+        item["proposed_content"]["article_details"]["evidence_findings"]
+        for item in batch_two_items
+    )
+
+
+def test_batch_three_scoped_import_creates_only_pending_rich_revisions(client) -> None:
+    batch_three = {
+        "ashwagandha",
+        "green-tea",
+        "calendula",
+        "milk-thistle",
+        "ginkgo",
+        "valerian",
+        "passionflower",
+        "cranberry",
+        "saw-palmetto",
+    }
+    earlier_batches = {
+        "german-chamomile",
+        "ginger",
+        "turmeric",
+        "garlic",
+        "fennel",
+        "asian-ginseng",
+        "black-cohosh",
+        "boswellia",
+        "devils-claw",
+        "aloe-vera",
+        "rosemary",
+        "thyme",
+        "sage",
+        "fenugreek",
+        "cinnamon",
+        "clove",
+        "licorice",
+        "echinacea",
+    }
+
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        canonicals = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug.in_(batch_three))
+            )
+        )
+        assert {profile.slug for profile in canonicals} == batch_three
+        for profile in canonicals:
+            profile.version = 3
+            profile.status = "published"
+            profile.article_details = {}
+            profile.approved_at = datetime.now(timezone.utc)
+            profile.published_at = datetime.now(timezone.utc)
+        session.commit()
+
+    with get_session_factory()() as session:
+        first = seed_curated_profiles(session, slugs=batch_three)
+        second = seed_curated_profiles(session, slugs=batch_three)
+        revisions = list(
+            session.scalars(
+                select(PlantProfileRevision)
+                .join(PlantProfile)
+                .where(PlantProfile.slug.in_(batch_three))
+            )
+        )
+        canonicals = list(
+            session.scalars(
+                select(PlantProfile).where(PlantProfile.slug.in_(batch_three))
+            )
+        )
+        earlier_revisions = session.scalar(
+            select(func.count(PlantProfileRevision.id))
+            .join(PlantProfile)
+            .where(PlantProfile.slug.in_(earlier_batches))
+        )
+
+    assert first["revisions_created"] == 9
+    assert second["revisions_created"] == 0
+    assert second["revisions_unchanged"] == 9
+    assert len(revisions) == 9
+    assert {revision.version for revision in revisions} == {4}
+    assert {revision.status for revision in revisions} == {"needs_review"}
+    assert all(
+        revision.content_payload["profile"]["article_details"]["preparation_forms"]
+        for revision in revisions
+    )
+    assert all(
+        revision.content_payload["profile"]["article_details"]["evidence_findings"]
+        for revision in revisions
+    )
+    assert all(profile.version == 3 for profile in canonicals)
+    assert all(profile.status == "published" for profile in canonicals)
+    assert all(profile.article_details == {} for profile in canonicals)
+    assert earlier_revisions == 0
+
+    public = client.get("/api/v1/plants/ashwagandha")
+    assert public.status_code == 200
+    assert public.json()["version"] == 3
+    assert public.json()["article_details"] == {}
+
+    login_client(client)
+    queue = client.get("/api/v1/admin/revisions")
+    assert queue.status_code == 200
+    batch_three_items = [item for item in queue.json() if item["slug"] in batch_three]
+    assert {item["slug"] for item in batch_three_items} == batch_three
+    assert all(item["status"] == "needs_review" for item in batch_three_items)
+    assert all(item["current_version"] == 3 for item in batch_three_items)
+    assert all(item["proposed_version"] == 4 for item in batch_three_items)
+    assert all(
+        item["proposed_content"]["article_details"]["preparation_forms"]
+        for item in batch_three_items
+    )
+    assert all(
+        item["proposed_content"]["article_details"]["evidence_findings"]
+        for item in batch_three_items
+    )
+
+
+def test_legacy_approved_revision_without_article_details_promotes(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        payload = dict(revision.content_payload)
+        profile_payload = dict(payload["profile"])
+        profile_payload.pop("article_details")
+        payload["profile"] = profile_payload
+        revision.content_payload = payload
+        revision.version = 3
+        revision.content_checksum = "c" * 64
+        session.commit()
+        revision_id = revision.id
+
+    login_client(client)
+    approved = client.post(
+        f"/api/v1/admin/revisions/{revision_id}/approve",
+        json={"reviewer_name": "Compatibility test editor"},
+    )
+    assert approved.status_code == 200
+    assert approved.json()["promotion_eligible"] is True
+
+    promoted = client.post(f"/api/v1/admin/revisions/{revision_id}/promote")
+    assert promoted.status_code == 200
+    assert promoted.json()["status"] == "promoted"
+    assert promoted.json()["current_version"] == 3
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        assert profile.version == 3
+        assert profile.article_details == {}
+
+
+def test_stale_approved_revision_is_rejected_when_newer_revision_exists(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        revision.status = "approved"
+        revision.reviewed_at = datetime.now(timezone.utc)
+        newer_payload = dict(revision.content_payload)
+        newer_profile = dict(newer_payload["profile"])
+        newer_profile["summary"] = "A newer proposed summary."
+        newer_payload["profile"] = newer_profile
+        session.add(
+            PlantProfileRevision(
+                plant_profile_id=revision.plant_profile_id,
+                version=revision.version + 1,
+                content_payload=newer_payload,
+                content_checksum="d" * 64,
+                status="needs_review",
+            )
+        )
+        session.commit()
+        revision_id = revision.id
+
+    login_client(client)
+    response = client.post(f"/api/v1/admin/revisions/{revision_id}/promote")
+    assert response.status_code == 409
+    assert response.json()["detail"]["code"] == "revision_stale"
+    assert "newer revision" in response.json()["detail"]["message"]
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        rejected = session.get(PlantProfileRevision, revision_id)
+        assert profile is not None
+        assert profile.version == 1
+        assert rejected is not None
+        assert rejected.status == "approved"
+
+
+def test_promotion_with_missing_provenance_returns_safe_error(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        payload = dict(revision.content_payload)
+        payload["source_refs"] = [
+            {
+                "source_id": "missing-source-record",
+                "support_role": "safety",
+                "note": "Intentionally invalid test reference.",
+            }
+        ]
+        revision.content_payload = payload
+        revision.status = "approved"
+        revision.reviewed_at = datetime.now(timezone.utc)
+        session.commit()
+        revision_id = revision.id
+
+    login_client(client)
+    response = client.post(f"/api/v1/admin/revisions/{revision_id}/promote")
+    assert response.status_code == 409
+    assert response.json()["detail"] == {
+        "code": "revision_provenance_incomplete",
+        "message": "Required provenance is incomplete.",
+    }
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        revision = session.get(PlantProfileRevision, revision_id)
+        assert profile is not None
+        assert profile.version == 1
+        assert revision is not None
+        assert revision.status == "approved"
+
+
+def test_promotion_commit_failure_rolls_back_all_changes(client, monkeypatch) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        revision = session.scalar(
+            select(PlantProfileRevision).where(
+                PlantProfileRevision.plant_profile.has(slug="peppermint")
+            )
+        )
+        assert revision is not None
+        revision.status = "approved"
+        revision.reviewed_at = datetime.now(timezone.utc)
+        session.commit()
+        revision_id = revision.id
+
+    with get_session_factory()() as session:
+
+        def fail_commit() -> None:
+            raise RuntimeError("simulated commit failure")
+
+        monkeypatch.setattr(session, "commit", fail_commit)
+        with pytest.raises(RuntimeError, match="simulated commit failure"):
+            promote_profile_revision(session, revision_id)
+
+    with get_session_factory()() as session:
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        revision = session.get(PlantProfileRevision, revision_id)
+        history_count = session.scalar(
+            select(func.count(PlantProfileRevision.id)).where(
+                PlantProfileRevision.plant_profile_id == profile.id
+            )
+        )
+        assert profile.version == 1
+        assert profile.summary == "Published version one summary."
+        assert revision is not None
+        assert revision.status == "approved"
+        assert history_count == 1
+
+
+def test_revision_hold_requires_reason_and_never_changes_public_profile(client) -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+    _make_peppermint_version_one()
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+
+    login_client(client)
+    revision = next(
+        item
+        for item in client.get("/api/v1/admin/revisions").json()
+        if item["slug"] == "peppermint"
+    )
+    missing_reason = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/reject",
+        json={"reviewer_name": "Test editor", "reason": ""},
+    )
+    assert missing_reason.status_code == 422
+
+    held = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/reject",
+        json={"reviewer_name": "Test editor", "reason": "Needs source review."},
+    )
+    assert held.status_code == 200
+    assert held.json()["status"] == "held"
+    assert held.json()["decision_reason"] == "Needs source review."
+    approved = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/approve",
+        json={"reviewer_name": "Test editor"},
+    )
+    assert approved.status_code == 200
+    held_again = client.post(
+        f"/api/v1/admin/revisions/{revision['id']}/reject",
+        json={"reviewer_name": "Test editor", "reason": "Approval revoked."},
+    )
+    assert held_again.status_code == 200
+    assert held_again.json()["status"] == "held"
+    assert held_again.json()["decision_reason"] == "Approval revoked."
+    public = client.get("/api/v1/plants/peppermint")
+    assert public.json()["version"] == 1
+
+
+def test_changed_protected_content_requires_a_new_manifest_version() -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.status = "published"
+        profile.summary = "Human-edited content at the same version."
+        session.commit()
+
+        with pytest.raises(
+            ValueError, match="content changed without increasing content_version"
+        ):
+            seed_curated_profiles(session)
+
+
+def test_older_manifest_version_is_skipped_without_canonical_overwrite() -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        profile.version = 5
+        profile.summary = "Newer human-authored canonical content."
+        session.commit()
+        result = seed_curated_profiles(session)
+        session.refresh(profile)
+
+    assert result["older_versions_skipped"] == 1
+    assert profile.version == 5
+    assert profile.summary == "Newer human-authored canonical content."
+
+
+def test_revision_constraints_prevent_duplicate_version_and_checksum() -> None:
+    with get_session_factory()() as session:
+        seed_curated_profiles(session)
+        profile = session.scalar(
+            select(PlantProfile).where(PlantProfile.slug == "peppermint")
+        )
+        assert profile is not None
+        first = PlantProfileRevision(
+            plant_profile_id=profile.id,
+            version=4,
+            content_payload={"profile": {}, "source_refs": []},
+            content_checksum="a" * 64,
+            status="needs_review",
+        )
+        session.add(first)
+        session.commit()
+        session.add(
+            PlantProfileRevision(
+                plant_profile_id=profile.id,
+                version=4,
+                content_payload={"profile": {"changed": True}, "source_refs": []},
+                content_checksum="b" * 64,
+                status="needs_review",
+            )
+        )
+        with pytest.raises(IntegrityError):
+            session.commit()
+        session.rollback()
+        session.add(
+            PlantProfileRevision(
+                plant_profile_id=profile.id,
+                version=5,
+                content_payload={"profile": {"changed": True}, "source_refs": []},
+                content_checksum="a" * 64,
+                status="needs_review",
+            )
+        )
+        with pytest.raises(IntegrityError):
+            session.commit()
 
 
 def test_source_records_reject_duplicate_canonical_url() -> None:
