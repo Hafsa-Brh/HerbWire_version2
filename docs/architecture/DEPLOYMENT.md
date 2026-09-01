@@ -63,17 +63,26 @@ Docker Compose is local-only.
     Node and the Vite build are absent from the runtime image. This is suitable
     for the Eco 512 MB limit, subject to the local runtime measurement.
 
-## Required config variable names
+## Required config before the first deployment
 
-- DATABASE_URL (created and rotated by the Postgres add-on)
-- HERBWIRE_ENVIRONMENT
-- HERBWIRE_FRONTEND_ORIGIN
-- HERBWIRE_ADMIN_EMAIL
-- HERBWIRE_ADMIN_PASSWORD
-- HERBWIRE_SESSION_SECRET
-- HERBWIRE_SESSION_COOKIE_NAME
-- HERBWIRE_SESSION_COOKIE_SECURE
-- HERBWIRE_ENABLE_DEVELOPMENT_ENDPOINTS
+`DATABASE_URL` must be created and rotated only by the attached Heroku
+Postgres database. Never create, replace, reveal, copy, or manually set it.
+
+Enter these non-secret values in the Heroku Dashboard Config Vars interface:
+
+- `HERBWIRE_ENVIRONMENT=staging`
+- `HERBWIRE_FRONTEND_ORIGIN=https://herbwire-staging-hafsa.herokuapp.com`
+- `HERBWIRE_SESSION_COOKIE_NAME=__Host-herbwire_editor_session`
+- `HERBWIRE_SESSION_COOKIE_SECURE=true`
+- `HERBWIRE_ENABLE_DEVELOPMENT_ENDPOINTS=false`
+
+Enter values for these backend-only secret names in the same interface without
+copying them into a terminal, documentation, source, screenshots, logs, or
+reports:
+
+- `HERBWIRE_ADMIN_EMAIL`
+- `HERBWIRE_ADMIN_PASSWORD`
+- `HERBWIRE_SESSION_SECRET`
 
 Do not set VITE_HERBWIRE_API_BASE_URL in Heroku. Do not place a credential in
 source, the Heroku manifest, Docker build arguments, shell history, or the
@@ -240,8 +249,8 @@ pgvector later requires the approved RAG milestone and its architecture review.
 The staging owner credentials and session secret are backend-only config
 variables. Startup fails unless the password is at least 16 characters, the
 session secret is at least 32 characters, the cookie name has the __Host-
-prefix, Secure cookies are enabled, the frontend origin is empty for
-same-origin use, and development endpoints are disabled. Login failures are
+prefix, Secure cookies are enabled, the frontend origin is the explicit HTTPS
+staging origin, and development endpoints are disabled. Login failures are
 limited to five attempts per client over five minutes in the single web
 process. No local editor header is recognized.
 
@@ -289,7 +298,7 @@ The corrected order is:
     git switch main
     git pull --ff-only origin main
     git status --short
-    $HerokuApp = "<approved-unique-app-name>"
+    $HerokuApp = "herbwire-staging-hafsa"
 
 Confirm that the reviewed readiness commits are merged, the account identity
 and active student credit are correct, and no app or pipeline exists:
@@ -333,12 +342,35 @@ dropping or reusing it:
 
     docker compose exec -T postgres psql -X -U herbwire -d postgres -v ON_ERROR_STOP=1 --command "SELECT count(*) AS existing_transfer_databases FROM pg_database WHERE datname = 'herbwire_staging_transfer';"
 
-After the owner approves the source identity and exclusions, clone the source.
-This reads but does not alter `herbwire`; all following writes target only the
-disposable clone:
+After the owner approves the source identity and exclusions, create the
+sanitized source with the PostgreSQL 17 tools inside the database container.
+`pg_dump` takes a consistent read-only snapshot and never writes to
+`herbwire`. Its custom-format dump stays at the exact container-local
+`/tmp/herbwire_staging_transfer.dump` path, outside the Git repository. The
+procedure uses `--file`, not PowerShell binary redirection, and creates only
+`herbwire_staging_transfer`. If any command fails, stop; do not drop, recreate,
+or retry against either database.
 
-    docker compose exec -T postgres createdb -U herbwire --template=herbwire herbwire_staging_transfer
+    $TransferDump = "/tmp/herbwire_staging_transfer.dump"
+    try {
+        docker compose exec -T postgres pg_dump -U herbwire -d herbwire --format=custom --no-owner --no-privileges --file=$TransferDump
+        if ($LASTEXITCODE -ne 0) { throw "read-only source dump failed; stop" }
+        docker compose exec -T postgres createdb -U herbwire herbwire_staging_transfer
+        if ($LASTEXITCODE -ne 0) { throw "transfer database creation failed; stop" }
+        docker compose exec -T postgres pg_restore -U herbwire -d herbwire_staging_transfer --no-owner --no-privileges --exit-on-error $TransferDump
+        if ($LASTEXITCODE -ne 0) { throw "transfer database restore failed; stop" }
+    }
+    finally {
+        docker compose exec -T postgres rm -f -- $TransferDump
+        $TransferDump = $null
+    }
+
+Confirm that the container-local dump no longer exists, then sanitize only the
+approved rows in the disposable database and run every invariant:
+
+    docker compose exec -T postgres test ! -e /tmp/herbwire_staging_transfer.dump
     docker compose exec -T postgres psql -X -U herbwire -d herbwire_staging_transfer -v ON_ERROR_STOP=1 --command "BEGIN; TRUNCATE newsletter_subscriptions, pipeline_stage_results, pipeline_runs; DELETE FROM source_records sr WHERE NOT EXISTS (SELECT 1 FROM plant_profile_sources pps WHERE pps.source_record_id = sr.id); DELETE FROM sources s WHERE NOT EXISTS (SELECT 1 FROM source_records sr WHERE sr.source_id = s.id); COMMIT;"
+    docker compose exec -T postgres psql -X -U herbwire -d herbwire_staging_transfer -v ON_ERROR_STOP=1 --command "SELECT version_num AS alembic_revision FROM alembic_version;"
     $InvariantSql | docker compose exec -T postgres psql -X -U herbwire -d herbwire_staging_transfer -v ON_ERROR_STOP=1
     $MarkerSql | docker compose exec -T postgres psql -X -U herbwire -d herbwire_staging_transfer -v ON_ERROR_STOP=1
 
@@ -381,13 +413,10 @@ Verify the transferred schema and invariants before configuring or deploying:
     heroku pg:psql DATABASE_URL -a $HerokuApp --command $InvariantSql
     heroku pg:psql DATABASE_URL -a $HerokuApp --command $MarkerSql
 
-Set the five non-secret runtime settings and the three backend-only secrets in
-the Heroku app Settings page. Do not reveal or copy `DATABASE_URL`, and do not
-run an unrestricted `heroku config` command. Required names are
-`HERBWIRE_ENVIRONMENT`, `HERBWIRE_FRONTEND_ORIGIN`,
-`HERBWIRE_SESSION_COOKIE_NAME`, `HERBWIRE_SESSION_COOKIE_SECURE`,
-`HERBWIRE_ENABLE_DEVELOPMENT_ENDPOINTS`, `HERBWIRE_ADMIN_EMAIL`,
-`HERBWIRE_ADMIN_PASSWORD`, and `HERBWIRE_SESSION_SECRET`.
+Before the first `git push`, use the Heroku Dashboard Config Vars interface to
+set the five exact non-secret values and enter the three backend-only secrets
+listed above. Confirm that all eight names are present. Do not reveal or copy
+`DATABASE_URL`, and do not run an unrestricted `heroku config` command.
 
 Deploy only after the transfer and configuration checks:
 
