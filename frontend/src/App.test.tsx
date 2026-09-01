@@ -234,7 +234,7 @@ describe("Milestone 2 final UI and functionality", () => {
     await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringContaining("/api/v1/auth/logout"), expect.objectContaining({ method: "POST" })))
   })
 
-  it("keeps the review workspace on its dedicated paged route", async () => {
+  it("paginates review sections, preserves all content, and resets on plant selection", async () => {
     const reviews = Array.from({ length: 7 }, (_, index) => ({
       ...draftReview,
       id: `review-${index + 1}`,
@@ -244,32 +244,111 @@ describe("Milestone 2 final UI and functionality", () => {
     renderAt("/admin/reviews")
 
     await screen.findByRole("heading", { name: "Review Queue" })
-    const reviewWorkspace = await screen.findByRole("region", { name: "Review workspace" })
-    expect(reviewWorkspace).toHaveClass("lg:grid-cols-[.75fr_1.25fr]")
-    expect(within(reviewWorkspace).getByText("Article review")).toBeInTheDocument()
-    expect(await within(reviewWorkspace).findByRole("img", { name: "Country-level distribution overview for Review plant 1" }, { timeout: 5000 })).toBeInTheDocument()
-    expect(screen.getByText("Page 1 of 2")).toBeInTheDocument()
-    expect(screen.queryByText("Review plant 7")).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole("button", { name: "Next" }))
-    expect(await screen.findAllByText("Review plant 7")).not.toHaveLength(0)
-    expect(screen.getByText("Page 2 of 2")).toBeInTheDocument()
-  })
-  it("compares, approves, holds, and promotes profile revisions with publication gating", async () => {
+    const workspace = await screen.findByRole("region", { name: "Review workspace" })
+    expect(workspace).toHaveClass("items-stretch", "lg:grid-cols-[.75fr_1.25fr]")
+    expect(within(workspace).getByText("Article review")).toBeInTheDocument()
+    expect(within(workspace).getByRole("heading", { name: "Overview" })).toBeInTheDocument()
+    expect(within(workspace).getByText("Section 1 of 5")).toBeInTheDocument()
+    const sectionNav = within(workspace).getByRole("navigation", { name: "Article review sections" })
+    for (const section of ["Overview", "Botanical content", "Traditional use & preparation", "Safety & evidence", "Distribution & sources"]) {
+      expect(within(sectionNav).getByRole("button", { name: `Open ${section} section` })).toBeInTheDocument()
+    }
+    const previousSection = within(workspace).getByRole("button", { name: "Previous review section" })
+    const nextSection = within(workspace).getByRole("button", { name: "Next review section" })
+    expect(previousSection).toBeDisabled()
+    expect(within(workspace).getByText(/Media attribution:/i)).toBeInTheDocument()
+
+    const mutationCallsBefore = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST").length
+    fireEvent.click(nextSection)
+    const botanicalHeading = await within(workspace).findByRole("heading", { name: "Botanical content" })
+    expect(botanicalHeading).toHaveFocus()
+    expect(within(workspace).getByText("Kew-supported botanical description.")).toBeInTheDocument()
+    fireEvent.click(previousSection)
+    expect(await within(workspace).findByRole("heading", { name: "Overview" })).toHaveFocus()
+
+    fireEvent.click(within(sectionNav).getByRole("button", { name: "Open Safety & evidence section" }))
+    expect(await within(workspace).findByRole("heading", { name: "Safety & evidence" })).toHaveFocus()
+    expect(within(workspace).getByText(/Allergy caution/i)).toBeInTheDocument()
+    expect(within(workspace).getByText(/Traditional use is not clinical proof/i)).toBeInTheDocument()
+
+    fireEvent.click(within(sectionNav).getByRole("button", { name: "Open Distribution & sources section" }))
+    expect(await within(workspace).findByRole("heading", { name: "Distribution & sources" })).toHaveFocus()
+    expect(nextSection).toBeDisabled()
+    expect(await within(workspace).findByRole("img", { name: "Country-level distribution overview for Review plant 1" }, { timeout: 8000 })).toBeInTheDocument()
+    expect(within(workspace).getByLabelText("Map legend")).toBeInTheDocument()
+    expect(within(workspace).getByText("Source title")).toBeInTheDocument()
+    expect(within(workspace).queryByText("Peppermint image source")).not.toBeInTheDocument()
+    expect(within(workspace).getByText(/Image rights and attribution are reviewed separately/i)).toBeInTheDocument()
+    const mutationCallsAfter = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST").length
+    expect(mutationCallsAfter).toBe(mutationCallsBefore)
+
+    fireEvent.click(within(workspace).getByRole("button", { name: /Review plant 2/i }))
+    expect(await within(workspace).findByRole("heading", { name: "Overview" })).toBeInTheDocument()
+    expect(within(workspace).getAllByRole("heading", { name: "Review plant 2" }).length).toBeGreaterThanOrEqual(2)
+    expect(within(workspace).getByRole("button", { name: /Review plant 2/i })).toHaveAttribute("aria-pressed", "true")
+
+    expect(within(workspace).getByText("Page 1 of 2")).toBeInTheDocument()
+    expect(within(workspace).queryByText("Review plant 7")).not.toBeInTheDocument()
+    fireEvent.click(within(workspace).getByRole("button", { name: "Next queue page" }))
+    expect(await within(workspace).findAllByText("Review plant 7")).not.toHaveLength(0)
+    expect(within(workspace).getByText("Page 2 of 2")).toBeInTheDocument()
+  }, 15000)
+  it("paginates revision comparison sections and preserves workflow gating", async () => {
     installMockApi({ authenticated: true })
     renderAt("/admin/revisions")
 
     await screen.findByRole("heading", { name: "Profile Revisions" })
-    expect(await screen.findByText("Current version 1")).toBeInTheDocument()
-    expect(screen.getByText("Proposed version 3")).toBeInTheDocument()
-    expect(screen.getByText("Expanded version-three overview from the corpus manifest.")).toBeInTheDocument()
-    const promote = screen.getByRole("button", { name: "Promote revision" })
+    const workspace = await screen.findByRole("region", { name: "Profile revision workspace" })
+    expect(await within(workspace).findByText("Current version 1")).toBeInTheDocument()
+    expect(within(workspace).getByText("Proposed version 3")).toBeInTheDocument()
+    expect(within(workspace).getByText("Expanded version-three overview from the corpus manifest.")).toBeInTheDocument()
+    const promote = within(workspace).getByRole("button", { name: "Promote revision" })
     expect(promote).toBeDisabled()
-    fireEvent.click(screen.getByRole("button", { name: "Approve revision" }))
+    expect(within(workspace).getByRole("button", { name: "Previous review section" })).toBeDisabled()
+
+    const mutationCallsBefore = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST").length
+    fireEvent.click(within(workspace).getByRole("button", { name: "Open Traditional use & preparation section" }))
+    expect(await within(workspace).findByRole("heading", { name: "Traditional use & preparation" })).toHaveFocus()
+    expect(within(workspace).getAllByText(/Documented infusion tradition without dosage/i)).toHaveLength(2)
+    fireEvent.click(within(workspace).getByRole("button", { name: "Open Safety & evidence section" }))
+    expect(within(workspace).getAllByText(/Allergy caution/i)).toHaveLength(2)
+    fireEvent.click(within(workspace).getByRole("button", { name: "Open Distribution & sources section" }))
+    expect(await within(workspace).findAllByRole("img", { name: "Country-level distribution overview for Peppermint" }, { timeout: 8000 })).toHaveLength(2)
+    expect(within(workspace).getAllByLabelText("Map legend")).toHaveLength(2)
+    expect(within(workspace).getAllByText("Source title")).toHaveLength(2)
+    expect(within(workspace).queryByText("Peppermint image source")).not.toBeInTheDocument()
+    expect(within(workspace).getByRole("button", { name: "Next review section" })).toBeDisabled()
+    const mutationCallsAfter = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST").length
+    expect(mutationCallsAfter).toBe(mutationCallsBefore)
+
+    fireEvent.click(within(workspace).getByRole("button", { name: "Approve revision" }))
     await waitFor(() => expect(promote).toBeEnabled())
     fireEvent.click(promote)
-    expect(await screen.findByText("Approved revision promoted atomically.")).toBeInTheDocument()
-  })
+    expect(await within(workspace).findByText("Approved revision promoted atomically.")).toBeInTheDocument()
+  }, 15000)
 
+  it("paginates the profile revision queue and resets comparison sections", async () => {
+    const revisions = Array.from({ length: 7 }, (_, index) => ({
+      ...plantRevision,
+      id: `revision-${index + 1}`,
+      display_common_name: `Revision plant ${index + 1}`,
+      current_content: { ...plantDetail, display_common_name: `Revision plant ${index + 1}` },
+      proposed_content: { ...plantRevision.proposed_content, display_common_name: `Revision plant ${index + 1}` },
+    }))
+    installMockApi({ authenticated: true, revisions })
+    renderAt("/admin/revisions")
+
+    const workspace = await screen.findByRole("region", { name: "Profile revision workspace" })
+    fireEvent.click(within(workspace).getByRole("button", { name: "Open Safety & evidence section" }))
+    expect(await within(workspace).findByRole("heading", { name: "Safety & evidence" })).toBeInTheDocument()
+    expect(within(workspace).getByText("Page 1 of 2")).toBeInTheDocument()
+    expect(within(workspace).queryByText("Revision plant 7")).not.toBeInTheDocument()
+    fireEvent.click(within(workspace).getByRole("button", { name: "Next queue page" }))
+    expect(await within(workspace).findAllByText("Revision plant 7")).not.toHaveLength(0)
+    expect(within(workspace).getByRole("heading", { name: "Overview" })).toBeInTheDocument()
+    expect(within(workspace).getByRole("button", { name: /Revision plant 7/i })).toHaveAttribute("aria-pressed", "true")
+    expect(within(workspace).getByText("Page 2 of 2")).toBeInTheDocument()
+  })
   it("holds a pending revision with an editorial reason", async () => {
     installMockApi({ authenticated: true })
     renderAt("/admin/revisions")

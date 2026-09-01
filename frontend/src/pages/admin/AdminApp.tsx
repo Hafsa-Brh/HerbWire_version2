@@ -1,5 +1,5 @@
 import { Activity, Database, Eye, Filter, GitCompareArrows, LayoutDashboard, LogOut, Menu, Search, ShieldCheck, Sprout, Workflow, X, Zap } from "lucide-react"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { Link, Navigate, NavLink, Route, Routes, useNavigate } from "react-router-dom"
 import { fetchSession, logout } from "../../api/auth"
 import { approvePlantRevision, approveReview, fetchAgentPerformance, fetchPipelineRuns, fetchPlantRevisions, fetchReviews, holdPlantRevision, promotePlantRevision, publishPlant, rejectReview, type ApiAgentPerformance, type ApiPipelineRun, type ApiPlantRevision, type ApiReview } from "../../api/editorial"
@@ -103,6 +103,17 @@ function ReviewQueue() {
   const reviews = data.data?.reviews ?? []
   return <><PageHeader eyebrow="Editorial / review" title="Review Queue" description="Human judgment is the final publication gate. Drafts can be approved, held with a reason, and published only after approval." action={<button type="button" onClick={data.reload} className="inline-flex items-center gap-2 bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf">Refresh</button>} />{data.data ? <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric label="Review items" value={String(reviews.length)} detail="Profiles in the editorial queue" /><Metric label="Needs attention" value={String(reviews.filter((review) => review.status === "needs_review" || review.status === "held").length)} detail="Drafts or held items" /><Metric label="Approved" value={String(reviews.filter((review) => review.status === "approved").length)} detail="Ready for publication" /><Metric label="Published" value={String(reviews.filter((review) => review.plant_profile?.status === "published").length)} detail="Visible publicly" /></div> : null}{data.isLoading ? <AdminStateCard title="Loading review queue" description="Pulling the latest items waiting for human judgment." /> : null}{data.error ? <AdminStateCard title="Review queue unavailable" description="The editorial review queue could not be loaded right now." action={<button type="button" onClick={data.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{data.data ? <ReviewPanel data={data.data} /> : null}</>
 }
+const REVIEW_SECTIONS = [
+  { id: "overview", title: "Overview" },
+  { id: "botanical", title: "Botanical content" },
+  { id: "traditional", title: "Traditional use & preparation" },
+  { id: "safety", title: "Safety & evidence" },
+  { id: "distribution", title: "Distribution & sources" },
+] as const
+
+type ReviewSectionId = (typeof REVIEW_SECTIONS)[number]["id"]
+type ReviewablePlant = ApiPlantDetail | ApiPlantRevision["proposed_content"]
+
 function ReviewPanel({ data }: { data: AdminData }) {
   const pageSize = 6
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -131,55 +142,126 @@ function ReviewPanel({ data }: { data: AdminData }) {
   function holdSelected() { if (selected) rejectReview(selected.id, reason).then(() => setMessage("Review placed on hold. Refresh to see updated state.")).catch(() => setMessage("Hold failed.")) }
   function publishSelected() { if (selected?.plant_profile) publishPlant(selected.plant_profile.id).then(() => setMessage("Profile published to the public encyclopedia. Refresh to see updated state.")).catch(() => setMessage("Publication requires an approved, complete plant profile with provenance, licensed media, distribution, and safety notes.")) }
 
-  return <section aria-label="Review workspace" className="grid gap-5 lg:grid-cols-[.75fr_1.25fr]">
-    <Panel eyebrow="Needs attention" title="Review queue">
+  return <section aria-label="Review workspace" className="grid items-stretch gap-5 lg:grid-cols-[.75fr_1.25fr]">
+    <Panel eyebrow="Needs attention" title="Review queue" className="h-full">
       <label className="mb-4 grid gap-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest">Completeness filter
         <select aria-label="Completeness filter" value={filter} onChange={(event) => { setFilter(event.target.value); setPage(1) }} className="min-h-10 border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep">
           <option value="all">All profiles</option><option value="ready_for_review">Ready for review</option><option value="missing_image">Missing image</option><option value="missing_safety">Missing safety evidence</option><option value="missing_distribution">Missing distribution</option><option value="approved">Approved</option><option value="published">Published</option><option value="held">Held</option>
         </select>
       </label>
-      <div className="grid gap-3">{pageReviews.length ? pageReviews.map((review) => <button key={review.id} type="button" onClick={() => setSelectedId(review.id)} className={"block border border-line p-4 text-left " + (selected?.id === review.id ? "bg-sage/25" : "bg-paper hover:border-leaf")}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{review.status}</AdminStatusPill><span className="font-sans text-xs text-muted">{review.plant_profile?.readiness_status ?? "held"}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{review.plant_profile?.display_common_name ?? "Discovery item"}</h2><p className="mt-2 font-sans text-xs text-muted">{review.content_type}</p></button>) : <p className="font-sans text-sm text-muted">No review items match this filter.</p>}</div>
-      {filteredReviews.length ? <div className="mt-5 flex items-center justify-between border-t border-line pt-4"><button type="button" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={safePage === 1} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Previous</button><span className="font-sans text-xs text-muted">Page {safePage} of {pageCount}</span><button type="button" onClick={() => setPage((current) => Math.min(pageCount, current + 1))} disabled={safePage === pageCount} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Next</button></div> : null}
+      <div className="grid gap-3">{pageReviews.length ? pageReviews.map((review) => {
+        const isSelected = selected?.id === review.id
+        return <button key={review.id} type="button" aria-pressed={isSelected} onClick={() => setSelectedId(review.id)} className={"block border p-4 text-left " + (isSelected ? "border-leaf bg-sage/25" : "border-line bg-paper hover:border-leaf")}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{review.status}</AdminStatusPill><span className="font-sans text-xs text-muted">{review.plant_profile?.readiness_status ?? "held"}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{review.plant_profile?.display_common_name ?? "Discovery item"}</h2><p className="mt-2 font-sans text-xs text-muted">{review.content_type}</p></button>
+      }) : <p className="font-sans text-sm text-muted">No review items match this filter.</p>}</div>
+      {filteredReviews.length ? <QueuePagination page={safePage} pageCount={pageCount} onPrevious={() => setPage((current) => Math.max(1, current - 1))} onNext={() => setPage((current) => Math.min(pageCount, current + 1))} /> : null}
     </Panel>
-    <Panel eyebrow="Article review" title={selected?.plant_profile?.display_common_name ?? "Select a review item"}>
-      {selected?.plant_profile ? <PlantReviewPreview plant={selected.plant_profile} /> : <p className="font-sans text-sm text-muted">No profile selected.</p>}
+    <Panel eyebrow="Article review" title={selected?.plant_profile?.display_common_name ?? "Select a review item"} className="flex h-full min-w-0 flex-col">
+      {selected?.plant_profile ? <PlantReviewPreview plant={selected.plant_profile} selectionKey={selected.id} /> : <p className="font-sans text-sm text-muted">No profile selected.</p>}
       {message ? <p role="alert" className="mt-4 border border-gold/40 bg-gold/10 p-3 font-sans text-sm text-deep">{message}</p> : null}
-      <div className="mt-5 flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" onClick={approveSelected} disabled={!selected || selected.status === "approved" || selected.plant_profile?.readiness_status !== "ready_for_review"} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf disabled:opacity-50">Approve</button><button type="button" onClick={publishSelected} disabled={!selected?.plant_profile || selected.status !== "approved" || selected.plant_profile.status === "published"} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-forest disabled:opacity-50">Publish</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep outline-none focus:border-leaf" /></label><button type="button" onClick={holdSelected} disabled={!selected || selected.status === "approved"} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust hover:bg-rust hover:text-cream disabled:opacity-50">Hold / reject</button></div>
+      <div className="mt-auto flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" onClick={approveSelected} disabled={!selected || selected.status === "approved" || selected.plant_profile?.readiness_status !== "ready_for_review"} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf disabled:opacity-50">Approve</button><button type="button" onClick={publishSelected} disabled={!selected?.plant_profile || selected.status !== "approved" || selected.plant_profile.status === "published"} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-forest disabled:opacity-50">Publish</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep outline-none focus:border-leaf" /></label><button type="button" onClick={holdSelected} disabled={!selected || selected.status === "approved"} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust hover:bg-rust hover:text-cream disabled:opacity-50">Hold / reject</button></div>
     </Panel>
   </section>
 }
 
-function PlantReviewPreview({ plant }: { plant: ApiPlantDetail }) {
+function QueuePagination({ page, pageCount, onPrevious, onNext }: { page: number; pageCount: number; onPrevious: () => void; onNext: () => void }) {
+  return <div className="mt-5 flex items-center justify-between border-t border-line pt-4"><button type="button" aria-label="Previous queue page" onClick={onPrevious} disabled={page === 1} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Previous</button><span className="font-sans text-xs text-muted">Page {page} of {pageCount}</span><button type="button" aria-label="Next queue page" onClick={onNext} disabled={page === pageCount} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Next</button></div>
+}
+
+function ReviewSectionPager({ selectionKey, renderSection }: { selectionKey: string; renderSection: (section: ReviewSectionId) => ReactNode }) {
+  const [sectionIndex, setSectionIndex] = useState(0)
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const shouldFocus = useRef(false)
+  const active = REVIEW_SECTIONS[sectionIndex]
+  const titleId = `review-section-${selectionKey}`
+
+
+  useEffect(() => {
+    if (shouldFocus.current) {
+      headingRef.current?.focus()
+      shouldFocus.current = false
+    }
+  }, [sectionIndex])
+
+  function goTo(nextIndex: number) {
+    if (nextIndex === sectionIndex || nextIndex < 0 || nextIndex >= REVIEW_SECTIONS.length) return
+    shouldFocus.current = true
+    setSectionIndex(nextIndex)
+  }
+
+  return <div className="flex min-h-0 flex-1 flex-col">
+    <div className="border-y border-line py-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-2"><h3 id={titleId} ref={headingRef} tabIndex={-1} className="font-serif text-2xl font-semibold text-deep outline-none">{active.title}</h3><p aria-live="polite" className="font-sans text-xs text-muted">Section {sectionIndex + 1} of {REVIEW_SECTIONS.length}</p></div>
+      <nav aria-label="Article review sections" className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">{REVIEW_SECTIONS.map((section, index) => <button key={section.id} type="button" aria-label={`Open ${section.title} section`} aria-current={index === sectionIndex ? "step" : undefined} onClick={() => goTo(index)} className={"min-h-10 border px-2 py-2 font-sans text-[10px] font-bold uppercase tracking-[.06em] " + (index === sectionIndex ? "border-forest bg-forest text-cream" : "border-line bg-paper text-muted hover:border-leaf hover:text-forest")}><span aria-hidden="true" className="mr-1">{index + 1}.</span>{section.title}</button>)}</nav>
+    </div>
+    <div role="region" aria-labelledby={titleId} className="min-h-0 py-4 lg:h-[30rem] lg:overflow-y-auto lg:pr-2">{renderSection(active.id)}</div>
+    <div className="mt-auto flex items-center justify-between border-t border-line pt-3"><button type="button" aria-label="Previous review section" onClick={() => goTo(sectionIndex - 1)} disabled={sectionIndex === 0} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Previous</button><span className="font-sans text-xs text-muted">{active.title}</span><button type="button" aria-label="Next review section" onClick={() => goTo(sectionIndex + 1)} disabled={sectionIndex === REVIEW_SECTIONS.length - 1} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Next</button></div>
+  </div>
+}
+
+function PlantReviewPreview({ plant, selectionKey }: { plant: ApiPlantDetail; selectionKey: string }) {
+  return <ReviewSectionPager key={selectionKey} selectionKey={selectionKey} renderSection={(section) => <PlantReviewSection plant={plant} sources={plant.sources} section={section} status={plant.status} version={plant.version} />} />
+}
+
+function PlantReviewSection({ plant, sources, section, status, version }: { plant: ReviewablePlant; sources: ApiPlantDetail["sources"]; section: ReviewSectionId; status?: string; version: number }) {
+  const informationSources = sources.filter((source) => source.source_type !== "licensed_media")
+  const distributionPlant: ApiPlantDetail = { ...plant, id: "editorial-preview", slug: "editorial-preview", status: status ?? "revision", published_at: null, source_count: informationSources.length, version, last_reviewed_at: null, sources }
   const checks = [
-    ["Sources", plant.sources.length > 0],
+    ["Sources", informationSources.length > 0],
     ["Licensed image", Boolean(plant.hero_image.local_path && plant.hero_image.license)],
     ["Safety evidence", plant.safety_notes.length > 0],
     ["Distribution", plant.distribution.length > 0],
   ] as const
-  return <div>
-    <div className="flex flex-wrap items-center gap-3"><AdminStatusPill>{plant.status}</AdminStatusPill><AdminStatusPill>{plant.readiness_status}</AdminStatusPill><span className="font-sans text-xs text-muted">{plant.accepted_scientific_name}</span></div>
-    <h3 className="mt-4 font-serif text-3xl font-semibold tracking-[-.045em] text-deep">{plant.display_common_name}</h3>
-    <div className="mt-5"><BotanicalImage label={plant.display_common_name} image={plant.hero_image} /></div>
-    <p className="mt-2 font-sans text-xs text-muted">{plant.hero_image.attribution ?? "No licensed image attribution"} / {plant.hero_image.license ?? "License missing"}</p>
-    <div className="mt-4 flex flex-wrap gap-2">{checks.map(([label, ready]) => <span key={label} className={"px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[.08em] " + (ready ? "bg-sage/30 text-forest" : "bg-rust/15 text-rust")}>{label}: {ready ? "ready" : "missing"}</span>)}</div>
-    <p className="mt-4 font-serif text-lg leading-relaxed text-muted">{plant.summary}</p><p className="mt-3 font-serif text-lg leading-relaxed text-muted">{plant.introduction}</p>
-    <div className="mt-5 grid gap-4 sm:grid-cols-2">
-      <section className="border border-line bg-sage/15 p-4"><h4 className="font-serif text-xl font-semibold text-deep">Botanical identity</h4><p className="mt-2 font-sans text-sm leading-relaxed text-muted">{plant.botanical_description}</p></section>
-      <section className="border border-line bg-sage/15 p-4"><h4 className="font-serif text-xl font-semibold text-deep">Safety panel</h4><ul className="mt-2 list-disc pl-5 font-sans text-sm leading-relaxed text-muted">{plant.safety_notes.map((note) => <li key={note.category + note.statement}><strong>{note.category}:</strong> {note.statement}</li>)}</ul></section>
-      <section className="border border-line bg-sage/15 p-4"><h4 className="font-serif text-xl font-semibold text-deep">Traditional use</h4>{plant.traditional_uses.map((use) => <p key={use.statement} className="mt-2 font-sans text-sm leading-relaxed text-muted">{use.tradition}: {use.statement}</p>)}</section>
-      <section className="border border-line bg-sage/15 p-4 sm:col-span-2"><h4 className="font-serif text-xl font-semibold text-deep">Distribution readiness</h4><p className="mt-2 font-sans text-sm leading-relaxed text-muted">{plant.distribution_summary}</p><ul className="mt-2 font-sans text-xs text-muted">{plant.distribution.map((region) => <li key={region.status + region.code}>{region.status}: {region.name}</li>)}</ul><PlantDistributionMap plant={plant} /></section>
-      <section className="border border-line bg-sage/15 p-4 sm:col-span-2"><h4 className="font-serif text-xl font-semibold text-deep">Provenance</h4><ol className="mt-2 grid gap-2 font-sans text-sm leading-relaxed text-muted">{plant.sources.map((source) => <li key={source.id}><strong className="text-deep">{source.title}</strong><span className="block text-xs">{source.publisher} / {source.license_status}</span></li>)}</ol></section>
-    </div>
+
+  if (section === "overview") return <div>
+    <div className="flex flex-wrap items-center gap-3">{status ? <AdminStatusPill>{status}</AdminStatusPill> : null}<AdminStatusPill>{plant.readiness_status}</AdminStatusPill><span className="font-sans text-xs text-muted">Version {version}</span></div>
+    <h4 className="mt-4 font-serif text-3xl font-semibold tracking-[-.045em] text-deep">{plant.display_common_name}</h4><p className="mt-1 font-serif text-base italic text-muted">{plant.accepted_scientific_name} {plant.botanical_author}</p><p className="mt-1 font-sans text-xs uppercase tracking-[.08em] text-muted">{plant.family_name ?? "Family unavailable"}</p>
+    <div className="mt-5 max-w-2xl"><BotanicalImage label={plant.display_common_name} image={plant.hero_image} /></div>
+    <div className="mt-3 border-l-2 border-leaf pl-3 font-sans text-xs leading-relaxed text-muted"><strong className="text-deep">Media attribution:</strong> {plant.hero_image.attribution ?? "No licensed image attribution"}<span className="block">License: {plant.hero_image.license ?? "License missing"}{plant.hero_image.license_url ? <> / <a href={plant.hero_image.license_url} target="_blank" rel="noreferrer" className="font-bold text-leaf">license terms</a></> : null}</span></div>
+    <p className="mt-5 font-serif text-lg leading-relaxed text-muted">{plant.summary}</p><p className="mt-3 font-serif text-lg leading-relaxed text-muted">{plant.introduction}</p>
+  </div>
+
+  if (section === "botanical") return <div className="grid gap-4 sm:grid-cols-2">
+    <ReviewContentBlock title="Botanical identity"><p>{plant.botanical_description}</p><dl className="mt-4 grid gap-2 text-xs"><div><dt className="font-bold text-deep">Taxon identifier</dt><dd>{plant.taxon_identifier}</dd></div><div><dt className="font-bold text-deep">Known synonyms</dt><dd>{plant.known_synonyms.length ? plant.known_synonyms.join(", ") : "None recorded."}</dd></div></dl></ReviewContentBlock>
+    <ReviewContentBlock title="Form and habitat"><dl className="grid gap-3"><div><dt className="font-bold text-deep">Growth form</dt><dd>{plant.growth_form || "Not recorded."}</dd></div><div><dt className="font-bold text-deep">Biome</dt><dd>{plant.biome || "Not recorded."}</dd></div><div><dt className="font-bold text-deep">Geographical / traditional context</dt><dd>{plant.diversity_tags.length ? plant.diversity_tags.join(", ") : "Not recorded."}</dd></div></dl></ReviewContentBlock>
+    <ReviewContentBlock title="Parts traditionally used" className="sm:col-span-2"><ul className="list-disc pl-5">{plant.parts_used.length ? plant.parts_used.map((part) => <li key={part}>{part}</li>) : <li>Not recorded.</li>}</ul></ReviewContentBlock>
+  </div>
+
+  if (section === "traditional") return <div className="grid gap-4">
+    <ReviewContentBlock title="Qualified traditional uses"><div className="grid gap-4">{plant.traditional_uses.length ? plant.traditional_uses.map((use) => <article key={use.tradition + use.statement}><p className="font-bold text-deep">{use.tradition}</p><p className="mt-1">{use.statement}</p><p className="mt-2 border-l-2 border-gold pl-3 text-xs">Qualification: {use.limitation}</p></article>) : <p>No traditional-use statements recorded.</p>}</div></ReviewContentBlock>
+    <ReviewContentBlock title="Preparation traditions"><p>{plant.preparation || "No preparation information recorded."}</p></ReviewContentBlock>
+    <p className="border border-gold/40 bg-gold/10 p-4 font-sans text-xs leading-relaxed text-deep">Traditional use does not establish clinical effectiveness and does not replace professional medical advice.</p>
+  </div>
+
+  if (section === "safety") return <div className="grid gap-4">
+    <ReviewContentBlock title="Safety, contraindications, and cautions"><ul className="grid gap-3">{plant.safety_notes.length ? plant.safety_notes.map((note) => <li key={note.category + note.statement} className="border-l-2 border-rust pl-3"><strong className="text-deep">{note.category}:</strong> {note.statement}</li>) : <li>No safety evidence recorded.</li>}</ul></ReviewContentBlock>
+    <ReviewContentBlock title="Evidence strength and limitations"><p>{plant.evidence_notes || "No evidence limitations recorded."}</p></ReviewContentBlock>
+  </div>
+
+  return <div className="grid gap-4">
+    <div className="flex flex-wrap gap-2">{checks.map(([label, ready]) => <span key={label} className={"px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[.08em] " + (ready ? "bg-sage/30 text-forest" : "bg-rust/15 text-rust")}>{label}: {ready ? "ready" : "missing"}</span>)}</div>
+    <ReviewContentBlock title="Distribution readiness"><p>{plant.distribution_summary || "No distribution summary recorded."}</p><ul aria-label="Distribution regions" className="mt-3 grid gap-1 text-xs">{plant.distribution.map((region) => <li key={region.status + region.code}><strong className="capitalize text-deep">{region.status}:</strong> {region.name}</li>)}</ul><PlantDistributionMap plant={distributionPlant} /></ReviewContentBlock>
+    <ReviewContentBlock title="Information sources"><ol className="grid gap-3">{informationSources.length ? informationSources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer" className="font-bold text-deep hover:text-leaf">{source.title}</a><span className="block text-xs">{source.publisher} / {source.source_type} / {source.license_status}</span></li>) : <li>No information sources linked.</li>}</ol></ReviewContentBlock>
+    <p className="font-sans text-xs leading-relaxed text-muted">Image rights and attribution are reviewed separately in the Overview section.</p>
   </div>
 }
+
+function ReviewContentBlock({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
+  return <section className={`border border-line bg-sage/15 p-4 font-sans text-sm leading-relaxed text-muted ${className}`}><h4 className="font-serif text-xl font-semibold text-deep">{title}</h4><div className="mt-2">{children}</div></section>
+}
+
 function ProfileRevisions() {
+  const pageSize = 6
   const revisions = useAsyncResource<ApiPlantRevision[]>(useCallback((signal: AbortSignal) => fetchPlantRevisions(signal), []))
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
   const [reason, setReason] = useState("Needs additional editorial review.")
   const [message, setMessage] = useState("")
   const [busy, setBusy] = useState(false)
   const items = useMemo(() => revisions.data ?? [], [revisions.data])
-  const selected = useMemo(() => items.find((revision) => revision.id === selectedId) ?? items[0] ?? null, [items, selectedId])
+  const pageCount = Math.max(1, Math.ceil(items.length / pageSize))
+  const safePage = Math.min(page, pageCount)
+  const pageItems = useMemo(() => items.slice((safePage - 1) * pageSize, safePage * pageSize), [items, safePage])
+  const selected = useMemo(() => pageItems.find((revision) => revision.id === selectedId) ?? pageItems[0] ?? null, [pageItems, selectedId])
 
   async function act(action: () => Promise<ApiPlantRevision>, success: string) {
     setBusy(true)
@@ -199,37 +281,30 @@ function ProfileRevisions() {
     {revisions.isLoading ? <AdminStateCard title="Loading profile revisions" description="Retrieving current and proposed article versions." /> : null}
     {revisions.error ? <AdminStateCard title="Profile revisions unavailable" description="The revision queue could not be loaded." action={<button type="button" onClick={revisions.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}
     {revisions.data && !items.length ? <AdminStateCard title="No profile revisions" description="Newer manifest content will appear here without replacing canonical articles." /> : null}
-    {items.length ? <section aria-label="Profile revision workspace" className="grid gap-5 xl:grid-cols-[.48fr_1.52fr]">
-      <Panel eyebrow="Pending content" title="Revision queue"><div className="grid max-h-[44rem] gap-3 overflow-y-auto pr-1">{items.map((revision) => <button key={revision.id} type="button" onClick={() => setSelectedId(revision.id)} className={"border border-line p-4 text-left " + (selected?.id === revision.id ? "bg-sage/25" : "bg-paper hover:border-leaf")}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">v{revision.current_version} to v{revision.proposed_version}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{revision.display_common_name}</h2></button>)}</div></Panel>
-      <Panel eyebrow="Current / proposed" title={selected?.display_common_name ?? "Select a revision"}>{selected ? <RevisionComparison revision={selected} /> : null}
+    {items.length ? <section aria-label="Profile revision workspace" className="grid items-stretch gap-5 xl:grid-cols-[.48fr_1.52fr]">
+      <Panel eyebrow="Pending content" title="Revision queue" className="h-full"><div className="grid gap-3">{pageItems.map((revision) => {
+        const isSelected = selected?.id === revision.id
+        return <button key={revision.id} type="button" aria-pressed={isSelected} onClick={() => setSelectedId(revision.id)} className={"border p-4 text-left " + (isSelected ? "border-leaf bg-sage/25" : "border-line bg-paper hover:border-leaf")}><div className="flex items-center justify-between gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">v{revision.current_version} to v{revision.proposed_version}</span></div><h2 className="mt-3 font-serif text-xl font-semibold text-deep">{revision.display_common_name}</h2></button>
+      })}</div><QueuePagination page={safePage} pageCount={pageCount} onPrevious={() => setPage((current) => Math.max(1, current - 1))} onNext={() => setPage((current) => Math.min(pageCount, current + 1))} /></Panel>
+      <Panel eyebrow="Current / proposed" title={selected?.display_common_name ?? "Select a revision"} className="flex h-full min-w-0 flex-col">{selected ? <RevisionComparison revision={selected} /> : null}
         {message ? <p role="alert" className="mt-4 border border-gold/40 bg-gold/10 p-3 font-sans text-sm text-deep">{message}</p> : null}
-        {selected ? <div className="mt-5 flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" disabled={busy || !["needs_review", "held"].includes(selected.status)} onClick={() => act(() => approvePlantRevision(selected.id), "Revision approved. It remains private until promotion.")} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Approve revision</button><button type="button" disabled={busy || selected.status !== "approved"} onClick={() => act(() => promotePlantRevision(selected.id), "Approved revision promoted atomically.")} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Promote revision</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep" /></label><button type="button" disabled={busy || !reason.trim() || selected.status === "promoted" || selected.status === "superseded"} onClick={() => act(() => holdPlantRevision(selected.id, reason), "Revision held. Canonical public content is unchanged.")} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust disabled:opacity-40">Hold / reject</button></div> : null}
+        {selected ? <div className="mt-auto flex flex-wrap items-end gap-3 border-t border-line pt-4"><button type="button" disabled={busy || !["needs_review", "held"].includes(selected.status)} onClick={() => act(() => approvePlantRevision(selected.id), "Revision approved. It remains private until promotion.")} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Approve revision</button><button type="button" disabled={busy || selected.status !== "approved"} onClick={() => act(() => promotePlantRevision(selected.id), "Approved revision promoted atomically.")} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream disabled:opacity-40">Promote revision</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep" /></label><button type="button" disabled={busy || !reason.trim() || selected.status === "promoted" || selected.status === "superseded"} onClick={() => act(() => holdPlantRevision(selected.id, reason), "Revision held. Canonical public content is unchanged.")} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust disabled:opacity-40">Hold / reject</button></div> : null}
       </Panel>
     </section> : null}
   </>
 }
 
 function RevisionComparison({ revision }: { revision: ApiPlantRevision }) {
-  const proposed = revision.proposed_content
-  return <div>
-    <div className="mb-5 flex flex-wrap items-center gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">Current v{revision.current_version}</span><GitCompareArrows size={15} className="text-leaf" /><span className="font-sans text-xs font-semibold text-forest">Proposed v{revision.proposed_version}</span></div>
-    <div className="grid gap-5 lg:grid-cols-2">
-      <RevisionColumn label={`Current version ${revision.current_version}`} plant={revision.current_content} sources={revision.current_content.sources} />
-      <RevisionColumn label={`Proposed version ${revision.proposed_version}`} plant={proposed} sources={revision.proposed_sources} />
-    </div>
+  return <div className="flex min-h-0 flex-1 flex-col">
+    <div className="mb-4 flex flex-wrap items-center gap-3"><AdminStatusPill>{revision.status}</AdminStatusPill><span className="font-sans text-xs text-muted">Current v{revision.current_version}</span><GitCompareArrows size={15} className="text-leaf" /><span className="font-sans text-xs font-semibold text-forest">Proposed v{revision.proposed_version}</span></div>
+    <ReviewSectionPager key={revision.id} selectionKey={revision.id} renderSection={(section) => <div className="grid gap-5 lg:grid-cols-2"><RevisionColumn label={`Current version ${revision.current_version}`} plant={revision.current_content} sources={revision.current_content.sources} section={section} status={revision.current_content.status} version={revision.current_version} /><RevisionColumn label={`Proposed version ${revision.proposed_version}`} plant={revision.proposed_content} sources={revision.proposed_sources} section={section} status={revision.status} version={revision.proposed_version} /></div>} />
     {revision.decision_reason ? <p className="mt-4 border border-rust/30 bg-rust/10 p-3 font-sans text-sm text-deep"><strong>Editorial reason:</strong> {revision.decision_reason}</p> : null}
   </div>
 }
 
-function RevisionColumn({ label, plant, sources }: { label: string; plant: ApiPlantRevision["current_content"] | ApiPlantRevision["proposed_content"]; sources: ApiPlantDetail["sources"] }) {
-  return <article className="min-w-0 border border-line bg-paper p-4">
-    <p className="hw-eyebrow">{label}</p><h3 className="mt-2 font-serif text-2xl font-semibold text-deep">{plant.display_common_name}</h3><p className="font-sans text-xs italic text-muted">{plant.accepted_scientific_name} {plant.botanical_author}</p>
-    <div className="mt-4"><BotanicalImage label={plant.display_common_name} image={plant.hero_image} /></div><p className="mt-2 font-sans text-xs text-muted">{plant.hero_image.attribution ?? "Attribution unavailable"} / {plant.hero_image.license ?? "License unavailable"}</p>
-    <div className="mt-5 grid gap-4 font-sans text-sm leading-relaxed text-muted"><RevisionField title="Overview" value={plant.introduction} /><RevisionField title="Taxonomy" value={`${plant.family_name ?? "Family unavailable"}. ${plant.botanical_description}`} /><RevisionField title="Parts traditionally used" value={plant.parts_used.join(", ")} /><RevisionField title="Traditional uses" value={plant.traditional_uses.map((use) => `${use.tradition}: ${use.statement} ${use.limitation}`).join(" ")} /><RevisionField title="Preparation" value={plant.preparation} /><RevisionField title="Safety" value={plant.safety_notes.map((note) => `${note.category}: ${note.statement}`).join(" ")} /><RevisionField title="Evidence limitations" value={plant.evidence_notes} /><RevisionField title="Distribution" value={`${plant.distribution_summary} ${plant.distribution.map((region) => `${region.status}: ${region.name}`).join("; ")}`} /><RevisionField title="Provenance" value={sources.map((source) => `${source.title} (${source.publisher})`).join("; ")} /></div>
-  </article>
+function RevisionColumn({ label, plant, sources, section, status, version }: { label: string; plant: ReviewablePlant; sources: ApiPlantDetail["sources"]; section: ReviewSectionId; status: string; version: number }) {
+  return <article className="min-w-0 border border-line bg-paper p-4"><p className="hw-eyebrow mb-3">{label}</p><PlantReviewSection plant={plant} sources={sources} section={section} status={status} version={version} /></article>
 }
-
-function RevisionField({ title, value }: { title: string; value: string }) { return <section className="border-t border-line pt-3"><h4 className="font-serif text-lg font-semibold text-deep">{title}</h4><p className="mt-1">{value || "Not provided in this version."}</p></section> }
 function PipelineRuns() { const runs = useAsyncResource(useCallback((signal: AbortSignal) => fetchPipelineRuns(signal), [])); return <><PageHeader eyebrow="Operations / monitoring" title="Pipeline Runs" description="A clear record of every persisted HerbWire pipeline run and stage result." />{runs.isLoading ? <AdminStateCard title="Loading pipeline dashboard" description="Gathering run activity and stage history." /> : null}{runs.error ? <AdminStateCard title="Pipeline runs unavailable" description="The pipeline monitoring view could not be loaded." action={<button type="button" onClick={runs.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{runs.data ? <PipelinePanel runs={runs.data} /> : null}</> }
 
 function PipelinePanel({ runs }: { runs: ApiPipelineRun[] }) { return <Panel eyebrow="Recent activity" title="Pipeline runs"><div className="grid gap-4">{runs.length ? runs.map((run) => <article key={run.id} className="border-t border-line pt-4 first:border-t-0 first:pt-0"><div className="flex flex-wrap items-center justify-between gap-3"><div><AdminStatusPill>{run.status}</AdminStatusPill><h3 className="mt-3 font-serif text-xl font-semibold text-deep">{run.pipeline_type}</h3><p className="mt-1 font-sans text-xs text-muted">{run.trigger} / {run.current_stage} / {new Date(run.started_at).toLocaleString()}</p></div></div><ol className="mt-3 list-decimal pl-5 font-sans text-xs leading-relaxed text-muted">{run.stages.map((stage) => <li key={`${run.id}-${stage.name}`}>{stage.name}: {stage.status} / {stage.duration_ms}ms</li>)}</ol></article>) : <p className="font-sans text-sm text-muted">No pipeline runs recorded.</p>}</div></Panel> }
