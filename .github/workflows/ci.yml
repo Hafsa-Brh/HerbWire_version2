@@ -2,33 +2,82 @@ name: CI
 
 on:
   pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
+
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  repository-hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Reject conflict markers
+        run: |
+          if git grep -nE '^(<<<<<<< |=======|>>>>>>> )' -- .; then
+            echo "Merge conflict markers are tracked."
+            exit 1
+          fi
+      - name: Reject tracked secrets and local artifacts
+        run: |
+          failed=0
+
+          while IFS= read -r path; do
+            case "$path" in
+              .env|*/.env|.env.*|*/.env.*)
+                if [[ "$path" != ".env.example" && "$path" != */.env.example ]]; then
+                  echo "Forbidden environment file is tracked: $path"
+                  failed=1
+                fi
+                ;;
+              *.pem|*.key|*.p12|*.pfx|*.dump|*.sqlite|*.sqlite3|*.db|*/node_modules/*|*/dist/*|*/build/*|*/__pycache__/*|*/.pytest_cache/*|*/.ruff_cache/*|*/coverage/*|*/.coverage)
+                echo "Forbidden secret-bearing or generated artifact is tracked: $path"
+                failed=1
+                ;;
+            esac
+          done < <(git ls-files)
+
+          secret_patterns=(
+            '-----BEGIN ([A-Z0-9]+ )?PRIVATE KEY-----'
+            'AKIA[0-9A-Z]{16}'
+            'gh[pousr]_[A-Za-z0-9_]{20,}'
+            'xox[baprs]-[A-Za-z0-9-]{20,}'
+            'sk-(proj-)?[A-Za-z0-9_-]{20,}'
+          )
+          for pattern in "${secret_patterns[@]}"; do
+            if git grep -qEI -e "$pattern" -- .; then
+              echo "A high-confidence credential pattern is tracked."
+              failed=1
+            fi
+          done
+
+          exit "$failed"
   backend:
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_DB: herbwire
-          POSTGRES_USER: herbwire
-          POSTGRES_PASSWORD: herbwire_dev
+          POSTGRES_DB: herbwire_ci_test
+          POSTGRES_USER: herbwire_ci_runner
+          POSTGRES_PASSWORD: ci_only_fixture_password_not_secret
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U herbwire -d herbwire"
+          --health-cmd "pg_isready -U herbwire_ci_runner -d herbwire_ci_test"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
     env:
-      HERBWIRE_DATABASE_URL: postgresql+psycopg://herbwire:herbwire_dev@127.0.0.1:5432/herbwire
+      HERBWIRE_DATABASE_URL: postgresql+psycopg://herbwire_ci_runner:ci_only_fixture_password_not_secret@127.0.0.1:5432/herbwire_ci_test
       HERBWIRE_FRONTEND_ORIGIN: http://127.0.0.1:5173
       HERBWIRE_API_HOST: 127.0.0.1
       HERBWIRE_API_PORT: 8000
@@ -38,6 +87,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
       - name: Install backend dependencies
         run: |
           python -m pip install --upgrade pip
@@ -46,12 +97,10 @@ jobs:
         run: python -m ruff check backend
       - name: Ruff format check
         run: python -m ruff format --check backend
-      - name: Migration cycle
+      - name: Apply migrations to empty database
         run: |
+          python -m alembic -c backend/alembic.ini upgrade head
           python -m alembic -c backend/alembic.ini current
-          python -m alembic -c backend/alembic.ini upgrade head
-          python -m alembic -c backend/alembic.ini downgrade 20260829_0001
-          python -m alembic -c backend/alembic.ini upgrade head
       - name: Backend tests
         run: python -m pytest backend/tests -q
 
