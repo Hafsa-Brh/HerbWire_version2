@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     zyte_api_key: str | None = Field(default=None)
     zyte_request_timeout_seconds: float = Field(default=10.0)
     zyte_max_retries: int = Field(default=2)
+    ncbi_email: str | None = Field(default=None)
+    ncbi_request_timeout_seconds: float = Field(default=10.0)
+    ncbi_max_retries: int = Field(default=2)
 
     @model_validator(mode="after")
     def validate_runtime_contract(self) -> Self:

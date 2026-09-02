@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PubmedArticleSet>
+  <PubmedArticle>
+    <MedlineCitation>
+      <PMID Version="1">39900001</PMID>
+      <Article>
+        <Journal>
+          <JournalIssue CitedMedium="Internet">
+            <PubDate><Year>2026</Year><Month>Sep</Month><Day>1</Day></PubDate>
+          </JournalIssue>
+          <Title>Journal of Botanical Evidence</Title>
+        </Journal>
+        <ArticleTitle>Safety evidence concerning Zingiber officinale in a bounded clinical study</ArticleTitle>
+        <Abstract>
+          <AbstractText Label="BACKGROUND">Zingiber officinale is a medicinal plant used in several herbal preparations.</AbstractText>
+          <AbstractText Label="LIMITATIONS">This abstract reports a small observational study and does not establish treatment efficacy.</AbstractText>
+        </Abstract>
+        <AuthorList>
+          <Author><ForeName>Amina</ForeName><LastName>Researcher</LastName></Author>
+          <Author><CollectiveName>Botanical Evidence Group</CollectiveName></Author>
+        </AuthorList>
+        <Language>eng</Language>
+        <PublicationTypeList><PublicationType>Clinical Study</PublicationType></PublicationTypeList>
+      </Article>
+    </MedlineCitation>
+    <PubmedData>
+      <ArticleIdList>
+        <ArticleId IdType="pubmed">39900001</ArticleId>
+        <ArticleId IdType="doi">10.1000/HERBWIRE.2026.1</ArticleId>
+      </ArticleIdList>
+    </PubmedData>
+  </PubmedArticle>
+</PubmedArticleSet>

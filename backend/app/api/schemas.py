@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import date, datetime
+from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class SourceRecordResponse(BaseModel):
@@ -114,10 +115,14 @@ class SeedResponse(BaseModel):
 
 
 class PipelineStageResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     name: str
     status: str
     attempt: int
     duration_ms: int
+    input_count: int = 0
+    output_count: int = 0
     input_refs: list
     output_refs: list
     error_code: str | None
@@ -186,3 +191,90 @@ class AgentPerformanceResponse(BaseModel):
     auto_published: int
     last_execution: datetime | None
     stages: list[AgentMetricResponse]
+
+
+class DiscoveryRunRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    source: str = Field(default="pubmed", pattern="^pubmed$")
+    start_date: date
+    end_date: date
+    max_records: int = Field(default=5, ge=1, le=5)
+    date_type: Literal["publication", "indexing"] = "publication"
+
+    @model_validator(mode="after")
+    def validate_window(self):
+        if self.start_date > self.end_date:
+            raise ValueError("start_date must not be after end_date")
+        if (self.end_date - self.start_date).days > 31:
+            raise ValueError("date window must not exceed 31 days")
+        return self
+
+
+class DiscoverySourceResponse(BaseModel):
+    id: UUID
+    pmid: str
+    doi: str | None
+    canonical_url: str
+    title: str
+    authors: list
+    journal: str | None
+    publication_date: str | None
+
+
+class DiscoveryArticleResponse(BaseModel):
+    id: UUID
+    slug: str
+    status: str
+    headline: str
+    standfirst: str
+    body_blocks: list
+    limitations: list
+    safety_context: str
+    cannot_conclude: list
+    qa_payload: dict
+    version: int
+    category: str
+    relevance_reasons: list
+    detected_entities: list
+    evidence_package: dict
+    sources: list[DiscoverySourceResponse]
+    review_id: UUID | None
+    review_status: str | None
+    reviewer_name: str | None
+    decision_reason: str | None
+    created_at: datetime
+    reviewed_at: datetime | None
+    published_at: datetime | None
+
+
+class DiscoveryArticlePageResponse(BaseModel):
+    items: list[DiscoveryArticleResponse]
+    total: int
+    page: int
+    page_size: int
+    pages: int
+
+
+class PublicDiscoveryArticleResponse(BaseModel):
+    id: UUID
+    slug: str
+    headline: str
+    standfirst: str
+    body_blocks: list
+    limitations: list
+    safety_context: str
+    cannot_conclude: list
+    version: int
+    category: str
+    sources: list[DiscoverySourceResponse]
+    created_at: datetime
+    published_at: datetime
+
+
+class PublicDiscoveryArticlePageResponse(BaseModel):
+    items: list[PublicDiscoveryArticleResponse]
+    total: int
+    page: int
+    page_size: int
+    pages: int
