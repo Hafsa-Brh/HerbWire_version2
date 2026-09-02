@@ -297,6 +297,10 @@ class PlantProfile(Base):
             "status in ('collected','normalized','draft','needs_review','approved','rejected','held','published')",
             name="ck_plant_profiles_status",
         ),
+        CheckConstraint(
+            "readiness_status in ('legacy','ready_for_review','held')",
+            name="ck_plant_profiles_readiness_status",
+        ),
         Index("ix_plant_profiles_status", "status"),
         Index("ix_plant_profiles_common_name", "display_common_name"),
         Index("ix_plant_profiles_scientific_name", "accepted_scientific_name"),

@@ -3,8 +3,23 @@ from pathlib import Path
 
 import pytest
 from backend.app.domains.encyclopedia.corpus import DistributionRegion, load_corpus
+from backend.app.models.encyclopedia import PlantProfile
+from sqlalchemy import CheckConstraint
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+
+
+def test_plant_profile_readiness_constraint_is_represented_in_metadata() -> None:
+    constraint = next(
+        item
+        for item in PlantProfile.__table__.constraints
+        if item.name == "ck_plant_profiles_readiness_status"
+    )
+
+    assert isinstance(constraint, CheckConstraint)
+    assert str(constraint.sqltext) == (
+        "readiness_status in ('legacy','ready_for_review','held')"
+    )
 
 
 def test_corpus_has_three_complete_batches_and_unique_taxa() -> None:
