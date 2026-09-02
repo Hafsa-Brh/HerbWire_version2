@@ -21,6 +21,7 @@ def deployed_settings(**overrides) -> Settings:
     values = {
         "environment": "staging",
         "database_url": "postgres://user@db.example.invalid/herbwire",
+        "local_database_name": None,
         "frontend_origin": "https://herbwire-staging-hafsa.herokuapp.com",
         "admin_email": "editor@example.invalid",
         "admin_password": "long-staging-password",

@@ -634,11 +634,46 @@ def publish_discovery_article(
     )
     if not all(value and value.strip() for value in required_text):
         raise ValueError("The discovery version is incomplete and cannot be published.")
+    required_section_keys = {
+        "overview",
+        "research_question",
+        "why_studied",
+        "methods",
+        "evidence_base",
+        "findings",
+        "why_matters",
+        "evidence_strength",
+        "limitations",
+        "safety",
+        "cannot_conclude",
+    }
+    body_section_keys = {
+        block.get("key") for block in article.body_blocks if isinstance(block, dict)
+    }
+    standalone_identity = article.event.evidence_package.get("botanical_identity")
+    standalone_is_traceable = bool(
+        standalone_identity
+        and standalone_identity.get("accepted")
+        and standalone_identity.get("authority_source_id")
+        and any(
+            link.support_role in {"taxonomy", "taxonomy_distribution"}
+            for link in article.sources
+        )
+        and any(
+            link.support_role in {"distribution", "taxonomy_distribution"}
+            for link in article.sources
+        )
+        and any(
+            item.get("geography_kind") == "botanical_distribution"
+            for item in article.geography
+            if isinstance(item, dict)
+        )
+    )
     if (
         not article.qa_payload.get("passed", False)
-        or len(article.body_blocks) != 11
+        or not required_section_keys <= body_section_keys
         or not article.sources
-        or not article.plant_links
+        or not (article.plant_links or standalone_is_traceable)
         or not article.hero_image.get("license")
         or not article.hero_image.get("checksum_sha256")
         or not article.section_sources

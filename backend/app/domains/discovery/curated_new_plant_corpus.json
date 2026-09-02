@@ -1,0 +1,3832 @@
+{
+  "schema_version": 2,
+  "batch_id": "milestone-4c-new-plants",
+  "selection_audit": [
+    {
+      "candidate_plant": "Moringa oleifera Lam.",
+      "candidate_pmid": "41305552",
+      "candidate_doi": "10.3390/nu17223501",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Ocimum tenuiflorum L.",
+      "candidate_pmid": "37829808",
+      "candidate_doi": "10.1016/j.heliyon.2023.e20691",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Centella asiatica (L.) Urb.",
+      "candidate_pmid": "42196964",
+      "candidate_doi": "10.3390/nu18101505",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Nigella sativa L.",
+      "candidate_pmid": "38777430",
+      "candidate_doi": "10.1016/j.clnesp.2024.03.020",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Crocus sativus L.",
+      "candidate_pmid": "38796446",
+      "candidate_doi": "10.1186/s12986-024-00806-y",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Review"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Bacopa monnieri (L.) Wettst.",
+      "candidate_pmid": "38538390",
+      "candidate_doi": "10.1016/j.explore.2024.02.008",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Rhodiola rosea L.",
+      "candidate_pmid": "37495266",
+      "candidate_doi": "10.1002/ptr.7950",
+      "decision": "selected",
+      "study_type": [
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Sabdariffa gossypiifolia (Mill.) M.M.Hanes & R.L.Barrett",
+      "candidate_pmid": "38878905",
+      "candidate_doi": "10.1016/j.ctim.2024.103063",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Tinospora cordifolia (Willd.) Hook.f. & Thomson",
+      "candidate_pmid": "38784353",
+      "candidate_doi": "10.7759/cureus.58807",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Plantago ovata Forssk.",
+      "candidate_pmid": "39479650",
+      "candidate_doi": "10.1002/fsn3.3863",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Review"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Andrographis paniculata (Burm.f.) Wall. ex Nees",
+      "candidate_pmid": "37821383",
+      "candidate_doi": "10.5582/ddt.2023.01053",
+      "decision": "selected",
+      "study_type": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Gymnema sylvestre (Retz.) R.Br. ex Sm.",
+      "candidate_pmid": "39064727",
+      "candidate_doi": "10.3390/nu16142284",
+      "decision": "selected",
+      "study_type": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Comparative Study"
+      ],
+      "source_completeness": "PubMed metadata and abstract plus Kew taxonomy and distribution verified"
+    },
+    {
+      "candidate_plant": "Azadirachta indica A.Juss.",
+      "candidate_pmid": null,
+      "candidate_doi": null,
+      "decision": "rejected",
+      "study_type": null,
+      "source_completeness": "No recent sufficiently informative plant-specific human source selected."
+    },
+    {
+      "candidate_plant": "Berberis vulgaris L.",
+      "candidate_pmid": "39413550",
+      "candidate_doi": "10.1016/j.jaim.2024.101039",
+      "decision": "rejected",
+      "study_type": [
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "source_completeness": "The pooled intervention combined Berberis vulgaris with B. integerrima, preventing a clean species-specific article."
+    },
+    {
+      "candidate_plant": "Urtica dioica L.",
+      "candidate_pmid": "38716323",
+      "candidate_doi": null,
+      "decision": "rejected",
+      "study_type": [
+        "Randomized Controlled Trial"
+      ],
+      "source_completeness": "The tested five-herb mixture could not support a nettle-specific finding."
+    }
+  ],
+  "articles": [
+    {
+      "slug": "moringa-41305552-evidence-report",
+      "content_version": 1,
+      "content_checksum": "237a3885dc484aa45033cb3d80f66695c4fcc39be2d02e9fead2d02f1c758f6b",
+      "plant_slug": null,
+      "common_name": "Moringa",
+      "scientific_name": "Moringa oleifera Lam.",
+      "botanical_identity": {
+        "common_name": "Moringa",
+        "accepted_scientific_name": "Moringa oleifera Lam.",
+        "cited_scientific_name": null,
+        "family": "Moringaceae",
+        "authority_source_id": "powo:584736-1",
+        "authority_taxon_id": "584736-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:584736-1",
+        "accepted": true
+      },
+      "headline": "Moringa meta-analysis finds no consistent cardiometabolic benefit",
+      "standfirst": "Nine randomized trials did not support consistent cardiometabolic benefits from moringa supplementation; one blood-pressure signal weakened during sensitivity analysis and every assessed outcome received very-low-certainty evidence.",
+      "publication_date": "2025-11-07",
+      "research_date": null,
+      "article_type": "Meta-Analysis",
+      "research_question": "Across randomized adult trials, does moringa supplementation change body measurements, blood lipids, glucose measures, or blood pressure?",
+      "research_context": "Moringa leaves and other plant parts are foods and components of traditional practices in parts of Africa and Asia. The review tested modern supplement claims against controlled evidence rather than treating those histories as proof of efficacy.",
+      "study_design": "The authors searched three databases through 7 April 2025, included adult randomized trials lasting at least two weeks, pooled outcomes with random-effects models, assessed bias with RoB 2, and rated certainty with GRADE.",
+      "evidence_base": "Nine trials contributed 12 study arms: 341 participants received moringa and 308 were in control groups. Products, doses, durations, populations, and cardiometabolic endpoints varied.",
+      "intervention": "Moringa preparations used in the included trials.",
+      "comparator": "Placebo or control conditions used by each randomized trial.",
+      "main_findings": [
+        "Most measured cardiometabolic outcomes did not differ significantly.",
+        "Diastolic blood pressure showed a modest pooled reduction, but it was not robust in sensitivity analysis.",
+        "GRADE certainty was very low for every evaluated outcome."
+      ],
+      "evidence_strength": "low",
+      "evidence_strength_rationale": "Randomization and formal GRADE assessment strengthen the review process, but small trials, bias, indirectness, and frequently high heterogeneity make the estimated effects very uncertain.",
+      "why_matters": "A careful negative result helps distinguish biological plausibility and traditional use from demonstrated clinical benefit. It also directs future work toward larger, standardized trials.",
+      "limitations": [
+        "Trials were small and methodologically uneven.",
+        "Products and outcome definitions differed.",
+        "Several pooled outcomes had heterogeneity above 80 percent.",
+        "The isolated blood-pressure signal did not survive sensitivity testing."
+      ],
+      "safety_context": "The indexed review focused on cardiometabolic efficacy and does not establish broad safety across plant parts, preparations, medicines, pregnancy, or long-term use. Product identity and contamination remain separate questions.",
+      "cannot_conclude": [
+        "The review does not prove that moringa prevents or treats diabetes or cardiovascular disease.",
+        "It does not establish an effective preparation or dose.",
+        "Subgroup observations cannot substitute for prospectively designed trials."
+      ],
+      "practical_interpretation": "The strongest reading is restraint: current randomized evidence is too uncertain to support broad cardiometabolic promises for moringa supplements.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew records Moringa oleifera as a plant used for food and medicine. That documented use context explains research interest but is not clinical-effect evidence.",
+          "source_ids": [
+            "powo:584736-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Moringa oleifera Lam. in Moringaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:584736-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "Included trials tested various moringa supplements rather than one standardized product. The meta-analysis therefore cannot make every leaf powder, extract, or food preparation interchangeable.",
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "The review examined anthropometric measures, lipid profiles, glycemic indices, and blood pressure. Reporting outcome-by-outcome matters because a weak signal in one measure does not imply general metabolic benefit.",
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "The review's subgroup findings were exploratory and should be treated as hypotheses. Larger trials need verified plant material, defined preparations, adequate duration, and preregistered outcomes.",
+          "source_ids": [
+            "pubmed:41305552"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native from northeastern pakistan to northwestern india. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:584736-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native from northeastern Pakistan to northwestern India",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "PK",
+            "IN"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:584736-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native from northeastern Pakistan to northwestern India",
+          "map_title": "Documented botanical distribution"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-moringa.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=58536866",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/1/16/Kalamunggay_%28Moringa_oleifera%29%2C_Philippines.jpg",
+        "stable_media_identifier": "commons:58536866",
+        "creator": "Obsidian Soul",
+        "license": "CC0 1.0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "attribution": "Kalamunggay (Moringa oleifera), Philippines.jpg — Obsidian Soul, CC0 1.0, via Wikimedia Commons",
+        "checksum_sha256": "2cb05f115172f0563e3a925556d31d66493ebe2184e64a63550562773e0fc289",
+        "plant_relevance": "The source description identifies Moringa oleifera Lam. or its studied preparation.",
+        "classification": "documentary",
+        "caption": "Documentary image of moringa leaves; not from the reported study.",
+        "alt_text": "Moringa editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:41305552",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "41305552",
+          "doi": "10.3390/nu17223501",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/41305552/",
+          "title": "Effects of Moringa oleifera Lam. Supplementation on Cardiometabolic Outcomes: A Meta-Analysis of Randomized Controlled Trials with GRADE Assessment.",
+          "authors": [
+            "Diana Crișan",
+            "Laura Gavrilaș",
+            "Ramona Păltinean",
+            "Oleg Frumuzachi",
+            "Andrei Mocan",
+            "Gianina Crișan"
+          ],
+          "journal": "Nutrients",
+          "publication_date": "2025-11-07",
+          "publication_types": [
+            "Journal Article",
+            "Meta-Analysis",
+            "Systematic Review"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:584736-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "584736-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:584736-1",
+          "title": "Moringa oleifera Lam. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "holy-basil-37829808-evidence-report",
+      "content_version": 1,
+      "content_checksum": "d42204631eca7e16f9beba594eccd616bb037f6813e234e1d171a5dd49c2f075",
+      "plant_slug": null,
+      "common_name": "Holy basil",
+      "scientific_name": "Ocimum tenuiflorum L.",
+      "botanical_identity": {
+        "common_name": "Holy basil",
+        "accepted_scientific_name": "Ocimum tenuiflorum L.",
+        "cited_scientific_name": null,
+        "family": "Lamiaceae",
+        "authority_source_id": "powo:453130-1",
+        "authority_taxon_id": "453130-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:453130-1",
+        "accepted": true
+      },
+      "headline": "Small trial tests holy basil tea during radioiodine therapy",
+      "standfirst": "A 44-person randomized study reported differences in anxiety scores, oral measurements, and salivary-gland imaging during radioiodine therapy, but its short duration and small sample keep the findings preliminary.",
+      "publication_date": "2023-10-05",
+      "research_date": null,
+      "article_type": "Randomized Controlled Trial",
+      "research_question": "Could a defined holy basil leaf tea influence anxiety and selected oral or salivary measures during four days of radioiodine therapy?",
+      "research_context": "Holy basil has religious, food, and traditional-use importance in South Asia. Here it was studied as supportive care during a specific cancer-treatment setting, not as a cancer treatment.",
+      "study_design": "After thyroid removal, 44 people with differentiated thyroid cancer were randomized to holy basil tea or distilled water during radioiodine therapy. Anxiety questionnaires, saliva measures, and scintigraphy were compared.",
+      "evidence_base": "Twenty-two participants were allocated to each group. The intervention began on the day of therapy and continued after meals for four days, producing a short, tightly bounded observation window.",
+      "intervention": "Tea prepared from 2.0 g of Ocimum tenuiflorum leaves in 180 mL, taken after meals for four days.",
+      "comparator": "The same volume of distilled water on the same schedule.",
+      "main_findings": [
+        "Changes in state and trait anxiety scores favored the tea group.",
+        "Several oral test measures changed differently between groups.",
+        "A salivary-gland scintigraphy washout measure also differed."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Random allocation and an active comparison schedule are useful, but 44 participants, four days of follow-up, multiple outcomes, and unclear masking limit confidence and generalizability.",
+      "why_matters": "The study treats supportive-care outcomes as measurable questions. It should prompt replication, not turn a small tea study into a claim about treating cancer or preventing all therapy complications.",
+      "limitations": [
+        "Only 44 patients participated.",
+        "Follow-up lasted four days.",
+        "Multiple psychological, microbiological, and imaging endpoints were tested.",
+        "The abstract does not report detailed adverse-event or masking procedures."
+      ],
+      "safety_context": "The indexed abstract does not provide a comprehensive safety analysis. People receiving cancer treatment may have medication, hydration, and dietary instructions that should not be displaced by an herbal tea report.",
+      "cannot_conclude": [
+        "The study does not show that holy basil treats thyroid cancer.",
+        "It does not establish prevention of long-term salivary injury.",
+        "It cannot determine effects in other cancers, treatments, preparations, or populations."
+      ],
+      "practical_interpretation": "This is an early supportive-care signal from one small treatment setting. The clinically responsible next step is independent replication with prespecified outcomes and fuller safety reporting.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew describes holy basil as a medicinal, food, social, and religious plant. Those traditions provide context for the tea preparation while remaining distinct from this modern clinical question.",
+          "source_ids": [
+            "powo:453130-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Ocimum tenuiflorum L. in Lamiaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:453130-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The researchers used a leaf infusion with a defined amount and volume. Findings cannot automatically be transferred to essential oil, extracts, capsules, culinary basil, or differently prepared teas.",
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "Measured domains included anxiety, saliva chemistry and microbiology, and salivary-gland scintigraphy. These are surrogate or supportive-care outcomes, not tumor response or survival outcomes.",
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Future work should clarify masking, adverse events, clinical relevance of the measured changes, and whether effects persist after therapy.",
+          "source_ids": [
+            "pubmed:37829808"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native across tropical and subtropical asia to the western pacific. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:453130-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native across tropical and subtropical Asia to the western Pacific",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "IN",
+            "BD",
+            "LK",
+            "TH",
+            "VN",
+            "PH",
+            "AU",
+            "CN",
+            "ID",
+            "NP",
+            "PK",
+            "MM",
+            "KH",
+            "LA",
+            "PG"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:453130-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native across tropical and subtropical Asia to the western Pacific",
+          "map_title": "Documented botanical distribution"
+        },
+        {
+          "country_or_region": "Japan",
+          "iso_country_code": "JP",
+          "iso_country_codes": [],
+          "geography_kind": "research_geography",
+          "evidence_type": "author_affiliation",
+          "source_id": "pubmed:37829808",
+          "supporting_text_location": "PubMed indexed abstract or affiliations",
+          "confidence": "qualified",
+          "qualification": "PubMed affiliations identify the research team in Japan; this is not asserted as the participant location.",
+          "display_label": "Japan",
+          "map_title": "Research affiliation"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-holy-basil.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=12175019",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Tulsi_Tea.JPG",
+        "stable_media_identifier": "commons:12175019",
+        "creator": "Miansari66",
+        "license": "Public domain",
+        "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "attribution": "Tulsi Tea.JPG — Miansari66, Public domain, via Wikimedia Commons",
+        "checksum_sha256": "60a8d5cf52b23aaab4403bc6ab551c3707bbb32106a0763955443888c811bf8a",
+        "plant_relevance": "The source description identifies Ocimum tenuiflorum L. or its studied preparation.",
+        "classification": "documentary",
+        "caption": "Documentary image of holy basil tea; not from the reported study.",
+        "alt_text": "Holy basil editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:37829808",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "37829808",
+          "doi": "10.1016/j.heliyon.2023.e20691",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/37829808/",
+          "title": "Benefits of basil tea for patients with differentiated thyroid cancer during radioiodine therapy: A randomized controlled trial.",
+          "authors": [
+            "Kenta Nomura",
+            "Michihiro Nakayama",
+            "Atsutaka Okizaki"
+          ],
+          "journal": "Heliyon",
+          "publication_date": "2023-10-05",
+          "publication_types": [
+            "Journal Article"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:453130-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "453130-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:453130-1",
+          "title": "Ocimum tenuiflorum L. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "centella-42196964-evidence-report",
+      "content_version": 1,
+      "content_checksum": "690adbabf1e1793f1908eebb267e974ea5f404d7d9d5f821582bec241528887d",
+      "plant_slug": null,
+      "common_name": "Gotu kola",
+      "scientific_name": "Centella asiatica (L.) Urb.",
+      "botanical_identity": {
+        "common_name": "Gotu kola",
+        "accepted_scientific_name": "Centella asiatica (L.) Urb.",
+        "cited_scientific_name": null,
+        "family": "Apiaceae",
+        "authority_source_id": "powo:1197718-2",
+        "authority_taxon_id": "1197718-2",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:1197718-2",
+        "accepted": true
+      },
+      "headline": "Centella trial reports wrinkle changes while other skin effects stay modest",
+      "standfirst": "In 112 middle-aged Korean women, 12 weeks of oral Centella asiatica extract changed several imaging-based wrinkle measures, while hydration, elasticity, and brightness effects were small and long-term applicability remains unknown.",
+      "publication_date": "2026-05-08",
+      "research_date": null,
+      "article_type": "Randomized Controlled Trial",
+      "research_question": "Does an oral Centella asiatica extract change measured wrinkle and skin-barrier parameters over 12 weeks compared with placebo?",
+      "research_context": "Centella is widely used in dermatological products and traditional practice, but oral supplementation is a different exposure from topical use. The trial addressed that product-specific evidence gap.",
+      "study_design": "The randomized, double-blind, placebo-controlled trial used three-dimensional wrinkle imaging and non-invasive measures of hydration, transepidermal water loss, elasticity, brightness, and redness.",
+      "evidence_base": "A total of 112 middle-aged Korean women were randomized. Efficacy was analyzed in the per-protocol population, which may differ from a full intention-to-treat estimate.",
+      "intervention": "A specified oral Centella asiatica extract taken daily for 12 weeks.",
+      "comparator": "Placebo for the same 12-week period.",
+      "main_findings": [
+        "Several wrinkle depth, volume, and roughness measures improved from baseline and differed from minimal placebo changes.",
+        "Transepidermal water loss declined and cheek hydration increased.",
+        "Elasticity, hydration, and brightness changes were statistically detected but small in magnitude."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Blinding, placebo control, and instrument-based measurements are strengths. One demographic group, 12 weeks, per-protocol analysis, multiple endpoints, and modest non-wrinkle changes limit broader claims.",
+      "why_matters": "The detailed measurements separate visually relevant wrinkle outcomes from smaller changes in other skin properties, helping prevent a single broad anti-aging claim from obscuring the actual result pattern.",
+      "limitations": [
+        "The population was limited to middle-aged Korean women.",
+        "Follow-up was 12 weeks.",
+        "The efficacy analysis used the per-protocol population.",
+        "Multiple related skin endpoints were assessed, and some changes were very small."
+      ],
+      "safety_context": "No serious adverse events were reported and monitored laboratory values stayed within reference ranges during 12 weeks. That does not establish long-term safety or safety in pregnancy, illness, or with medicines.",
+      "cannot_conclude": [
+        "The trial does not prove reversal of biological skin aging.",
+        "It does not show durable changes after supplementation stops.",
+        "It does not establish that topical products or other extracts behave the same way."
+      ],
+      "practical_interpretation": "The trial supports a short-term, product-specific signal in wrinkle imaging, while its small secondary changes and narrow population argue against sweeping anti-aging claims.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew records Centella asiatica as a medicinal and food plant with a broad Old World distribution. Traditional context is relevant background, not a substitute for the controlled comparison.",
+          "source_ids": [
+            "powo:1197718-2"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Centella asiatica (L.) Urb. in Apiaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:1197718-2"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "This was an oral extract, not a topical cream and not an undefined fresh-plant preparation. Product chemistry and bioavailability determine whether another preparation is comparable.",
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "Researchers used three-dimensional imaging plus barrier, hydration, elasticity, and color instruments. A statistically detectable change is not automatically a large or noticeable clinical effect.",
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Replication should use intention-to-treat analyses, longer follow-up, diverse populations, prespecified primary outcomes, and transparent product characterization.",
+          "source_ids": [
+            "pubmed:42196964"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native across tropical and subtropical old world regions to eastern australia and the western pacific. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:1197718-2"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native across tropical and subtropical Old World regions to eastern Australia and the western Pacific",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "KR",
+            "IN",
+            "LK",
+            "CN",
+            "AU",
+            "ZA",
+            "NG",
+            "ET",
+            "ID",
+            "TH",
+            "VN",
+            "JP",
+            "PG"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:1197718-2",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native across tropical and subtropical Old World regions to eastern Australia and the western Pacific",
+          "map_title": "Documented botanical distribution"
+        },
+        {
+          "country_or_region": "South Korea",
+          "iso_country_code": "KR",
+          "iso_country_codes": [],
+          "geography_kind": "research_geography",
+          "evidence_type": "participant_location",
+          "source_id": "pubmed:42196964",
+          "supporting_text_location": "PubMed indexed abstract or affiliations",
+          "confidence": "high",
+          "qualification": "The indexed title and abstract identify the participants as Korean women.",
+          "display_label": "South Korea",
+          "map_title": "Participant location"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-centella.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=70874613",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/b/ba/Centella_asiatica_6107.jpg",
+        "stable_media_identifier": "commons:70874613",
+        "creator": "Vengolis",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Centella asiatica 6107.jpg — Vengolis, CC BY-SA 4.0, via Wikimedia Commons",
+        "checksum_sha256": "6faa1508c531b10d10bf4554db88dcf72ffa169119140ea118ca341b3ac20a3a",
+        "plant_relevance": "The source description identifies Centella asiatica (L.) Urb. or its studied preparation.",
+        "classification": "botanical_reference",
+        "caption": "Botanical reference image; not an image from the reported study.",
+        "alt_text": "Gotu kola editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:42196964",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "42196964",
+          "doi": "10.3390/nu18101505",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/42196964/",
+          "title": "A Randomized, Double-Blind, Placebo-Controlled Trial Assessing the Effects of Oral Centella asiatica Extract on Skin Aging-Related Parameters in Middle-Aged Korean Women.",
+          "authors": [
+            "Nayon Hur",
+            "Youngha Seo",
+            "Jaewoo Bae",
+            "Young Jun Kim",
+            "Eun Ji Kim",
+            "Yean Jung Choi"
+          ],
+          "journal": "Nutrients",
+          "publication_date": "2026-05-08",
+          "publication_types": [
+            "Journal Article",
+            "Randomized Controlled Trial"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:1197718-2",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "1197718-2",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:1197718-2",
+          "title": "Centella asiatica (L.) Urb. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "black-seed-38777430-evidence-report",
+      "content_version": 1,
+      "content_checksum": "8cbe57458da71b95a495b589b01da3a2574e0515310d65e00d69e5c791378b1c",
+      "plant_slug": null,
+      "common_name": "Black seed",
+      "scientific_name": "Nigella sativa L.",
+      "botanical_identity": {
+        "common_name": "Black seed",
+        "accepted_scientific_name": "Nigella sativa L.",
+        "cited_scientific_name": null,
+        "family": "Ranunculaceae",
+        "authority_source_id": "powo:711687-1",
+        "authority_taxon_id": "711687-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:711687-1",
+        "accepted": true
+      },
+      "headline": "Black-seed review reports lipid changes but leaves clinical certainty unresolved",
+      "standfirst": "A 34-study meta-analysis involving 2,278 adults reported pooled changes in cholesterol and triglyceride measures, while the indexed abstract does not provide enough risk-of-bias, heterogeneity, preparation, or safety detail for a treatment conclusion.",
+      "publication_date": "2024-03-22",
+      "research_date": null,
+      "article_type": "Meta-Analysis",
+      "research_question": "Across randomized adult trials, how does Nigella sativa supplementation affect total cholesterol, LDL, HDL, and triglyceride measurements?",
+      "research_context": "Black seed has food and traditional-use histories across parts of western Asia and neighboring regions. Modern products vary from seeds and oils to extracts, making synthesis useful but also methodologically difficult.",
+      "study_design": "The reviewers searched major databases through December 2022 and pooled randomized-trial lipid outcomes with random-effects models using standardized mean differences.",
+      "evidence_base": "Thirty-four studies with 2,278 adult participants were included. The abstract reports the aggregate size but not enough product-by-product or population detail to establish interchangeability.",
+      "intervention": "Nigella sativa supplements as defined in the included randomized trials.",
+      "comparator": "Control conditions from the included trials.",
+      "main_findings": [
+        "Pooled estimates favored Nigella sativa for total cholesterol, triglycerides, and LDL cholesterol.",
+        "The pooled HDL estimate moved upward.",
+        "The abstract's effect estimates do not by themselves establish clinical outcomes such as fewer cardiovascular events."
+      ],
+      "evidence_strength": "mixed",
+      "evidence_strength_rationale": "The number of trials is substantial, but standardized effects are difficult to translate clinically, and the indexed abstract lacks the bias, heterogeneity, product, duration, and adverse-event detail needed for confident application.",
+      "why_matters": "The synthesis identifies a research signal while showing why biomarker movement should not be presented as proof of disease prevention or a substitute for established lipid management.",
+      "limitations": [
+        "The abstract does not report risk-of-bias results.",
+        "Preparations, doses, populations, and durations are not summarized in sufficient detail.",
+        "Standardized mean differences obscure the absolute clinical size of change.",
+        "Cardiovascular events were not the reported endpoint."
+      ],
+      "safety_context": "The indexed abstract does not provide a pooled adverse-event analysis. Seed, oil, and extract products may differ, and interactions or special-population risks cannot be inferred from lipid results.",
+      "cannot_conclude": [
+        "The review does not prove prevention of heart attack or stroke.",
+        "It does not identify one universally effective product.",
+        "It does not justify replacing prescribed lipid-lowering treatment."
+      ],
+      "practical_interpretation": "The pooled biomarker signal warrants better standardized trials and clinically interpretable reporting; it is not a treatment recommendation.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew recognizes Nigella sativa as an accepted species native from southeastern Europe toward Iran. Cultural and culinary use contextualize the research without proving lipid effects.",
+          "source_ids": [
+            "powo:711687-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Nigella sativa L. in Ranunculaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:711687-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The source groups multiple Nigella sativa supplement forms. Without preparation-specific analyses in the indexed abstract, readers should not assume seeds, oils, and extracts are equivalent.",
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "The measured outcomes were blood lipid markers, not symptoms, quality of life, cardiovascular events, or mortality. That distinction limits the strength of practical conclusions.",
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Future reviews should foreground absolute units, trial bias, adverse events, verified products, and whether effects differ by baseline lipid status.",
+          "source_ids": [
+            "pubmed:38777430"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native from southeastern europe and the caucasus through western and southwestern iran. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:711687-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native from southeastern Europe and the Caucasus through western and southwestern Iran",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "BG",
+            "CY",
+            "IR",
+            "IQ",
+            "LB",
+            "RO",
+            "TM",
+            "TR",
+            "GE"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:711687-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native from southeastern Europe and the Caucasus through western and southwestern Iran",
+          "map_title": "Documented botanical distribution"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-black-seed.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=63481886",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Nigella_Sativa_seed.jpg",
+        "stable_media_identifier": "commons:63481886",
+        "creator": "Afifa Afrin",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Nigella Sativa seed.jpg — Afifa Afrin, CC BY-SA 4.0, via Wikimedia Commons",
+        "checksum_sha256": "fe9d699a824bc7430d624e12051439e0cdc5de8e028ac1e2de002e34987b4c6f",
+        "plant_relevance": "The source description identifies Nigella sativa L. or its studied preparation.",
+        "classification": "documentary",
+        "caption": "Documentary image of black seeds; not from the reported study.",
+        "alt_text": "Black seed editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:38777430",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "38777430",
+          "doi": "10.1016/j.clnesp.2024.03.020",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/38777430/",
+          "title": "Effects of Nigella sativa supplementation on lipid profiles in adults: An updated systematic review and meta-analysis of randomized controlled trials.",
+          "authors": [
+            "Mahsa Rounagh",
+            "Vali Musazadeh",
+            "Ali Hosseininejad-Mohebati",
+            "Maryam Falahatzadeh",
+            "Zeynab Kavyani",
+            "Reza Bijan Rostami",
+            "Mahdi Vajdi"
+          ],
+          "journal": "Clinical Nutrition ESPEN",
+          "publication_date": "2024-03-22",
+          "publication_types": [
+            "Journal Article",
+            "Systematic Review",
+            "Meta-Analysis"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:711687-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "711687-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:711687-1",
+          "title": "Nigella sativa L. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "saffron-38796446-evidence-report",
+      "content_version": 1,
+      "content_checksum": "c114046aee46491a71d1b6f67f4edadb49737939058a298c5e4260231a90d668",
+      "plant_slug": null,
+      "common_name": "Saffron",
+      "scientific_name": "Crocus sativus L.",
+      "botanical_identity": {
+        "common_name": "Saffron",
+        "accepted_scientific_name": "Crocus sativus L.",
+        "cited_scientific_name": null,
+        "family": "Iridaceae",
+        "authority_source_id": "powo:436688-1",
+        "authority_taxon_id": "436688-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:436688-1",
+        "accepted": true
+      },
+      "headline": "Saffron meta-analysis signals glycemic changes—and a reporting inconsistency",
+      "standfirst": "A synthesis of 13 randomized trials and 840 participants reported changes in HbA1c, fasting glucose, cholesterol, and systolic blood pressure, but an internally inconsistent p-value in the indexed abstract makes cautious full-text verification essential.",
+      "publication_date": "2024-05-25",
+      "research_date": null,
+      "article_type": "Meta-Analysis",
+      "research_question": "Do saffron or crocin preparations change glycemic and cardiometabolic markers in people with metabolic syndrome or related disorders?",
+      "research_context": "Saffron is a cultivated spice with a long medical-use history. Trials of whole saffron and crocin do not necessarily test the same exposure, even when combined in one review.",
+      "study_design": "The authors searched four databases through 30 December 2023, included randomized trials, assessed heterogeneity, and used random-effects weighted mean differences.",
+      "evidence_base": "Thirteen randomized trials involving 840 patients with metabolic syndrome or related disorders contributed to the synthesis.",
+      "intervention": "Crocus sativus or crocin preparations from the included trials.",
+      "comparator": "Placebo or other control conditions in the included trials.",
+      "main_findings": [
+        "Pooled estimates favored the intervention for HbA1c and fasting glucose.",
+        "Total cholesterol changed in the metabolic-syndrome subgroup.",
+        "The systolic-blood-pressure line reports a confidence interval excluding zero alongside p=0.99, an inconsistency requiring source-level checking."
+      ],
+      "evidence_strength": "mixed",
+      "evidence_strength_rationale": "Randomized evidence and a multi-database review are strengths, but mixed preparations, related yet different disorders, and an internally inconsistent indexed statistic prevent a high-confidence interpretation.",
+      "why_matters": "Calling out the inconsistency is part of evidence translation: a plausible pooled result should not be repeated uncritically when its own abstract contains conflicting statistical information.",
+      "limitations": [
+        "Saffron and crocin interventions were combined.",
+        "Participants had metabolic syndrome and related but non-identical disorders.",
+        "The indexed systolic-pressure statistic is internally inconsistent.",
+        "The abstract does not provide a complete adverse-event synthesis."
+      ],
+      "safety_context": "The indexed abstract does not establish comprehensive safety. Concentrated saffron or crocin products are not equivalent to culinary exposure, and special-population or interaction questions require separate evidence.",
+      "cannot_conclude": [
+        "The review does not prove prevention of diabetes or cardiovascular events.",
+        "It does not resolve which preparation accounts for pooled findings.",
+        "The inconsistent blood-pressure statistic should not be used until checked against the full analysis."
+      ],
+      "practical_interpretation": "The review is a signal for careful follow-up, not a basis for self-treatment. The full paper and future standardized trials must resolve product and reporting uncertainty.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew treats Crocus sativus as a cultivated taxon originating from Greece and documents its introduced range. Spice history explains interest but does not validate concentrated supplements.",
+          "source_ids": [
+            "powo:436688-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Crocus sativus L. in Iridaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:436688-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The review combines whole-saffron and crocin interventions. Those exposures should remain separately identifiable in future trials and evidence summaries.",
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "HbA1c, fasting glucose, blood pressure, and cholesterol are surrogate cardiometabolic markers. The review did not establish patient-important event reduction.",
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "A useful replication agenda includes registered primary outcomes, consistent units, preparation chemistry, adverse-event reporting, and correction of statistical inconsistencies.",
+          "source_ids": [
+            "pubmed:38796446"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as a cultigen recorded by kew as native from greece and introduced in several saffron-growing regions. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:436688-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "A cultigen recorded by Kew as native from Greece and introduced in several saffron-growing regions",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "GR",
+            "IR",
+            "IT",
+            "MA",
+            "PK",
+            "ES",
+            "TR"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:436688-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "A cultigen recorded by Kew as native from Greece and introduced in several saffron-growing regions",
+          "map_title": "Documented botanical distribution"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-saffron.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=84317051",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/e/e7/R%C3%A9colte_de_Crocus_sativus%2C_Taliouine%2C_Morocco_03.jpg",
+        "stable_media_identifier": "commons:84317051",
+        "creator": "Francois Rodolphe INGOLD",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution": "Récolte de Crocus sativus, Taliouine, Morocco 03.jpg — Francois Rodolphe INGOLD, CC BY 4.0, via Wikimedia Commons",
+        "checksum_sha256": "a8d893265937188532369a6e483cb1819f3b7f0dfe07d1cd03aa1b26c54ea530",
+        "plant_relevance": "The source description identifies Crocus sativus L. or its studied preparation.",
+        "classification": "documentary",
+        "caption": "Documentary image of a saffron harvest; not from the reported study.",
+        "alt_text": "Saffron editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:38796446",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "38796446",
+          "doi": "10.1186/s12986-024-00806-y",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/38796446/",
+          "title": "Effects of Crocus sativus on glycemic control and cardiometabolic parameters among patients with metabolic syndrome and related disorders: a systematic review and meta-analysis of randomized controlled trials.",
+          "authors": [
+            "Xiaodan Yan",
+            "Shuyuan Zhao",
+            "Xue Feng",
+            "Xinrui Li",
+            "Qian Zhou",
+            "Qiu Chen"
+          ],
+          "journal": "Nutrition & Metabolism",
+          "publication_date": "2024-05-25",
+          "publication_types": [
+            "Journal Article",
+            "Review"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:436688-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "436688-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:436688-1",
+          "title": "Crocus sativus L. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "bacopa-38538390-evidence-report",
+      "content_version": 1,
+      "content_checksum": "dcb2ef26b8a7f24c9ab1d77414074355f4c777deb4ce6c5e43adf894cbd1bec1",
+      "plant_slug": null,
+      "common_name": "Bacopa",
+      "scientific_name": "Bacopa monnieri (L.) Wettst.",
+      "botanical_identity": {
+        "common_name": "Bacopa",
+        "accepted_scientific_name": "Bacopa monnieri (L.) Wettst.",
+        "cited_scientific_name": null,
+        "family": "Plantaginaceae",
+        "authority_source_id": "powo:1072674-2",
+        "authority_taxon_id": "1072674-2",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:1072674-2",
+        "accepted": true
+      },
+      "headline": "Bacopa trial finds selective cognitive signals but no sleep-quality change",
+      "standfirst": "A two-month placebo-controlled trial in 62 people with mild cognitive impairment reported changes in selected attention, verbal-fluency, and overall cognitive scores, while overall sleep quality did not differ.",
+      "publication_date": "2024-03-03",
+      "research_date": null,
+      "article_type": "Randomized Controlled Trial",
+      "research_question": "Can a defined Bacopa monnieri extract change cognitive-test performance or self-reported sleep quality over two months in mild cognitive impairment?",
+      "research_context": "Bacopa has a traditional-use history associated with cognition, but mild cognitive impairment is heterogeneous and short questionnaire-based trials cannot establish prevention of dementia.",
+      "study_design": "Sixty-two patients were assigned to extract or starch placebo. Montreal Cognitive Assessment and Pittsburgh Sleep Quality Index measures were collected before treatment, after one month, and after two months.",
+      "evidence_base": "The study included 62 people with mild cognitive impairment divided between two groups. The abstract does not report attrition, allocation details, or a full adverse-event table.",
+      "intervention": "A Bacopa monnieri extract tablet for two months.",
+      "comparator": "A starch-containing placebo tablet.",
+      "main_findings": [
+        "Overall cognition did not differ at the first two time points but did at the final assessment.",
+        "Attention differed at months one and two, and verbal fluency at month two.",
+        "Overall sleep-quality scores did not differ at any time point."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Triple blinding and placebo control are valuable, but the small sample, short follow-up, repeated testing, multiple cognitive domains, and sparse safety detail make the signals exploratory.",
+      "why_matters": "The uneven result pattern matters more than a simple positive label: some test domains changed, others did not, and sleep—the second major outcome—showed no overall effect.",
+      "limitations": [
+        "Only 62 participants were studied for two months.",
+        "Several domains and time points were tested.",
+        "The abstract does not clarify multiplicity adjustment or attrition.",
+        "Questionnaire and screening-score changes do not establish durable functional benefit."
+      ],
+      "safety_context": "The indexed abstract does not provide detailed adverse-event findings. Cognitive vulnerability, other medicines, and product variability make broader safety conclusions inappropriate.",
+      "cannot_conclude": [
+        "The trial does not show that bacopa prevents dementia.",
+        "It does not establish durable everyday cognitive improvement.",
+        "It does not support a sleep benefit in this population."
+      ],
+      "practical_interpretation": "The study offers selective short-term signals that need larger, preregistered replication with functional outcomes and transparent safety reporting.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew accepts Bacopa monnieri and records medicinal use across its broad tropical and subtropical range. Traditional reputation motivated the question but did not determine the answer.",
+          "source_ids": [
+            "powo:1072674-2"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Bacopa monnieri (L.) Wettst. in Plantaginaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:1072674-2"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The study used an oral extract tablet. Composition and standardization details are necessary before comparing it with fresh herb, powders, or other commercial extracts.",
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "Cognition was assessed through a screening instrument and named subdomains; sleep through the Pittsburgh index. The absence of a sleep signal should remain as visible as the selected cognitive results.",
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Next studies should specify a primary cognitive endpoint, adjust for repeated testing, measure daily function, document adverse events, and follow participants longer.",
+          "source_ids": [
+            "pubmed:38538390"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native across tropical and subtropical regions worldwide, with a few documented introductions. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:1072674-2"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native across tropical and subtropical regions worldwide, with a few documented introductions",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "IN",
+            "LK",
+            "TH",
+            "VN",
+            "CN",
+            "AU",
+            "NG",
+            "EG",
+            "BR",
+            "AR",
+            "US",
+            "MX"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:1072674-2",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native across tropical and subtropical regions worldwide, with a few documented introductions",
+          "map_title": "Documented botanical distribution"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-bacopa.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=137031020",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Bacopa_monnieri_Brahmi_flower.jpg",
+        "stable_media_identifier": "commons:137031020",
+        "creator": "Aseedtolife",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Bacopa monnieri Brahmi flower.jpg — Aseedtolife, CC BY-SA 4.0, via Wikimedia Commons",
+        "checksum_sha256": "8b714725488352dd3f2bb60259d1eb8c7110e894613d0b2d47bef9491ca7b346",
+        "plant_relevance": "The source description identifies Bacopa monnieri (L.) Wettst. or its studied preparation.",
+        "classification": "botanical_reference",
+        "caption": "Botanical reference image; not an image from the reported study.",
+        "alt_text": "Bacopa editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:38538390",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "38538390",
+          "doi": "10.1016/j.explore.2024.02.008",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/38538390/",
+          "title": "Evaluating the effects of Bacopa monnieri on cognitive performance and sleep quality of patients with mild cognitive impairment: A triple-blinded, randomized, placebo-controlled trial.",
+          "authors": [
+            "Maryam Delfan",
+            "Parastou Kordestani-Moghaddam",
+            "Mohammad Gholami",
+            "Khadije Kazemi",
+            "Rasool Mohammadi"
+          ],
+          "journal": "Explore",
+          "publication_date": "2024-03-03",
+          "publication_types": [
+            "Journal Article",
+            "Randomized Controlled Trial"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:1072674-2",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "1072674-2",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:1072674-2",
+          "title": "Bacopa monnieri (L.) Wettst. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "rhodiola-37495266-evidence-report",
+      "content_version": 1,
+      "content_checksum": "627e3dbaa7aa09483dc08a48d0b477100e37b9c15894db27bc7c75ba292e64ab",
+      "plant_slug": null,
+      "common_name": "Rhodiola",
+      "scientific_name": "Rhodiola rosea L.",
+      "botanical_identity": {
+        "common_name": "Rhodiola",
+        "accepted_scientific_name": "Rhodiola rosea L.",
+        "cited_scientific_name": null,
+        "family": "Crassulaceae",
+        "authority_source_id": "powo:315148-2",
+        "authority_taxon_id": "315148-2",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:315148-2",
+        "accepted": true
+      },
+      "headline": "Rhodiola sports review finds heterogeneous signals under high bias risk",
+      "standfirst": "Thirteen randomized trials involving 263 healthy adults produced mixed signals across endurance, anaerobic performance, perceived exertion, and muscle-damage measures; protocols differed and most studies had unclear or high risk of bias.",
+      "publication_date": "2023-07-26",
+      "research_date": null,
+      "article_type": "Systematic Review",
+      "research_question": "Does Rhodiola rosea supplementation influence exercise performance, perceived exertion, or markers associated with muscle damage in healthy adults?",
+      "research_context": "Rhodiola is associated with endurance and fatigue claims, but sports studies vary in exercise protocol, timing, extract composition, and endpoint, which can make a simple pooled narrative misleading.",
+      "study_design": "Two reviewers searched PubMed, Web of Science, and Cochrane through March 2023 for randomized trials in healthy participants not using other supplements.",
+      "evidence_base": "Thirteen studies included 263 participants—198 men and 65 women aged 18 to 65. Two tested acute use, five chronic use, and six combined both approaches.",
+      "intervention": "Rhodiola rosea supplements under acute, chronic, or combined protocols.",
+      "comparator": "Control conditions in the eligible randomized trials.",
+      "main_findings": [
+        "Eleven studies reported at least one positive finding and two reported no effect.",
+        "Signals varied across endurance, anaerobic performance, perceived exertion, heart rate, lactate, and damage markers.",
+        "The review itself identified protocol differences and unclear or high bias risk in most studies."
+      ],
+      "evidence_strength": "low",
+      "evidence_strength_rationale": "Restriction to randomized studies is helpful, but just 263 participants, male predominance, inconsistent protocols, many outcomes, and widespread bias concerns make the evidence unstable.",
+      "why_matters": "Athletic-performance claims often collapse many endpoints into one promise. This review instead shows a fragmented literature where a positive result in one measure may not reproduce in another protocol.",
+      "limitations": [
+        "The review included only 65 women.",
+        "Exercise and supplementation protocols varied substantially.",
+        "Most studies had unclear or high risk of bias.",
+        "Multiple physiological and performance outcomes reduce confidence in isolated positive signals."
+      ],
+      "safety_context": "The indexed abstract does not provide a systematic adverse-event synthesis. Exercise performance data cannot establish safety for people with medical conditions, interacting medicines, or prolonged use.",
+      "cannot_conclude": [
+        "The review does not prove a reliable performance benefit for every athlete.",
+        "It does not identify an interchangeable class of rhodiola products.",
+        "It does not establish long-term safety or clinical benefit."
+      ],
+      "practical_interpretation": "The literature is better described as hypothesis-generating than performance-confirming; standardized independent trials are still needed.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew accepts Rhodiola rosea across northern alpine and subarctic regions. Historical use provides cultural context, while the sports-performance claims require their own controlled evidence.",
+          "source_ids": [
+            "powo:315148-2"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Rhodiola rosea L. in Crassulaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:315148-2"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The review covered acute and chronic supplementation protocols. Without uniform extract standards and timing, results cannot be transferred to any product labeled rhodiola.",
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "Endpoints ranged from perceived exertion to endurance, anaerobic work, heart rate, lactate, creatine kinase, and C-reactive protein. They answer different questions and should not be merged rhetorically.",
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Future trials need authenticated Rhodiola rosea, standardized marker compounds, adequate sex representation, preregistered outcomes, and protocols relevant to specific sports.",
+          "source_ids": [
+            "pubmed:37495266"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native across subarctic and subalpine parts of the northern hemisphere. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:315148-2"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native across subarctic and subalpine parts of the Northern Hemisphere",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "CA",
+            "US",
+            "GL",
+            "IS",
+            "NO",
+            "SE",
+            "FI",
+            "GB",
+            "IE",
+            "FR",
+            "DE",
+            "CH",
+            "AT",
+            "IT",
+            "PL",
+            "RO",
+            "BG",
+            "RU",
+            "KZ",
+            "MN",
+            "CN",
+            "JP",
+            "KR",
+            "UA"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:315148-2",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native across subarctic and subalpine parts of the Northern Hemisphere",
+          "map_title": "Documented botanical distribution"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-rhodiola.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=156924638",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/%D0%9A%D0%B2%D1%96%D1%82%D0%B8_%D0%B7%D0%BE%D0%BB%D0%BE%D1%82%D0%BE%D0%B3%D0%BE_%D0%BA%D0%BE%D1%80%D0%B5%D0%BD%D1%8F_%28Rhodiola_rosea%29.jpg",
+        "stable_media_identifier": "commons:156924638",
+        "creator": "Maryana Twardovska",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution": "Квіти золотого кореня (Rhodiola rosea).jpg — Maryana Twardovska, CC BY 4.0, via Wikimedia Commons",
+        "checksum_sha256": "f20ef11dd1c893618b8b92648d3629f870f2730bab26bdc740266f0d30722597",
+        "plant_relevance": "The source description identifies Rhodiola rosea L. or its studied preparation.",
+        "classification": "editorial_illustration",
+        "caption": "Editorial research illustration; not a photograph of the reported study.",
+        "alt_text": "Rhodiola editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:37495266",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "37495266",
+          "doi": "10.1002/ptr.7950",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/37495266/",
+          "title": "Rhodiola rosea supplementation on sports performance: A systematic review of randomized controlled trials.",
+          "authors": [
+            "Patricia M Sanz-Barrio",
+            "Eric E Noreen",
+            "Laura Gilsanz-Estebaranz",
+            "Jorge Lorenzo-Calvo",
+            "María Martínez-Ferrán",
+            "Helios Pareja-Galeano"
+          ],
+          "journal": "Phytotherapy Research",
+          "publication_date": "2023-07-26",
+          "publication_types": [
+            "Systematic Review",
+            "Journal Article"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:315148-2",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "315148-2",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:315148-2",
+          "title": "Rhodiola rosea L. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "roselle-38878905-evidence-report",
+      "content_version": 1,
+      "content_checksum": "e04931103cd5b89a49e2dc6b80af2e839feee6a940b64d0ff2651216bb12e401",
+      "plant_slug": null,
+      "common_name": "Roselle",
+      "scientific_name": "Sabdariffa gossypiifolia (Mill.) M.M.Hanes & R.L.Barrett",
+      "botanical_identity": {
+        "common_name": "Roselle",
+        "accepted_scientific_name": "Sabdariffa gossypiifolia (Mill.) M.M.Hanes & R.L.Barrett",
+        "cited_scientific_name": "Hibiscus sabdariffa L.",
+        "family": "Malvaceae",
+        "authority_source_id": "powo:77361038-1",
+        "authority_taxon_id": "77361038-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77361038-1",
+        "accepted": true
+      },
+      "headline": "Roselle review finds no clinical weight-loss benefit",
+      "standfirst": "A registered review of six randomized trials and 339 participants found no meaningful differences in weight, body-mass index, or waist circumference, offering a useful counterweight to weight-loss marketing.",
+      "publication_date": "2024-06-13",
+      "research_date": null,
+      "article_type": "Meta-Analysis",
+      "research_question": "Do preparations cited as Hibiscus sabdariffa improve body weight, body-mass index, waist circumference, or waist-to-hip ratio in randomized trials?",
+      "research_context": "Roselle calyces are used in foods and drinks, while concentrated products are marketed for metabolic goals. The review tested a narrow obesity-treatment claim rather than assuming culinary or traditional use predicts weight loss.",
+      "study_design": "The authors searched PubMed, EMBASE, and CENTRAL through February 2024 under a registered protocol and pooled randomized trials with random-effects models.",
+      "evidence_base": "Six trials with 339 participants were included. Four tested extract capsules against placebo; two tested roselle tea against black or green tea.",
+      "intervention": "Capsulated extracts or roselle tea used in the included trials.",
+      "comparator": "Placebo capsules, black tea, or green tea depending on the trial.",
+      "main_findings": [
+        "The pooled weight difference was close to zero and its confidence interval crossed no effect.",
+        "BMI and waist-circumference estimates were also near zero.",
+        "The authors concluded that the evidence did not show a clinical obesity-treatment benefit."
+      ],
+      "evidence_strength": "moderate",
+      "evidence_strength_rationale": "A registered systematic review and consistent near-null estimates support the negative conclusion, though only six small trials and differing preparations limit precision.",
+      "why_matters": "Well-conducted negative evidence is newsworthy because it can prevent a colorful beverage or capsule from being promoted beyond what controlled trials show.",
+      "limitations": [
+        "Only six trials and 339 participants were available.",
+        "Capsules and teas were not the same intervention.",
+        "Two tea studies used active beverage comparators.",
+        "Longer standardized trials remain limited."
+      ],
+      "safety_context": "The review reports no safety concerns in included studies, but small trials and short follow-up cannot exclude uncommon effects or interactions. No efficacy finding should be read as universal product safety.",
+      "cannot_conclude": [
+        "The analysis does not prove roselle has no biological effects of any kind.",
+        "It does not test every preparation or population.",
+        "It does not support using roselle as an obesity treatment."
+      ],
+      "practical_interpretation": "For weight loss, the best current reading of these trials is no demonstrated clinical benefit. Food use and other research questions remain separate.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "The study used the long-established name Hibiscus sabdariffa. Kew's 2025 backbone now treats that name as a synonym of Sabdariffa gossypiifolia; both names are preserved to keep research and current taxonomy traceable.",
+          "source_ids": [
+            "powo:77361038-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Sabdariffa gossypiifolia (Mill.) M.M.Hanes & R.L.Barrett in Malvaceae. The study cited it as Hibiscus sabdariffa L.. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:77361038-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "Four studies used extract capsules and two used tea. Their composition and comparators differ, so the review cannot define one uniform roselle intervention.",
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "The prespecified outcomes were anthropometric measures, not long-term health events. Their pooled estimates were small and compatible with no effect.",
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Further studies would need standardized products, adequate duration, preregistration, and transparent safety data, but the current evidence does not justify stronger marketing claims.",
+          "source_ids": [
+            "pubmed:38878905"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native from western tropical africa to sudan and introduced widely in tropical regions. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:77361038-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native from western tropical Africa to Sudan and introduced widely in tropical regions",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "CF",
+            "TD",
+            "CG",
+            "CD",
+            "GA",
+            "GH",
+            "NG",
+            "SD"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:77361038-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native from western tropical Africa to Sudan and introduced widely in tropical regions",
+          "map_title": "Documented botanical distribution"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-roselle.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=36622514",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Hibiscus._Fresh_and_dried.jpg",
+        "stable_media_identifier": "commons:36622514",
+        "creator": "T.K. Naliaka",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Hibiscus. Fresh and dried.jpg — T.K. Naliaka, CC BY-SA 4.0, via Wikimedia Commons",
+        "checksum_sha256": "246d3a45e7a76f424a3f48d5af4dbf48a49ca54943ed31b6abbe898294f384d1",
+        "plant_relevance": "The source description identifies Sabdariffa gossypiifolia (Mill.) M.M.Hanes & R.L.Barrett or its studied preparation.",
+        "classification": "documentary",
+        "caption": "Documentary image of fresh and dried roselle calyces; not from the reported study.",
+        "alt_text": "Roselle editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:38878905",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "38878905",
+          "doi": "10.1016/j.ctim.2024.103063",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/38878905/",
+          "title": "Clinical effects of Hibiscus sabdariffa Linn. on obesity treatment: A systematic review and meta-analysis of randomized controlled trials.",
+          "authors": [
+            "Piyameth Dilokthornsakul",
+            "Natnicha Rattanachaisit",
+            "Phiyanuch Thimkorn",
+            "Supawan Pongpattanawut",
+            "Witoo Dilokthornsakul",
+            "Teerapon Dhippayom"
+          ],
+          "journal": "Complementary Therapies in Medicine",
+          "publication_date": "2024-06-13",
+          "publication_types": [
+            "Journal Article",
+            "Systematic Review",
+            "Meta-Analysis"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:77361038-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "77361038-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77361038-1",
+          "title": "Sabdariffa gossypiifolia (Mill.) M.M.Hanes & R.L.Barrett — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "guduchi-38784353-evidence-report",
+      "content_version": 1,
+      "content_checksum": "4041c9e03ef612e1e3e49d5f10cbaebca8ce928bab93843d77091d7a6370c1cf",
+      "plant_slug": null,
+      "common_name": "Guduchi",
+      "scientific_name": "Tinospora cordifolia (Willd.) Hook.f. & Thomson",
+      "botanical_identity": {
+        "common_name": "Guduchi",
+        "accepted_scientific_name": "Tinospora cordifolia (Willd.) Hook.f. & Thomson",
+        "cited_scientific_name": null,
+        "family": "Menispermaceae",
+        "authority_source_id": "powo:907828-1",
+        "authority_taxon_id": "907828-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:907828-1",
+        "accepted": true
+      },
+      "headline": "Large guduchi study leaves its primary prevention signal unresolved",
+      "standfirst": "A community study with 10,022 completers reported no statistically significant difference in COVID-19 incidence, despite secondary severity and non-COVID illness findings; its open-label, no-intervention comparison limits causal interpretation.",
+      "publication_date": "2024-04-23",
+      "research_date": null,
+      "article_type": "Randomized Controlled Trial",
+      "research_question": "Did Guduchi Ghana Vati change infection incidence, severity, hospitalization, or adverse reactions over 45 days in healthy community participants?",
+      "research_context": "Guduchi is important in Ayurveda. During a pandemic, that history created interest but also heightened the need to separate prevention claims from controlled primary-outcome evidence.",
+      "study_design": "The multicenter, randomized, comparative community study was open label. Participants in five Rajasthan districts received the formulation for 45 days or no intervention.",
+      "evidence_base": "The analysis reports 10,022 completers, making it large, but the abstract does not provide allocation counts, attrition from randomization, laboratory confirmation detail, or blinded outcome assessment.",
+      "intervention": "Guduchi Ghana Vati for 45 days.",
+      "comparator": "No intervention rather than placebo.",
+      "main_findings": [
+        "COVID-19 incidence was lower numerically but not statistically significant.",
+        "Reported severity and non-COVID illness measures favored the intervention group.",
+        "No major adverse drug reactions were observed during the study."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "The large sample and multicenter design are notable, but open-label exposure, no placebo, unclear attrition and outcome ascertainment, multiple secondary findings, and a nonsignificant incidence endpoint greatly limit causal confidence.",
+      "why_matters": "The central prevention result was not statistically significant. Keeping that fact ahead of favorable secondary outcomes is essential when a traditional product is discussed in an infectious-disease context.",
+      "limitations": [
+        "The trial was open label with a no-intervention control.",
+        "The primary incidence difference was not statistically significant.",
+        "The abstract does not fully report attrition or diagnostic ascertainment.",
+        "Secondary infection and severity findings are vulnerable to reporting and behavior differences."
+      ],
+      "safety_context": "No major reactions were observed in this study, but that does not settle broader safety. Published literature has separately raised liver-injury concerns around Tinospora products, species substitution, and causality; clinical safety review remains important.",
+      "cannot_conclude": [
+        "The study does not prove that guduchi prevents COVID-19.",
+        "It does not establish an alternative to vaccination or evidence-based infection care.",
+        "It does not establish safety across species, products, liver conditions, or longer use."
+      ],
+      "practical_interpretation": "The large participant count should not overshadow design limitations or the nonsignificant incidence result. The article supports further rigorous study, not a prevention recommendation.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew accepts Tinospora cordifolia as a liana native from the Indian subcontinent to Indochina. Ayurvedic use is historical context and remains distinct from proof of infection prevention.",
+          "source_ids": [
+            "powo:907828-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Tinospora cordifolia (Willd.) Hook.f. & Thomson in Menispermaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:907828-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The tested intervention was Guduchi Ghana Vati, a specific Ayurvedic formulation. Results cannot be assigned automatically to raw stems, other extracts, or products with uncertain species identity.",
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "The study examined infection incidence, severity, hospitalization, non-COVID illness, and adverse reactions. The incidence result—the most direct prevention question—was not significant.",
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Future work needs placebo control, masking where possible, transparent flow counts, objective case ascertainment, preregistered outcomes, and detailed liver-safety monitoring.",
+          "source_ids": [
+            "pubmed:38784353"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native from the indian subcontinent to indochina. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:907828-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native from the Indian subcontinent to Indochina",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "BD",
+            "IN",
+            "LK",
+            "MM",
+            "MV",
+            "VN"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:907828-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native from the Indian subcontinent to Indochina",
+          "map_title": "Documented botanical distribution"
+        },
+        {
+          "country_or_region": "Rajasthan, India",
+          "iso_country_code": "IN",
+          "iso_country_codes": [],
+          "geography_kind": "research_geography",
+          "evidence_type": "study_site",
+          "source_id": "pubmed:38784353",
+          "supporting_text_location": "PubMed indexed abstract or affiliations",
+          "confidence": "high",
+          "qualification": "The abstract explicitly reports community recruitment in five districts of Rajasthan.",
+          "display_label": "Rajasthan, India",
+          "map_title": "Where the study was conducted"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-guduchi.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=115434978",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/1/11/CS_of_Tinospora_cordifolia_root_01.jpg",
+        "stable_media_identifier": "commons:115434978",
+        "creator": "Adarshjchandran",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "CS of Tinospora cordifolia root 01.jpg — Adarshjchandran, CC BY-SA 4.0, via Wikimedia Commons",
+        "checksum_sha256": "087572b3922a408518d39d3128e76a7e0c1a0a9318257f421a239ab4c6664134",
+        "plant_relevance": "The source description identifies Tinospora cordifolia (Willd.) Hook.f. & Thomson or its studied preparation.",
+        "classification": "editorial_illustration",
+        "caption": "Editorial research illustration; not a photograph of the reported study.",
+        "alt_text": "Guduchi editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:38784353",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "38784353",
+          "doi": "10.7759/cureus.58807",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/38784353/",
+          "title": "Safety and Efficacy of the Ayurvedic Formulation Guduchi Ghana Vati as a Preventive Remedy in COVID-19.",
+          "authors": [
+            "Sanjeev Sharma",
+            "Pawankumar Godatwar",
+            "Manohar Pareek",
+            "Hml Meena",
+            "Anand Sharma",
+            "Sanjay Tamoli"
+          ],
+          "journal": "Cureus",
+          "publication_date": "2024-04-23",
+          "publication_types": [
+            "Journal Article"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:907828-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "907828-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:907828-1",
+          "title": "Tinospora cordifolia (Willd.) Hook.f. & Thomson — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "psyllium-39479650-evidence-report",
+      "content_version": 1,
+      "content_checksum": "abe360807357fadb8728e266c3115689d1869391d1fd4336d572cc7ffb27b3c7",
+      "plant_slug": null,
+      "common_name": "Psyllium",
+      "scientific_name": "Plantago ovata Forssk.",
+      "botanical_identity": {
+        "common_name": "Psyllium",
+        "accepted_scientific_name": "Plantago ovata Forssk.",
+        "cited_scientific_name": null,
+        "family": "Plantaginaceae",
+        "authority_source_id": "powo:685486-1",
+        "authority_taxon_id": "685486-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:685486-1",
+        "accepted": true
+      },
+      "headline": "Psyllium review reports a small systolic—but not diastolic—blood-pressure change",
+      "standfirst": "Across 14 randomized trials and 802 adults, psyllium was associated with a modest pooled reduction in systolic pressure while diastolic pressure did not significantly change; methods reported in the abstract leave important robustness questions.",
+      "publication_date": "2024-08-29",
+      "research_date": null,
+      "article_type": "Systematic Review",
+      "research_question": "What do randomized adult trials show about psyllium consumption and systolic or diastolic blood pressure?",
+      "research_context": "Psyllium seed husk is a concentrated soluble-fiber preparation. Blood-pressure research is distinct from its better-known digestive use and should not be generalized across all Plantago products.",
+      "study_design": "The authors searched Scopus, Web of Science, and PubMed during a stated 2022 search period and pooled 14 randomized trials with a fixed-effects model, also examining dose and duration relationships.",
+      "evidence_base": "Fourteen randomized studies with 802 adult participants contributed. The indexed abstract does not summarize diagnoses, trial quality, preparation consistency, or between-study heterogeneity.",
+      "intervention": "Psyllium consumption in the included randomized trials.",
+      "comparator": "Control conditions used by those trials.",
+      "main_findings": [
+        "Systolic blood pressure was lower by a pooled 2.24 mmHg.",
+        "Diastolic blood pressure showed no significant difference.",
+        "Dose and duration relationships were reported, but the abstract does not provide enough detail to judge their robustness."
+      ],
+      "evidence_strength": "mixed",
+      "evidence_strength_rationale": "Randomized trials and a quantitative synthesis are strengths. A fixed-effects model, sparse bias reporting, and missing heterogeneity and population detail in the abstract limit confidence in transportability.",
+      "why_matters": "Separating systolic from diastolic results prevents a small biomarker change from becoming a broad claim that psyllium treats hypertension.",
+      "limitations": [
+        "The abstract does not report risk-of-bias findings.",
+        "A fixed-effects model assumes one common underlying effect.",
+        "Population and preparation differences are not summarized.",
+        "The clinical importance of a small average systolic change varies by context."
+      ],
+      "safety_context": "Psyllium expands with liquid and can affect medicine absorption; the indexed efficacy abstract does not provide a safety synthesis. Appropriate product instructions and individual clinical context remain important.",
+      "cannot_conclude": [
+        "The review does not prove prevention of cardiovascular events.",
+        "It does not establish psyllium as a replacement for hypertension treatment.",
+        "It does not show a diastolic-pressure benefit."
+      ],
+      "practical_interpretation": "The result is a modest systolic signal with no corresponding diastolic change. It belongs in a broader evidence discussion, not as standalone treatment advice.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:39479650",
+            "ema-herbal:plantaginis-ovatae-seminis-tegumentum"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail",
+            "EMA: risks, interactions, and safe-use conditions"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew accepts Plantago ovata across dry regions spanning several continents and records medicinal seed use. The research concerns processed psyllium fiber, not every species or plant part in the genus.",
+          "source_ids": [
+            "powo:685486-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Plantago ovata Forssk. in Plantaginaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:685486-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "Psyllium generally refers to husk-derived soluble fiber, but included products and administration protocols may differ. The abstract does not support one universal regimen.",
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "Systolic and diastolic pressure were analyzed separately. Only the systolic pooled estimate changed significantly, and neither measure is itself a patient-important clinical event.",
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Future syntheses should report bias, heterogeneity, baseline pressure, verified fiber composition, adverse events, and absolute adherence data.",
+          "source_ids": [
+            "pubmed:39479650"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native from southeastern spain and north africa to india and somalia, and in the southwestern united states to northern mexico. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:685486-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native from southeastern Spain and North Africa to India and Somalia, and in the southwestern United States to northern Mexico",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "ES",
+            "DZ",
+            "MA",
+            "TN",
+            "LY",
+            "EG",
+            "CY",
+            "IQ",
+            "IR",
+            "KW",
+            "SA",
+            "OM",
+            "YE",
+            "SO",
+            "PK",
+            "IN",
+            "AF",
+            "US",
+            "MX"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:685486-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native from southeastern Spain and North Africa to India and Somalia, and in the southwestern United States to northern Mexico",
+          "map_title": "Documented botanical distribution"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-psyllium.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=47259296",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/b/be/2016-02-04_Flohsamenschalen_%28Plantago_ovata%29_Psyllium_Seed_Husks_anagoria.jpg",
+        "stable_media_identifier": "commons:47259296",
+        "creator": "Anagoria",
+        "license": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0/",
+        "attribution": "2016-02-04 Flohsamenschalen (Plantago ovata) Psyllium Seed Husks anagoria.jpg — Anagoria, CC BY 3.0, via Wikimedia Commons",
+        "checksum_sha256": "7e7fdb4fa20dd3a9976411332983445875e6060e4dc256b67b0dc76970beb2d1",
+        "plant_relevance": "The source description identifies Plantago ovata Forssk. or its studied preparation.",
+        "classification": "documentary",
+        "caption": "Documentary image of psyllium seed husks; not from the reported study.",
+        "alt_text": "Psyllium editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:39479650",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "39479650",
+          "doi": "10.1002/fsn3.3863",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/39479650/",
+          "title": "The effect of psyllium consumption on blood pressure: Systematic review and dose-response meta-analysis of randomized controlled trials.",
+          "authors": [
+            "Zeinab Gholami",
+            "Zamzam Paknahad"
+          ],
+          "journal": "Food Science & Nutrition",
+          "publication_date": "2024-08-29",
+          "publication_types": [
+            "Journal Article",
+            "Review"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:685486-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "685486-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:685486-1",
+          "title": "Plantago ovata Forssk. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        },
+        {
+          "source_id": "ema-herbal:plantaginis-ovatae-seminis-tegumentum",
+          "provider": "ema-herbal",
+          "support_role": "safety",
+          "external_identifier": "EMA/HMPC/313600/2013",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://www.ema.europa.eu/en/medicines/herbal/plantaginis-ovatae-seminis-tegumentum",
+          "title": "Plantaginis ovatae seminis tegumentum - herbal medicinal product",
+          "authors": [
+            "Committee on Herbal Medicinal Products"
+          ],
+          "journal": "European Medicines Agency",
+          "publication_date": "2013-07-23",
+          "publication_types": [
+            "European Union herbal monograph"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "andrographis-37821383-evidence-report",
+      "content_version": 1,
+      "content_checksum": "c4305c657489436a55573ba307da19ac8b13156c1d7d96e07737d60f1c95e518",
+      "plant_slug": null,
+      "common_name": "Andrographis",
+      "scientific_name": "Andrographis paniculata (Burm.f.) Wall. ex Nees",
+      "botanical_identity": {
+        "common_name": "Andrographis",
+        "accepted_scientific_name": "Andrographis paniculata (Burm.f.) Wall. ex Nees",
+        "cited_scientific_name": null,
+        "family": "Acanthaceae",
+        "authority_source_id": "powo:45226-1",
+        "authority_taxon_id": "45226-1",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:45226-1",
+        "accepted": true
+      },
+      "headline": "Andrographis throat-spray trial needs a true placebo comparison",
+      "standfirst": "A double-blind study in 60 adults with self-limited viral pharyngitis found symptoms improved with both andrographis and chamomile sprays, with a borderline difference in response duration and no placebo-only group.",
+      "publication_date": "2023-10-11",
+      "research_date": null,
+      "article_type": "Randomized Controlled Trial",
+      "research_question": "Does a local Andrographis paniculata spray change symptom response compared with a chamomile spray in acute viral pharyngitis?",
+      "research_context": "Andrographis is used in several traditional systems and respiratory products. Because viral sore throat commonly improves on its own, comparator choice is central to interpreting symptom change.",
+      "study_design": "Sixty adults were randomized under double blinding to andrographis or an active chamomile spray. Participants scored symptoms and clinicians scored throat redness and swelling.",
+      "evidence_base": "The trial included 60 adults with acute viral pharyngitis. The abstract does not state group sizes, diagnostic confirmation, attrition, or a prespecified primary outcome.",
+      "intervention": "A locally applied Andrographis paniculata spray.",
+      "comparator": "A chamomile spray, which is an active botanical comparator rather than an inert placebo.",
+      "main_findings": [
+        "Signs and symptoms improved significantly within both groups.",
+        "Reported response duration averaged 1.9 versus 2.5 days, with p=0.049.",
+        "No adverse events were noted in either small group."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Randomization and blinding help, but the active comparator, no untreated or inert-placebo group, small sample, self-limiting illness, multiple endpoints, and borderline p-value restrict causal interpretation.",
+      "why_matters": "The study illustrates why within-group improvement is not enough: spontaneous recovery and an active comparator make it difficult to determine absolute benefit.",
+      "limitations": [
+        "There was no inert placebo or usual-care-only arm.",
+        "Acute viral pharyngitis commonly improves spontaneously.",
+        "Only 60 adults participated.",
+        "The response-duration result was borderline and multiple symptoms were measured."
+      ],
+      "safety_context": "No events were observed in 60 participants, which cannot exclude uncommon reactions. A local spray also does not establish the safety of systemic andrographis products.",
+      "cannot_conclude": [
+        "The trial does not prove benefit over inert placebo or natural recovery.",
+        "It does not establish treatment of bacterial throat infection.",
+        "It does not support extrapolation to oral or systemic products."
+      ],
+      "practical_interpretation": "The trial offers a comparator-specific signal, but an inert-placebo design is needed before attributing symptom recovery confidently to andrographis.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew accepts Andrographis paniculata as native to the Indian subcontinent. Traditional respiratory use helps frame the question but cannot resolve placebo effects or spontaneous recovery.",
+          "source_ids": [
+            "powo:45226-1"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Andrographis paniculata (Burm.f.) Wall. ex Nees in Acanthaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:45226-1"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The exposure was a local throat spray. Its formulation and route differ fundamentally from tablets, decoctions, and whole-herb preparations.",
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "Patient-rated sore throat, swallowing difficulty, cough, and clinician-rated mucosal signs were tracked. Improvement in both groups complicates attribution.",
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "A stronger replication would use an inert matched spray, define one primary endpoint, document virologic criteria, and report allocation, attrition, and adverse events fully.",
+          "source_ids": [
+            "pubmed:37821383"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native to the indian subcontinent and introduced across parts of tropical asia and the americas. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:45226-1"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native to the Indian subcontinent and introduced across parts of tropical Asia and the Americas",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "BD",
+            "IN",
+            "NP",
+            "LK"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:45226-1",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native to the Indian subcontinent and introduced across parts of tropical Asia and the Americas",
+          "map_title": "Documented botanical distribution"
+        },
+        {
+          "country_or_region": "Thailand",
+          "iso_country_code": "TH",
+          "iso_country_codes": [],
+          "geography_kind": "research_geography",
+          "evidence_type": "research_institution",
+          "source_id": "pubmed:37821383",
+          "supporting_text_location": "PubMed indexed abstract or affiliations",
+          "confidence": "high",
+          "qualification": "PubMed affiliations identify hospitals and a university in Chiang Rai and Chiang Mai; the abstract does not explicitly state the participant site.",
+          "display_label": "Thailand",
+          "map_title": "Research institution affiliation"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-andrographis.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=17710458",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Andrographis_paniculata_Plant.JPG",
+        "stable_media_identifier": "commons:17710458",
+        "creator": "Viswaprabha",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "attribution": "Andrographis paniculata Plant.JPG — Viswaprabha, CC BY-SA 3.0, via Wikimedia Commons",
+        "checksum_sha256": "95e5f09595d35d2c172661f189e67601e519146440af4074aa56ecb2ade0542b",
+        "plant_relevance": "The source description identifies Andrographis paniculata (Burm.f.) Wall. ex Nees or its studied preparation.",
+        "classification": "botanical_reference",
+        "caption": "Botanical reference image; not an image from the reported study.",
+        "alt_text": "Andrographis editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:37821383",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "37821383",
+          "doi": "10.5582/ddt.2023.01053",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/37821383/",
+          "title": "Efficacy of Andrographis paniculata spray in acute pharyngitis: A randomized controlled trial.",
+          "authors": [
+            "Risa Okonogi",
+            "Vich Thampanya",
+            "Siriporn Okonogi"
+          ],
+          "journal": "Drug Discoveries & Therapeutics",
+          "publication_date": "2023-10-11",
+          "publication_types": [
+            "Randomized Controlled Trial",
+            "Journal Article"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:45226-1",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "45226-1",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:45226-1",
+          "title": "Andrographis paniculata (Burm.f.) Wall. ex Nees — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    },
+    {
+      "slug": "gymnema-39064727-evidence-report",
+      "content_version": 1,
+      "content_checksum": "5f991723da88c8faeecf1fb5145dfba9bdee89a06aaa4a6112f2dd49fb66752b",
+      "plant_slug": null,
+      "common_name": "Gymnema",
+      "scientific_name": "Gymnema sylvestre (Retz.) R.Br. ex Sm.",
+      "botanical_identity": {
+        "common_name": "Gymnema",
+        "accepted_scientific_name": "Gymnema sylvestre (Retz.) R.Br. ex Sm.",
+        "cited_scientific_name": null,
+        "family": "Apocynaceae",
+        "authority_source_id": "powo:60454719-2",
+        "authority_taxon_id": "60454719-2",
+        "authority_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:60454719-2",
+        "accepted": true
+      },
+      "headline": "Gymnema comparison separates glucose signals from body-composition claims",
+      "standfirst": "In 50 Mexican adults with obesity, three months of Gymnema sylvestre was associated with fasting-glucose and resistin-expression changes, while the berberine arm—not gymnema—showed the stronger body-composition and blood-pressure pattern.",
+      "publication_date": "2024-07-16",
+      "research_date": null,
+      "article_type": "Randomized Controlled Trial",
+      "research_question": "How do Gymnema sylvestre and berberine compare on metabolic measures, body composition, blood pressure, adipokine gene expression, and safety over three months?",
+      "research_context": "Gymnema has a traditional association with sweet taste and glucose-related use. This head-to-head study did not include an inert placebo, so it compares two products rather than estimating either one's absolute effect.",
+      "study_design": "Fifty adults with obesity were randomized to gymnema or berberine for three months. Baseline and final biochemical, body-composition, blood-pressure, adipokine-expression, and safety measures were compared.",
+      "evidence_base": "Fifty Mexican adult participants were split between two active treatments. The abstract does not report blinding, placebo control, attrition, or detailed baseline balance.",
+      "intervention": "A Gymnema sylvestre preparation for three months.",
+      "comparator": "Berberine, another active natural product; there was no inert placebo group.",
+      "main_findings": [
+        "The gymnema arm showed lower fasting glucose and resistin expression after treatment.",
+        "The berberine arm showed broader body-composition, blood-pressure, and selected adipokine changes.",
+        "Gastrointestinal symptoms were the most frequent adverse effects in both groups and eased during the first month."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Random allocation and direct active comparison are useful, but 50 participants, no placebo, short follow-up, many outcomes, and uncertain blinding prevent firm gymnema efficacy conclusions.",
+      "why_matters": "The result challenges a generalized metabolic claim: gymnema's reported pattern was narrower than berberine's, and without placebo neither arm reveals the absolute treatment effect.",
+      "limitations": [
+        "Only 50 adults participated.",
+        "There was no placebo or untreated control.",
+        "Many biochemical and gene-expression outcomes were assessed.",
+        "The abstract does not report allocation concealment, blinding, or attrition."
+      ],
+      "safety_context": "Gastrointestinal symptoms occurred in both groups and reportedly attenuated. Three months in a small sample cannot establish uncommon, long-term, interaction, pregnancy, or diabetes-medication safety.",
+      "cannot_conclude": [
+        "The study does not prove gymnema causes weight loss.",
+        "It does not establish superiority to standard obesity or diabetes care.",
+        "Gene-expression changes do not themselves prove improved clinical outcomes."
+      ],
+      "practical_interpretation": "The gymnema arm produced a narrow exploratory metabolic signal. A placebo-controlled, adequately powered trial is needed before stronger conclusions.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Article title and abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: objective or background"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: results and conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Publication types and abstract: methods"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: design and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: adverse-event reporting or absence of safety detail"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: design boundaries and conclusion"
+          ]
+        }
+      },
+      "additional_sections": [
+        {
+          "key": "traditional_context",
+          "heading": "Traditional-medicine context",
+          "text": "Kew accepts Gymnema sylvestre across the tropical and subtropical Old World to Australia. Traditional glucose-related use provides context but does not resolve the trial's missing placebo comparison.",
+          "source_ids": [
+            "powo:60454719-2"
+          ],
+          "evidence_locations": [
+            "POWO: Uses and general information"
+          ]
+        },
+        {
+          "key": "botanical_identity",
+          "heading": "Botanical identity",
+          "text": "Kew accepts Gymnema sylvestre (Retz.) R.Br. ex Sm. in Apocynaceae. The taxonomic authority is recorded independently from the clinical paper so a common name cannot silently establish identity.",
+          "source_ids": [
+            "powo:60454719-2"
+          ],
+          "evidence_locations": [
+            "POWO: accepted name and classification"
+          ]
+        },
+        {
+          "key": "preparation",
+          "heading": "Preparation or plant part studied",
+          "text": "The trial used a gymnema product under a three-month protocol. Product standardization and composition must be known before comparing it with other extracts or leaf preparations.",
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: intervention description"
+          ]
+        },
+        {
+          "key": "outcomes",
+          "heading": "Outcomes measured",
+          "text": "Fasting glucose, body composition, blood pressure, safety measures, and several adipokine genes were measured. Biomarker and expression changes are not equivalent to fewer complications.",
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: methods and results"
+          ]
+        },
+        {
+          "key": "related_research",
+          "heading": "What should researchers examine next?",
+          "text": "Future research should add placebo, preregister one primary endpoint, report participant flow and product chemistry, and account for concurrent diet, medicines, and activity.",
+          "source_ids": [
+            "pubmed:39064727"
+          ],
+          "evidence_locations": [
+            "Abstract: design limitations and conclusion"
+          ]
+        },
+        {
+          "key": "botanical_distribution",
+          "heading": "Botanical distribution",
+          "text": "Kew records this taxon as native across tropical and subtropical africa and asia to australia. Botanical occurrence describes the plant's documented range; it does not identify where the reported study took place.",
+          "source_ids": [
+            "powo:60454719-2"
+          ],
+          "evidence_locations": [
+            "POWO: Distribution"
+          ]
+        }
+      ],
+      "geography": [
+        {
+          "country_or_region": "Native across tropical and subtropical Africa and Asia to Australia",
+          "iso_country_code": null,
+          "iso_country_codes": [
+            "IN",
+            "LK",
+            "BD",
+            "MM",
+            "TH",
+            "VN",
+            "CN",
+            "SA",
+            "YE",
+            "ET",
+            "KE",
+            "TZ",
+            "ZA",
+            "MG",
+            "AU"
+          ],
+          "geography_kind": "botanical_distribution",
+          "evidence_type": "native_distribution",
+          "source_id": "powo:60454719-2",
+          "supporting_text_location": "POWO: Distribution / Native to",
+          "confidence": "high",
+          "qualification": "Highlighted countries represent the documented native range summarized by Kew; consult the source for subnational botanical regions.",
+          "display_label": "Native across tropical and subtropical Africa and Asia to Australia",
+          "map_title": "Documented botanical distribution"
+        },
+        {
+          "country_or_region": "Mexico",
+          "iso_country_code": "MX",
+          "iso_country_codes": [],
+          "geography_kind": "research_geography",
+          "evidence_type": "participant_location",
+          "source_id": "pubmed:39064727",
+          "supporting_text_location": "PubMed indexed abstract or affiliations",
+          "confidence": "high",
+          "qualification": "The indexed abstract explicitly describes the participants as Mexican adults.",
+          "display_label": "Mexico",
+          "map_title": "Participant location"
+        }
+      ],
+      "image_caption": null,
+      "hero_image": {
+        "local_path": "/media/discoveries/m4c-gymnema.jpg",
+        "source_page": "https://commons.wikimedia.org/?curid=197247322",
+        "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/8/82/Gymnema_sylvestre-1-Semmozhi_Poonga-coimbatore-India.jpg",
+        "stable_media_identifier": "commons:197247322",
+        "creator": "Yercaud-elango",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution": "Gymnema sylvestre-1-Semmozhi Poonga-coimbatore-India.jpg — Yercaud-elango, CC BY 4.0, via Wikimedia Commons",
+        "checksum_sha256": "6a245dc4d42fa5ec692bf736e11e8f12c1e231bbffbd35eeabe98bd626ab8b8c",
+        "plant_relevance": "The source description identifies Gymnema sylvestre (Retz.) R.Br. ex Sm. or its studied preparation.",
+        "classification": "botanical_reference",
+        "caption": "Botanical reference image; not an image from the reported study.",
+        "alt_text": "Gymnema editorial discovery image"
+      },
+      "sources": [
+        {
+          "source_id": "pubmed:39064727",
+          "provider": "pubmed-eutils",
+          "support_role": "primary_evidence",
+          "external_identifier": null,
+          "pmid": "39064727",
+          "doi": "10.3390/nu16142284",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/39064727/",
+          "title": "Comparative Effects of Gymnema sylvestre and Berberine on Adipokines, Body Composition, and Metabolic Parameters in Obese Patients: A Randomized Study.",
+          "authors": [
+            "Cindy Bandala",
+            "Jazmín Carro-Rodríguez",
+            "Noemí Cárdenas-Rodríguez",
+            "Itzel Peña-Montero",
+            "Modesto Gómez-López",
+            "Ana Paola Hernández-Roldán",
+            "Juan Carlos Huerta-Cruz",
+            "Felipe Muñoz-González",
+            "Iván Ignacio-Mejía",
+            "Brayan Domínguez",
+            "Eleazar Lara-Padilla"
+          ],
+          "journal": "Nutrients",
+          "publication_date": "2024-07-16",
+          "publication_types": [
+            "Journal Article",
+            "Randomized Controlled Trial",
+            "Comparative Study"
+          ],
+          "retraction_status": "checked_clear"
+        },
+        {
+          "source_id": "powo:60454719-2",
+          "provider": "kew-powo",
+          "support_role": "taxonomy_distribution",
+          "external_identifier": "60454719-2",
+          "pmid": null,
+          "doi": null,
+          "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:60454719-2",
+          "title": "Gymnema sylvestre (Retz.) R.Br. ex Sm. — Plants of the World Online",
+          "authors": [
+            "Royal Botanic Gardens, Kew"
+          ],
+          "journal": "Plants of the World Online",
+          "publication_date": null,
+          "publication_types": [
+            "Taxonomic backbone",
+            "Structured distribution"
+          ],
+          "retraction_status": "not_applicable"
+        }
+      ]
+    }
+  ]
+}

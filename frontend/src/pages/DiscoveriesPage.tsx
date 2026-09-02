@@ -24,11 +24,15 @@ export function DiscoveriesPage() {
         {discoveries.data?.items.length ? (
           <section className="hw-container grid gap-x-7 gap-y-12 border-b border-line py-12 sm:grid-cols-2 lg:grid-cols-3">
             {discoveries.data.items.map((article) => {
-              const plant = article.linked_plants?.[0]
-              const place = article.geography?.[0]?.display_label
+              const linkedPlant = article.linked_plants?.[0]
+              const plant = linkedPlant ?? (article.botanical_identity ? {
+                common_name: article.botanical_identity.common_name,
+                scientific_name: article.botanical_identity.accepted_scientific_name,
+              } : undefined)
+              const place = article.geography?.find((item) => item.geography_kind === "research_geography")?.display_label
               return <article key={article.id} className="group">
                 <Link to={`/discoveries/${article.slug}`} className="block">
-                  <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-sage/20">
+                  <div className="aspect-[16/9] overflow-hidden rounded-2xl bg-sage/20">
                     {article.hero_image?.local_path ? <img src={article.hero_image?.local_path} alt={article.hero_image?.alt_text || `${plant?.common_name ?? "Medicinal plant"} botanical reference`} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.025]" /> : null}
                   </div>
                   <div className="pt-5">

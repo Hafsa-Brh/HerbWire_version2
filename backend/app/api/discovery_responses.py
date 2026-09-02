@@ -47,6 +47,7 @@ def discovery_article_response(article: DiscoveryArticle) -> DiscoveryArticleRes
             )
             for link in article.plant_links
         ],
+        botanical_identity=article.event.evidence_package.get("botanical_identity"),
         category=article.event.category,
         relevance_reasons=article.event.reasons,
         detected_entities=article.event.detected_entities,
@@ -54,7 +55,15 @@ def discovery_article_response(article: DiscoveryArticle) -> DiscoveryArticleRes
         sources=[
             DiscoverySourceResponse(
                 id=link.source_record.id,
-                pmid=link.source_record.external_identifier,
+                provider=link.source_record.supports.get("provider", "unknown"),
+                support_role=link.support_role,
+                external_identifier=link.source_record.external_identifier,
+                pmid=(
+                    link.source_record.external_identifier
+                    if link.source_record.supports.get("provider")
+                    in {"pubmed", "pubmed-eutils"}
+                    else None
+                ),
                 doi=link.source_record.doi,
                 canonical_url=link.source_record.canonical_url,
                 title=link.source_record.title,
@@ -110,6 +119,7 @@ def public_discovery_article_response(
                 "hero_image",
                 "geography",
                 "linked_plants",
+                "botanical_identity",
                 "category",
                 "sources",
                 "created_at",

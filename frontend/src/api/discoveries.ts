@@ -2,7 +2,10 @@ import { requestJson } from "./plants"
 
 export type ApiDiscoverySource = {
   id: string
-  pmid: string
+  provider: string
+  support_role: string
+  external_identifier: string
+  pmid: string | null
   doi: string | null
   canonical_url: string
   title: string
@@ -21,6 +24,8 @@ export type ApiDiscoveryPlant = {
 export type ApiDiscoveryGeography = {
   country_or_region: string
   iso_country_code: string | null
+  iso_country_codes?: string[]
+  geography_kind: "botanical_distribution" | "research_geography"
   evidence_type: string
   source_id: string
   supporting_text_location: string
@@ -28,6 +33,17 @@ export type ApiDiscoveryGeography = {
   qualification: string
   display_label: string
   map_title: string
+}
+
+export type ApiBotanicalIdentity = {
+  common_name: string
+  accepted_scientific_name: string
+  cited_scientific_name?: string | null
+  family: string
+  authority_source_id: string
+  authority_taxon_id: string
+  authority_url: string
+  accepted: boolean
 }
 
 export type ApiDiscoveryArticle = {
@@ -60,10 +76,11 @@ export type ApiDiscoveryArticle = {
   hero_image: Record<string, string>
   geography: ApiDiscoveryGeography[]
   linked_plants: ApiDiscoveryPlant[]
+  botanical_identity: ApiBotanicalIdentity | null
   category: string
   relevance_reasons: string[]
   detected_entities: Array<{ label?: string; common_name?: string; scientific_name?: string | null; ambiguous?: boolean }>
-  evidence_package: { evidence_type?: string; excerpts?: Array<{ text?: string; location?: string }> }
+  evidence_package: { evidence_type?: string; batch_id?: string; excerpts?: Array<{ text?: string; location?: string }> }
   sources: ApiDiscoverySource[]
   review_id: string | null
   review_status: string | null

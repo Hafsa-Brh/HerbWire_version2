@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 
 from backend.app.domains.discovery.corpus import CuratedDiscoveryCorpus
-from backend.app.domains.discovery.deduplication import require_pubmed_source
 from backend.app.models.encyclopedia import (
     DiscoveryArticle,
     DiscoveryArticlePlant,
@@ -16,6 +15,7 @@ from backend.app.models.encyclopedia import (
     PlantProfile,
     SourceRecord,
 )
+from backend.app.models.source import Source
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -58,7 +58,7 @@ def _body_blocks(article) -> list[dict]:
             " ".join(article.cannot_conclude),
         ),
     )
-    return [
+    blocks = [
         {
             "key": key,
             "heading": heading,
@@ -69,6 +69,8 @@ def _body_blocks(article) -> list[dict]:
         for key, heading, text in fields
         if text
     ]
+    blocks.extend(section.model_dump() for section in article.additional_sections)
+    return blocks
 
 
 def _validate_profile_media(profile: PlantProfile, caption: str) -> dict:
@@ -90,13 +92,21 @@ def _validate_profile_media(profile: PlantProfile, caption: str) -> dict:
     return image
 
 
+def _validated_media(article, profile: PlantProfile | None) -> dict:
+    if article.hero_image is not None:
+        return article.hero_image.model_dump(mode="json")
+    if profile is None or article.image_caption is None:
+        raise ValueError(f"Discovery {article.slug} lacks licensed media metadata.")
+    return _validate_profile_media(profile, article.image_caption)
+
+
 def _source_record(
-    session: Session, source, item, now: datetime
+    session: Session, registry_source: Source, item, now: datetime
 ) -> tuple[SourceRecord, bool]:
     existing = session.scalar(
         select(SourceRecord).where(
-            SourceRecord.source_id == source.id,
-            SourceRecord.external_identifier == item.pmid,
+            SourceRecord.source_id == registry_source.id,
+            SourceRecord.external_identifier == item.stable_identifier,
         )
     )
     if existing is not None:
@@ -105,7 +115,7 @@ def _source_record(
             or existing.doi != item.doi
             or existing.title != item.title
         ):
-            raise ValueError(f"Existing PubMed metadata differs for PMID {item.pmid}.")
+            raise ValueError(f"Existing source metadata differs for {item.source_id}.")
         return existing, False
     content_hash = hashlib.sha256(
         json.dumps(
@@ -113,26 +123,29 @@ def _source_record(
         ).encode()
     ).hexdigest()
     record = SourceRecord(
-        source_id=source.id,
-        external_identifier=item.pmid,
+        source_id=registry_source.id,
+        external_identifier=item.stable_identifier,
         url=str(item.canonical_url),
         canonical_url=str(item.canonical_url),
         title=item.title,
-        publisher="National Library of Medicine (PubMed)",
-        source_type="scientific_literature",
+        publisher=registry_source.name,
+        source_type=item.support_role,
         original_language="en",
         license_status=(
             "PubMed metadata; article and abstract copyright remain with their holders."
+            if item.provider == "pubmed-eutils"
+            else "Authoritative linked metadata; source terms remain applicable."
         ),
         supports={
             "discovery": True,
-            "provider": "pubmed",
+            "provider": item.provider,
             "curated": True,
+            "support_role": item.support_role,
             "publication_types": item.publication_types,
             "retraction_status": item.retraction_status,
         },
         permitted_extract=None,
-        parser_version="curated-pubmed-metadata-v1",
+        parser_version="curated-source-metadata-v2",
         content_hash=content_hash,
         source_publication_date=item.publication_date,
         doi=item.doi,
@@ -150,25 +163,39 @@ def _source_record(
 def import_curated_discoveries(
     session: Session, corpus: CuratedDiscoveryCorpus
 ) -> CuratedImportSummary:
-    source = require_pubmed_source(session)
+    providers = {
+        item.provider for article in corpus.articles for item in article.sources
+    }
+    registry_sources = {
+        source.identifier: source
+        for source in session.scalars(
+            select(Source).where(Source.identifier.in_(providers))
+        ).all()
+    }
+    missing_providers = sorted(providers - registry_sources.keys())
+    if missing_providers:
+        raise ValueError(
+            f"Required source providers are missing: {', '.join(missing_providers)}"
+        )
+    requested_profile_slugs = {
+        item.plant_slug for item in corpus.articles if item.plant_slug is not None
+    }
     profiles = {
         profile.slug: profile
         for profile in session.scalars(
-            select(PlantProfile).where(
-                PlantProfile.slug.in_([item.plant_slug for item in corpus.articles])
-            )
+            select(PlantProfile).where(PlantProfile.slug.in_(requested_profile_slugs))
         ).all()
     }
-    missing = sorted({item.plant_slug for item in corpus.articles} - profiles.keys())
+    missing = sorted(requested_profile_slugs - profiles.keys())
     if missing:
         raise ValueError(
             f"Required published plant profiles are missing: {', '.join(missing)}"
         )
     for item in corpus.articles:
-        profile = profiles[item.plant_slug]
-        if profile.status != "published":
+        profile = profiles.get(item.plant_slug) if item.plant_slug else None
+        if profile is not None and profile.status != "published":
             raise ValueError(f"Plant profile {profile.slug} is not published.")
-        _validate_profile_media(profile, item.image_caption)
+        _validated_media(item, profile)
         existing = session.scalar(
             select(DiscoveryArticle).where(DiscoveryArticle.slug == item.slug)
         )
@@ -194,28 +221,61 @@ def import_curated_discoveries(
             if existing is not None:
                 unchanged += 1
                 continue
-            source_record, source_created = _source_record(
-                session, source, item.sources[0], now
+            source_records = []
+            for source_item in item.sources:
+                source_record, source_created = _source_record(
+                    session,
+                    registry_sources[source_item.provider],
+                    source_item,
+                    now,
+                )
+                source_records.append((source_item, source_record))
+                sources_created += int(source_created)
+            primary_source = next(
+                record
+                for source_item, record in source_records
+                if source_item.support_role == "primary_evidence"
             )
-            sources_created += int(source_created)
             event = DiscoveryEvent(
-                source_record_id=source_record.id,
+                source_record_id=primary_source.id,
                 status="enriched",
                 category=item.article_type,
                 relevance_confidence=1.0,
-                reasons=["curated_source_verified", "linked_published_plant"],
-                evidence_signals=["pubmed_identifier", "section_level_traceability"],
+                reasons=[
+                    "curated_source_verified",
+                    (
+                        "linked_published_plant"
+                        if item.plant_slug
+                        else "standalone_botanical_identity_verified"
+                    ),
+                ],
+                evidence_signals=[
+                    "pubmed_identifier",
+                    "section_level_traceability",
+                    "authoritative_taxonomy",
+                ],
                 detected_entities=[
                     {
                         "common_name": item.common_name,
                         "scientific_name": item.scientific_name,
                         "plant_slug": item.plant_slug,
+                        "family": (
+                            item.botanical_identity.family
+                            if item.botanical_identity
+                            else None
+                        ),
                         "ambiguous": False,
                     }
                 ],
                 evidence_package={
                     "origin": "curated",
+                    "batch_id": corpus.batch_id,
                     "source_ids": [s.source_id for s in item.sources],
+                    "botanical_identity": (
+                        item.botanical_identity.model_dump(mode="json")
+                        if item.botanical_identity
+                        else None
+                    ),
                     "section_sources": {
                         k: v.model_dump() for k, v in item.section_sources.items()
                     },
@@ -225,7 +285,7 @@ def import_curated_discoveries(
             )
             session.add(event)
             session.flush()
-            profile = profiles[item.plant_slug]
+            profile = profiles.get(item.plant_slug) if item.plant_slug else None
             article = DiscoveryArticle(
                 event_id=event.id,
                 slug=item.slug,
@@ -244,6 +304,7 @@ def import_curated_discoveries(
                         "source_traceability": True,
                         "media_license": True,
                         "geography_evidence": True,
+                        "botanical_identity": True,
                         "human_review_required": True,
                     },
                 },
@@ -266,29 +327,41 @@ def import_curated_discoveries(
                 section_sources={
                     k: v.model_dump() for k, v in item.section_sources.items()
                 },
-                hero_image=_validate_profile_media(profile, item.image_caption),
-                geography=[g.model_dump() for g in item.geography],
+                hero_image=_validated_media(item, profile),
+                geography=[g.model_dump(mode="json") for g in item.geography],
                 created_at=now,
                 updated_at=now,
             )
             session.add(article)
             session.flush()
-            session.add(
-                DiscoveryArticlePlant(
-                    discovery_article_id=article.id, plant_profile_id=profile.id
+            if profile is not None:
+                session.add(
+                    DiscoveryArticlePlant(
+                        discovery_article_id=article.id, plant_profile_id=profile.id
+                    )
                 )
-            )
-            session.add(
-                DiscoveryArticleSource(
-                    discovery_article_id=article.id,
-                    source_record_id=source_record.id,
-                    support_role="primary_evidence",
-                    evidence_locations=[
-                        {"section": key, "locations": trace.evidence_locations}
-                        for key, trace in item.section_sources.items()
-                    ],
+            for source_item, source_record in source_records:
+                evidence_locations = [
+                    {"section": key, "locations": trace.evidence_locations}
+                    for key, trace in item.section_sources.items()
+                    if source_item.source_id in trace.source_ids
+                ]
+                evidence_locations.extend(
+                    {
+                        "section": section.key,
+                        "locations": section.evidence_locations,
+                    }
+                    for section in item.additional_sections
+                    if source_item.source_id in section.source_ids
                 )
-            )
+                session.add(
+                    DiscoveryArticleSource(
+                        discovery_article_id=article.id,
+                        source_record_id=source_record.id,
+                        support_role=source_item.support_role,
+                        evidence_locations=evidence_locations,
+                    )
+                )
             session.add(
                 EditorialReview(
                     plant_profile_id=None,
@@ -297,6 +370,7 @@ def import_curated_discoveries(
                     status="needs_review",
                     review_payload={
                         "origin": "curated",
+                        "batch_id": corpus.batch_id,
                         "version": item.content_version,
                         "content_checksum": item.content_checksum,
                         "source_ids": [s.source_id for s in item.sources],

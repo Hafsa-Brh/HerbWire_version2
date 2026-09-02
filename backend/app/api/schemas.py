@@ -213,7 +213,10 @@ class DiscoveryRunRequest(BaseModel):
 
 class DiscoverySourceResponse(BaseModel):
     id: UUID
-    pmid: str
+    provider: str
+    support_role: str
+    external_identifier: str
+    pmid: str | None
     doi: str | None
     canonical_url: str
     title: str
@@ -259,6 +262,7 @@ class DiscoveryArticleResponse(BaseModel):
     hero_image: dict
     geography: list
     linked_plants: list[DiscoveryPlantResponse]
+    botanical_identity: dict | None
     category: str
     relevance_reasons: list
     detected_entities: list
@@ -308,6 +312,7 @@ class PublicDiscoveryArticleResponse(BaseModel):
     hero_image: dict
     geography: list
     linked_plants: list[DiscoveryPlantResponse]
+    botanical_identity: dict | None
     category: str
     sources: list[DiscoverySourceResponse]
     created_at: datetime

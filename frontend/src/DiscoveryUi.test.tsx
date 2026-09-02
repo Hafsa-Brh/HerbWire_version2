@@ -35,6 +35,7 @@ const discovery = {
   hero_image: { local_path: "/media/plants/ginger.jpg", alt_text: "Ginger", caption: "Botanical reference image; not an image from the reported study.", attribution: "Licensed image", license: "CC BY-SA 4.0" },
   geography: [],
   linked_plants: [{ id: "plant-1", slug: "ginger", common_name: "Ginger", scientific_name: "Zingiber officinale Roscoe" }],
+  botanical_identity: null,
   category: "research_discovery_safety",
   relevance_reasons: ["supported_scientific_plant_name"],
   detected_entities: [{ label: "Zingiber officinale", scientific_name: "Zingiber officinale", ambiguous: false }],
@@ -44,6 +45,9 @@ const discovery = {
   },
   sources: [{
     id: "source-1",
+    provider: "pubmed-eutils",
+    support_role: "primary_evidence",
+    external_identifier: "39900001",
     pmid: "39900001",
     doi: "10.1000/herbwire.2026.1",
     canonical_url: "https://pubmed.ncbi.nlm.nih.gov/39900001/",
@@ -136,6 +140,35 @@ describe("Milestone 4B discovery UI", () => {
     expect(screen.getByRole("link", { name: new RegExp(discovery.sources[0].title) })).toHaveAttribute("href", discovery.sources[0].canonical_url)
     expect(screen.getByText(/not diagnosis, treatment advice/i)).toBeInTheDocument()
     expect(screen.queryByText("Research geography")).not.toBeInTheDocument()
+  })
+
+  it("renders standalone identity and separates botanical from research geography", async () => {
+    const published = {
+      ...discovery,
+      status: "published",
+      published_at: "2026-09-03T10:00:00Z",
+      linked_plants: [],
+      botanical_identity: {
+        common_name: "Moringa",
+        accepted_scientific_name: "Moringa oleifera Lam.",
+        family: "Moringaceae",
+        authority_source_id: "powo:584736-1",
+        authority_taxon_id: "584736-1",
+        authority_url: "https://powo.science.kew.org/taxon/584736-1",
+        accepted: true,
+      },
+      geography: [
+        { country_or_region: "India and Pakistan", iso_country_code: null, iso_country_codes: [], geography_kind: "botanical_distribution" as const, evidence_type: "native_distribution", source_id: "powo:584736-1", supporting_text_location: "POWO: Distribution", confidence: "high", qualification: "Documented native range.", display_label: "India and Pakistan", map_title: "Documented botanical distribution" },
+        { country_or_region: "Mexico", iso_country_code: null, iso_country_codes: [], geography_kind: "research_geography" as const, evidence_type: "participant_location", source_id: "pubmed:39900001", supporting_text_location: "Abstract", confidence: "high", qualification: "Participants were reported in Mexico.", display_label: "Mexico", map_title: "Participant location" },
+      ],
+    }
+    vi.mocked(fetch).mockImplementation(() => response(published))
+    renderAt(`/discoveries/${discovery.slug}`)
+    expect(await screen.findByRole("heading", { name: discovery.headline })).toBeInTheDocument()
+    expect(screen.getByText("Verified botanical identity", { exact: false })).toBeInTheDocument()
+    expect(screen.getByText("Botanical distribution", { exact: true })).toBeInTheDocument()
+    expect(screen.getByText("Research geography", { exact: true })).toBeInTheDocument()
+    expect(screen.queryByText("Related plant profile")).not.toBeInTheDocument()
   })
 
   it("renders the intentional non-public state for a private discovery URL", async () => {
