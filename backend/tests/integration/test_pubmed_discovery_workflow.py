@@ -79,7 +79,9 @@ def scalar_count(session, model) -> int:
 def test_pipeline_creates_one_private_traceable_review_and_is_idempotent() -> None:
     with get_session_factory()() as session:
         seed_curated_profiles(session)
-        first = run_discovery_pipeline(session, REQUEST, fixture_provider())
+        first = run_discovery_pipeline(
+            session, REQUEST, fixture_provider(), trigger="manual_cli_fixture"
+        )
         first_id = first.id
         second = run_discovery_pipeline(session, REQUEST, fixture_provider())
         original = fixture_provider().collect(REQUEST)[0]
@@ -157,6 +159,7 @@ def test_pipeline_creates_one_private_traceable_review_and_is_idempotent() -> No
         article = session.scalar(select(DiscoveryArticle))
         assert article is not None
         assert article.status == "needs_review"
+        assert article.content_origin == "synthetic"
         assert article.published_at is None
         assert article.sources[0].source_record.external_identifier == "39900001"
         assert article.event.evidence_package["excerpts"][0]["location"].startswith(

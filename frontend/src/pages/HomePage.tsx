@@ -2,6 +2,7 @@ import { ArrowUpRight, Check, Globe2 } from "lucide-react"
 import { useCallback, useState } from "react"
 import { Link } from "react-router-dom"
 import { subscribeNewsletter } from "../api/newsletter"
+import { fetchPublishedDiscoveries } from "../api/discoveries"
 import { ApiRequestError, fetchPlants } from "../api/plants"
 import globalCoverageImage from "../assets/global-coverage.png"
 
@@ -70,6 +71,7 @@ export function HomePage() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(169,196,165,.12),transparent_28%),radial-gradient(circle_at_84%_76%,rgba(199,158,78,.08),transparent_20%)]" />
           </div>
         </section>
+        <LatestDiscoveries />
         <NewsletterSection />
       </main>
       <Footer />
@@ -77,6 +79,17 @@ export function HomePage() {
   )
 }
 
+function LatestDiscoveries() {
+  const discoveries = useAsyncResource(
+    useCallback((signal: AbortSignal) => fetchPublishedDiscoveries(signal), []),
+  )
+  const items = discoveries.data?.items?.slice(0, 3) ?? []
+  if (!items.length) return null
+  return <section className="hw-container border-b border-line py-14 md:py-20">
+    <div className="flex items-end justify-between border-b-2 border-forest pb-4"><div><p className="hw-eyebrow">Latest discoveries</p><h2 className="mt-2 font-serif text-4xl font-semibold tracking-[-.04em] text-deep md:text-5xl">New evidence, carefully read</h2></div><Link to="/discoveries" className="hidden items-center gap-2 text-xs font-bold uppercase tracking-[.12em] text-leaf sm:inline-flex">All discoveries <ArrowUpRight size={14} /></Link></div>
+    <div className="grid gap-7 pt-8 md:grid-cols-3">{items.map((article) => <Link key={article.id} to={`/discoveries/${article.slug}`} className="group"><div className="aspect-[4/3] overflow-hidden rounded-xl bg-sage/20">{article.hero_image?.local_path ? <img src={article.hero_image?.local_path} alt={article.hero_image?.alt_text || "Botanical reference"} className="h-full w-full object-cover transition group-hover:scale-[1.02]" /> : null}</div><p className="mt-4 hw-eyebrow">{article.linked_plants?.[0]?.common_name ?? article.category}</p><h3 className="mt-2 font-serif text-2xl font-semibold leading-tight text-deep group-hover:text-leaf">{article.headline}</h3></Link>)}</div>
+  </section>
+}
 function NewsletterSection() {
   const [email, setEmail] = useState("")
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "duplicate" | "invalid" | "error">("idle")

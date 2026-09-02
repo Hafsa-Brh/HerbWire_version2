@@ -222,6 +222,13 @@ class DiscoverySourceResponse(BaseModel):
     publication_date: str | None
 
 
+class DiscoveryPlantResponse(BaseModel):
+    id: UUID
+    slug: str
+    common_name: str
+    scientific_name: str
+
+
 class DiscoveryArticleResponse(BaseModel):
     id: UUID
     slug: str
@@ -234,6 +241,24 @@ class DiscoveryArticleResponse(BaseModel):
     cannot_conclude: list
     qa_payload: dict
     version: int
+    content_origin: str
+    article_type: str | None
+    research_date: str | None
+    research_question: str | None
+    research_context: str | None
+    study_design: str | None
+    evidence_base: str | None
+    intervention: str | None
+    comparator: str | None
+    main_findings: list
+    evidence_strength: str | None
+    evidence_strength_rationale: str | None
+    why_matters: str | None
+    practical_interpretation: str | None
+    section_sources: dict
+    hero_image: dict
+    geography: list
+    linked_plants: list[DiscoveryPlantResponse]
     category: str
     relevance_reasons: list
     detected_entities: list
@@ -266,6 +291,23 @@ class PublicDiscoveryArticleResponse(BaseModel):
     safety_context: str
     cannot_conclude: list
     version: int
+    article_type: str | None
+    research_date: str | None
+    research_question: str | None
+    research_context: str | None
+    study_design: str | None
+    evidence_base: str | None
+    intervention: str | None
+    comparator: str | None
+    main_findings: list
+    evidence_strength: str | None
+    evidence_strength_rationale: str | None
+    why_matters: str | None
+    practical_interpretation: str | None
+    section_sources: dict
+    hero_image: dict
+    geography: list
+    linked_plants: list[DiscoveryPlantResponse]
     category: str
     sources: list[DiscoverySourceResponse]
     created_at: datetime

@@ -23,6 +23,7 @@ from backend.app.domains.discovery.qa import evaluate_draft
 from backend.app.domains.discovery.relevance import PlantTerm, detect_relevance
 from backend.app.models.encyclopedia import (
     DiscoveryArticle,
+    DiscoveryArticlePlant,
     DiscoveryArticleSource,
     DiscoveryEvent,
     EditorialReview,
@@ -205,6 +206,8 @@ def _article_for_evidence(
     source_record_id: uuid.UUID,
     normalized,
     evidence: EvidencePackage,
+    *,
+    content_origin: str,
 ) -> DiscoveryArticle:
     article = session.scalar(
         select(DiscoveryArticle).where(DiscoveryArticle.event_id == event.id)
@@ -219,6 +222,7 @@ def _article_for_evidence(
     ).hexdigest()
     article = DiscoveryArticle(
         event_id=event.id,
+        content_origin=content_origin,
         slug=draft.slug,
         status="draft",
         headline=draft.headline,
@@ -421,7 +425,12 @@ def run_discovery_pipeline(
         drafted = []
         for record, source_record, event, evidence in enriched:
             article = _article_for_evidence(
-                session, event, source_record.id, record, evidence
+                session,
+                event,
+                source_record.id,
+                record,
+                evidence,
+                content_origin="synthetic" if "fixture" in trigger else "automated",
             )
             drafted.append((article, evidence))
         _stage(
@@ -518,6 +527,9 @@ def list_discovery_articles(session: Session) -> list[DiscoveryArticle]:
                     DiscoveryArticleSource.source_record
                 ),
                 selectinload(DiscoveryArticle.reviews),
+                selectinload(DiscoveryArticle.plant_links).selectinload(
+                    DiscoveryArticlePlant.plant_profile
+                ),
             )
             .order_by(DiscoveryArticle.created_at.desc())
         ).all()
@@ -538,6 +550,9 @@ def get_discovery_article(
                 DiscoveryArticleSource.source_record
             ),
             selectinload(DiscoveryArticle.reviews),
+            selectinload(DiscoveryArticle.plant_links).selectinload(
+                DiscoveryArticlePlant.plant_profile
+            ),
         )
     )
 
@@ -558,6 +573,12 @@ def decide_discovery_article(
         )
     if decision not in {"approved", "held", "rejected"}:
         raise ValueError("Unsupported editorial decision.")
+    if (
+        article.status == decision
+        and article.reviews
+        and article.reviews[0].status == decision
+    ):
+        return article
     if decision == "approved" and not article.qa_payload.get("passed", False):
         raise ValueError("A QA-held discovery cannot be approved.")
     if decision in {"held", "rejected"} and not (reason or "").strip():
@@ -569,5 +590,70 @@ def decide_discovery_article(
     review.reviewer_name = reviewer_name.strip() or "Editor"
     review.decision_reason = (reason or "").strip() or None
     review.decided_at = utc_now()
-    session.commit()
+    try:
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
+    return get_discovery_article(session, article_id)  # type: ignore[return-value]
+
+
+def publish_discovery_article(
+    session: Session,
+    article_id: uuid.UUID,
+    reviewer_name: str,
+) -> DiscoveryArticle:
+    article = get_discovery_article(session, article_id)
+    if article is None:
+        raise LookupError("Discovery article not found.")
+    if article.status == "published":
+        return article
+    if article.content_origin != "curated":
+        raise ValueError("Only validated curated discoveries can be published.")
+    if (
+        article.status != "approved"
+        or not article.reviews
+        or article.reviews[0].status != "approved"
+    ):
+        raise ValueError(
+            "The latest discovery version must be explicitly approved first."
+        )
+    required_text = (
+        article.headline,
+        article.standfirst,
+        article.article_type,
+        article.research_question,
+        article.research_context,
+        article.study_design,
+        article.evidence_base,
+        article.evidence_strength,
+        article.evidence_strength_rationale,
+        article.why_matters,
+        article.safety_context,
+        article.practical_interpretation,
+    )
+    if not all(value and value.strip() for value in required_text):
+        raise ValueError("The discovery version is incomplete and cannot be published.")
+    if (
+        not article.qa_payload.get("passed", False)
+        or len(article.body_blocks) != 11
+        or not article.sources
+        or not article.plant_links
+        or not article.hero_image.get("license")
+        or not article.hero_image.get("checksum_sha256")
+        or not article.section_sources
+    ):
+        raise ValueError("The discovery version is not publication eligible.")
+    article.status = "published"
+    article.reviewed_at = article.reviewed_at or utc_now()
+    article.published_at = utc_now()
+    article.updated_at = utc_now()
+    article.reviews[0].reviewer_name = (
+        reviewer_name.strip() or article.reviews[0].reviewer_name or "Editor"
+    )
+    try:
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
     return get_discovery_article(session, article_id)  # type: ignore[return-value]

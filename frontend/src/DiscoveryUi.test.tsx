@@ -17,6 +17,24 @@ const discovery = {
   cannot_conclude: ["No treatment recommendation can be made."],
   qa_payload: { passed: true, reason_codes: [], checklist: { source_linked: true } },
   version: 1,
+  content_origin: "curated",
+  article_type: "Randomized controlled trial",
+  research_date: null,
+  research_question: "What did the trial test?",
+  research_context: "A structured research context.",
+  study_design: "Randomized and controlled.",
+  evidence_base: "Eighty participants.",
+  intervention: "A defined botanical preparation.",
+  comparator: "Placebo.",
+  main_findings: ["A bounded finding."],
+  evidence_strength: "limited",
+  evidence_strength_rationale: "One small trial.",
+  why_matters: "It supports further research.",
+  practical_interpretation: "This is not treatment advice.",
+  section_sources: {},
+  hero_image: { local_path: "/media/plants/ginger.jpg", alt_text: "Ginger", caption: "Botanical reference image; not an image from the reported study.", attribution: "Licensed image", license: "CC BY-SA 4.0" },
+  geography: [],
+  linked_plants: [{ id: "plant-1", slug: "ginger", common_name: "Ginger", scientific_name: "Zingiber officinale Roscoe" }],
   category: "research_discovery_safety",
   relevance_reasons: ["supported_scientific_plant_name"],
   detected_entities: [{ label: "Zingiber officinale", scientific_name: "Zingiber officinale", ambiguous: false }],
@@ -64,8 +82,11 @@ function renderAt(path: string) {
   return render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>)
 }
 
-describe("Milestone 4A discovery UI", () => {
-  beforeEach(() => vi.stubGlobal("fetch", vi.fn()))
+describe("Milestone 4B discovery UI", () => {
+  beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn())
+    vi.stubGlobal("confirm", vi.fn(() => true))
+  })
   afterEach(() => {
     vi.unstubAllGlobals()
     vi.restoreAllMocks()
@@ -88,10 +109,40 @@ describe("Milestone 4A discovery UI", () => {
     )
     renderAt("/discoveries")
     expect(await screen.findByRole("heading", { name: discovery.headline })).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /View PubMed source/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Read discovery/i })).toHaveAttribute(
       "href",
-      discovery.sources[0].canonical_url,
+      `/discoveries/${discovery.slug}`,
     )
+  })
+
+  it("renders a rich published detail with source and plant linkage", async () => {
+    const published = {
+      ...discovery,
+      status: "published",
+      published_at: "2026-09-02T13:00:00Z",
+      body_blocks: [{
+        key: "overview",
+        heading: "Overview",
+        text: "A source-backed overview long enough for editorial reading.",
+        source_ids: ["pubmed:39900001"],
+        evidence_locations: ["Abstract"],
+      }],
+    }
+    vi.mocked(fetch).mockImplementation(() => response(published))
+    renderAt(`/discoveries/${discovery.slug}`)
+    expect(await screen.findByRole("heading", { name: discovery.headline })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Overview" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: /Ginger/ })).toHaveAttribute("href", "/plants/ginger")
+    expect(screen.getByRole("link", { name: new RegExp(discovery.sources[0].title) })).toHaveAttribute("href", discovery.sources[0].canonical_url)
+    expect(screen.getByText(/not diagnosis, treatment advice/i)).toBeInTheDocument()
+    expect(screen.queryByText("Research geography")).not.toBeInTheDocument()
+  })
+
+  it("renders the intentional non-public state for a private discovery URL", async () => {
+    vi.mocked(fetch).mockImplementation(() => response({ detail: "Discovery not found." }, 404))
+    renderAt(`/discoveries/${discovery.slug}`)
+    expect(await screen.findByRole("heading", { name: "That discovery is not published." })).toBeInTheDocument()
+    expect(screen.queryByText("This discovery is temporarily unavailable.")).not.toBeInTheDocument()
   })
 
   it("shows the protected review detail and saves hold without publishing", async () => {
@@ -110,25 +161,26 @@ describe("Milestone 4A discovery UI", () => {
 
     const workspace = await screen.findByRole("region", { name: "Discovery review workspace" })
     expect(within(workspace).getAllByText(discovery.headline).length).toBeGreaterThan(0)
-    expect(within(workspace).getByText("Zingiber officinale")).toBeInTheDocument()
+    expect(within(workspace).getByText(/Zingiber officinale Roscoe/)).toBeInTheDocument()
     expect(within(workspace).getByText(/abstract_sentence:1/)).toBeInTheDocument()
     expect(within(workspace).getByRole("link", { name: discovery.sources[0].title })).toHaveAttribute(
       "href",
       discovery.sources[0].canonical_url,
     )
-    expect(within(workspace).queryByRole("button", { name: /publish/i })).not.toBeInTheDocument()
+    expect(within(workspace).getByRole("button", { name: /publish approved version/i })).toBeDisabled()
 
     fireEvent.change(within(workspace).getByLabelText("Hold or reject reason"), {
       target: { value: "Needs full-method review." },
     })
     fireEvent.click(within(workspace).getByRole("button", { name: "Hold" }))
+    expect(confirm).toHaveBeenCalledWith(expect.stringContaining("needs_review → held"))
     await waitFor(() =>
       expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining("/hold"),
         expect.objectContaining({ method: "POST" }),
       ),
     )
-    expect(await within(workspace).findByRole("alert")).toHaveTextContent("remains non-public")
+    expect(await within(workspace).findByRole("alert")).toHaveTextContent("held")
   })
 
   it("renders stage failures and submits only bounded PubMed trigger fields", async () => {

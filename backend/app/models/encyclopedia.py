@@ -169,6 +169,25 @@ class DiscoveryArticle(Base):
         String(64), nullable=False, unique=True
     )
     version: Mapped[int] = mapped_column(nullable=False, default=1)
+    content_origin: Mapped[str] = mapped_column(
+        String(50), nullable=False, default="automated"
+    )
+    article_type: Mapped[str | None] = mapped_column(String(100))
+    research_date: Mapped[str | None] = mapped_column(String(50))
+    research_question: Mapped[str | None] = mapped_column(Text)
+    research_context: Mapped[str | None] = mapped_column(Text)
+    study_design: Mapped[str | None] = mapped_column(Text)
+    evidence_base: Mapped[str | None] = mapped_column(Text)
+    intervention: Mapped[str | None] = mapped_column(Text)
+    comparator: Mapped[str | None] = mapped_column(Text)
+    main_findings: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    evidence_strength: Mapped[str | None] = mapped_column(String(50))
+    evidence_strength_rationale: Mapped[str | None] = mapped_column(Text)
+    why_matters: Mapped[str | None] = mapped_column(Text)
+    practical_interpretation: Mapped[str | None] = mapped_column(Text)
+    section_sources: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    hero_image: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    geography: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utc_now
     )
@@ -185,6 +204,9 @@ class DiscoveryArticle(Base):
     reviews: Mapped[list["EditorialReview"]] = relationship(
         back_populates="discovery_article"
     )
+    plant_links: Mapped[list["DiscoveryArticlePlant"]] = relationship(
+        back_populates="article", cascade="all, delete-orphan"
+    )
 
     __table_args__ = (
         CheckConstraint(
@@ -192,9 +214,33 @@ class DiscoveryArticle(Base):
             name="ck_discovery_articles_status",
         ),
         CheckConstraint("version > 0", name="ck_discovery_articles_version"),
+        CheckConstraint(
+            "content_origin in ('automated','curated','synthetic')",
+            name="ck_discovery_articles_content_origin",
+        ),
         Index("ix_discovery_articles_status", "status"),
         Index("ix_discovery_articles_created_at", "created_at"),
     )
+
+
+class DiscoveryArticlePlant(Base):
+    __tablename__ = "discovery_article_plants"
+
+    discovery_article_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("discovery_articles.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    plant_profile_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("plant_profiles.id", ondelete="RESTRICT"),
+        primary_key=True,
+    )
+
+    article: Mapped[DiscoveryArticle] = relationship(back_populates="plant_links")
+    plant_profile: Mapped["PlantProfile"] = relationship()
+
+    __table_args__ = (Index("ix_discovery_article_plants_profile", "plant_profile_id"),)
 
 
 class DiscoveryArticleSource(Base):

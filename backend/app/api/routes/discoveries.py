@@ -8,6 +8,7 @@ from backend.app.api.schemas import (
 from backend.app.db.session import get_session
 from backend.app.models.encyclopedia import (
     DiscoveryArticle,
+    DiscoveryArticlePlant,
     DiscoveryArticleSource,
     DiscoveryEvent,
 )
@@ -26,6 +27,9 @@ def _published_options():
             DiscoveryArticleSource.source_record
         ),
         selectinload(DiscoveryArticle.reviews),
+        selectinload(DiscoveryArticle.plant_links).selectinload(
+            DiscoveryArticlePlant.plant_profile
+        ),
     )
 
 
@@ -39,14 +43,20 @@ def list_published_discoveries(
         session.scalar(
             select(func.count())
             .select_from(DiscoveryArticle)
-            .where(DiscoveryArticle.status == "published")
+            .where(
+                DiscoveryArticle.status == "published",
+                DiscoveryArticle.published_at.is_not(None),
+            )
         )
         or 0
     )
     articles = list(
         session.scalars(
             select(DiscoveryArticle)
-            .where(DiscoveryArticle.status == "published")
+            .where(
+                DiscoveryArticle.status == "published",
+                DiscoveryArticle.published_at.is_not(None),
+            )
             .options(*_published_options())
             .order_by(DiscoveryArticle.published_at.desc())
             .offset((page - 1) * page_size)
@@ -71,6 +81,7 @@ def get_published_discovery(
         .where(
             DiscoveryArticle.slug == slug,
             DiscoveryArticle.status == "published",
+            DiscoveryArticle.published_at.is_not(None),
         )
         .options(*_published_options())
     )

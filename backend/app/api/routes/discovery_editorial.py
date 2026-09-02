@@ -21,6 +21,7 @@ from backend.app.domains.discovery.service import (
     decide_discovery_article,
     get_discovery_article,
     list_discovery_articles,
+    publish_discovery_article,
     run_discovery_pipeline,
 )
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
@@ -166,3 +167,22 @@ def reject_discovery(
     session: Session = Depends(get_session),
 ) -> DiscoveryArticleResponse:
     return _decision(article_id, "rejected", payload, session)
+
+
+@router.post(
+    "/reviews/{article_id}/publish",
+    response_model=DiscoveryArticleResponse,
+    dependencies=[Depends(require_editor)],
+)
+def publish_discovery(
+    article_id: UUID,
+    payload: DecisionRequest,
+    session: Session = Depends(get_session),
+) -> DiscoveryArticleResponse:
+    try:
+        article = publish_discovery_article(session, article_id, payload.reviewer_name)
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    return discovery_article_response(article)
