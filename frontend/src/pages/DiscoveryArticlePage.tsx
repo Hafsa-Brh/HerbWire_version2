@@ -1,8 +1,9 @@
-import { ArrowLeft, ExternalLink, FlaskConical, MapPin } from "lucide-react"
+import { ArrowLeft, ExternalLink, FlaskConical } from "lucide-react"
 import { useCallback } from "react"
 import { Link, useParams } from "react-router-dom"
-import { fetchPublishedDiscovery, type ApiDiscoveryGeography, type ApiPublicDiscoveryArticle } from "../api/discoveries"
+import { fetchPublishedDiscovery, type ApiPublicDiscoveryArticle } from "../api/discoveries"
 import { ApiRequestError } from "../api/plants"
+import { DiscoveryBotanicalDistribution, DiscoveryResearchGeography } from "../components/discoveries/DiscoveryMaps"
 import { RouteState } from "../components/site/RouteState"
 import { Footer, SiteShell } from "../components/site/SiteShell"
 import { useAsyncResource } from "../hooks/useAsyncResource"
@@ -29,8 +30,6 @@ function DiscoveryContent({ article }: { article: ApiPublicDiscoveryArticle }) {
     scientific_name: article.botanical_identity.accepted_scientific_name,
   } : undefined)
   const image = article.hero_image ?? {}
-  const botanicalDistribution = article.geography?.filter((item) => item.geography_kind === "botanical_distribution") ?? []
-  const researchGeography = article.geography?.filter((item) => item.geography_kind !== "botanical_distribution") ?? []
   return <>
     <div className="hw-container pt-10 md:pt-16">
       <Link to="/discoveries" className="inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[.16em] text-leaf"><ArrowLeft size={14} /> All discoveries</Link>
@@ -49,25 +48,11 @@ function DiscoveryContent({ article }: { article: ApiPublicDiscoveryArticle }) {
     <article className="hw-container py-14 md:py-24"><div className="mx-auto max-w-3xl">
       {article.body_blocks.map((block) => block.heading && block.text ? <section key={block.key ?? block.heading} className="mb-12"><h2 className="font-serif text-3xl font-semibold tracking-[-.04em] text-deep md:text-4xl">{block.heading}</h2><p className="mt-5 font-serif text-lg leading-[1.85] text-muted">{block.text}</p>{block.evidence_locations?.length ? <p className="mt-3 font-sans text-[10px] uppercase tracking-[.11em] text-muted">Trace: {block.evidence_locations.join("; ")}</p> : null}</section> : null)}
       {article.practical_interpretation ? <aside className="my-12 border-y-2 border-forest bg-sage/15 px-6 py-8"><p className="hw-eyebrow">Practical interpretation</p><p className="mt-3 font-serif text-xl leading-relaxed text-deep">{article.practical_interpretation}</p></aside> : null}
-      {botanicalDistribution.length ? <GeographySection label="Botanical distribution" items={botanicalDistribution} /> : null}
-      {researchGeography.length ? <GeographySection label="Research geography" items={researchGeography} /> : null}
+      <DiscoveryBotanicalDistribution article={article} />
+      <DiscoveryResearchGeography article={article} />
       {linkedPlant ? <section className="mt-12 border-t border-line pt-7"><p className="hw-eyebrow">Related plant profile</p><Link to={`/plants/${linkedPlant.slug}`} className="mt-3 inline-flex items-center gap-2 font-serif text-2xl font-semibold text-leaf">{linkedPlant.common_name} <span className="font-normal italic text-muted">{linkedPlant.scientific_name}</span></Link></section> : article.botanical_identity ? <section className="mt-12 border-t border-line pt-7"><p className="hw-eyebrow">Verified botanical identity</p><a href={article.botanical_identity.authority_url} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 font-serif text-2xl font-semibold text-leaf">{article.botanical_identity.common_name} <span className="font-normal italic text-muted">{article.botanical_identity.accepted_scientific_name}</span> <ExternalLink size={14} /></a><p className="mt-2 font-sans text-xs text-muted">{article.botanical_identity.family} / no encyclopedia profile yet</p></section> : null}
       <section className="mt-14 border-t-2 border-forest pt-6"><p className="hw-eyebrow">Information sources</p><div className="mt-5 grid gap-6">{article.sources.map((source) => <article key={source.id}><a href={source.canonical_url} target="_blank" rel="noreferrer" className="font-serif text-xl font-semibold text-deep hover:text-leaf">{source.title} <ExternalLink className="inline" size={14} /></a><p className="mt-2 font-sans text-xs leading-relaxed text-muted">{source.authors.length ? `${source.authors.join(", ")}. ` : ""}{source.journal ? `${source.journal}. ` : ""}{source.pmid ? `PMID ${source.pmid}` : source.external_identifier}{source.doi ? ` / DOI ${source.doi}` : ""}.</p></article>)}</div></section>
       <section className="mt-12 border-t border-line pt-6"><p className="hw-eyebrow">Publication note</p><p className="mt-3 font-sans text-sm leading-relaxed text-muted">This evidence report is educational, not diagnosis, treatment advice, or a dosage recommendation. It was published only after separate editorial approval.</p></section>
     </div></article>
   </>
-}
-
-function GeographySection({ label, items }: { label: string; items: ApiDiscoveryGeography[] }) {
-  const mapped = items.filter((item) => item.iso_country_code || item.iso_country_codes?.length)
-  return <section className="my-14 border-y border-line py-8"><p className="hw-eyebrow inline-flex items-center gap-2"><MapPin size={14} /> {label}</p><h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-.04em]">{items[0].map_title}</h2>{mapped.length ? <ResearchMap items={mapped} /> : null}<ul className="mt-5 grid gap-3">{items.map((item) => <li key={`${item.source_id}-${item.evidence_type}-${item.display_label}`} className="border-l-2 border-gold pl-4"><p className="font-serif text-lg font-semibold">{item.display_label}</p><p className="mt-1 font-sans text-xs leading-relaxed text-muted">{item.qualification} Evidence: {item.supporting_text_location}.</p></li>)}</ul></section>
-}
-
-function ResearchMap({ items }: { items: ApiDiscoveryGeography[] }) {
-  type WorldMap = { viewBox: string; locations: Array<{ id: string; name: string; path: string }> }
-  const map = useAsyncResource<WorldMap>(useCallback(async () => { const module = await import("@svg-maps/world"); const value = module.default as WorldMap | { default: WorldMap }; return "default" in value ? value.default : value }, []))
-  const codes = new Set(items.flatMap((item) => [item.iso_country_code, ...(item.iso_country_codes ?? [])].filter(Boolean).map((code) => code!.toUpperCase())))
-  if (map.isLoading) return <div aria-label="Loading research map" className="mt-6 aspect-[1010/666] animate-pulse bg-sage/20" />
-  if (map.error || !map.data) return null
-  return <figure className="mt-6"><svg viewBox={map.data.viewBox} role="img" aria-label={items[0].map_title} className="h-auto w-full">{map.data.locations.map((location) => <path key={location.id} d={location.path} className={codes.has(location.id.toUpperCase()) ? "fill-leaf stroke-paper" : "fill-sage/40 stroke-paper"}><title>{location.name}</title></path>)}</svg><figcaption className="mt-2 font-sans text-[10px] text-muted">Highlighted only where the cited source supports the displayed evidence type. Basemap: SVG Maps World, CC BY 4.0.</figcaption></figure>
 }

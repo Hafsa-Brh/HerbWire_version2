@@ -37,13 +37,42 @@ def discovery_article_response(article: DiscoveryArticle) -> DiscoveryArticleRes
         practical_interpretation=article.practical_interpretation,
         section_sources=article.section_sources,
         hero_image=article.hero_image,
-        geography=article.geography,
+        geography=[
+            {
+                **item,
+                "geography_kind": item.get("geography_kind", "research_geography"),
+            }
+            for item in article.geography
+        ],
         linked_plants=[
             DiscoveryPlantResponse(
                 id=link.plant_profile.id,
                 slug=link.plant_profile.slug,
                 common_name=link.plant_profile.display_common_name,
                 scientific_name=link.plant_profile.accepted_scientific_name,
+                distribution=link.plant_profile.distribution,
+                distribution_summary=link.plant_profile.distribution_summary,
+                distribution_sources=[
+                    DiscoverySourceResponse(
+                        id=source_link.source_record.id,
+                        provider=source_link.source_record.supports.get(
+                            "provider", "unknown"
+                        ),
+                        support_role=source_link.support_role,
+                        external_identifier=source_link.source_record.external_identifier,
+                        pmid=None,
+                        doi=source_link.source_record.doi,
+                        canonical_url=source_link.source_record.canonical_url,
+                        title=source_link.source_record.title,
+                        authors=source_link.source_record.authors,
+                        journal=source_link.source_record.journal,
+                        publication_date=(
+                            source_link.source_record.source_publication_date
+                        ),
+                    )
+                    for source_link in link.plant_profile.sources
+                    if source_link.source_record.supports.get("distribution")
+                ],
             )
             for link in article.plant_links
         ],

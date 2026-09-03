@@ -81,7 +81,7 @@ export function HomePage() {
 
 function LatestDiscoveries() {
   const discoveries = useAsyncResource(
-    useCallback((signal: AbortSignal) => fetchPublishedDiscoveries(signal), []),
+    useCallback((signal: AbortSignal) => fetchPublishedDiscoveries({}, signal), []),
   )
   const items = discoveries.data?.items?.slice(0, 3) ?? []
   if (!items.length) return null

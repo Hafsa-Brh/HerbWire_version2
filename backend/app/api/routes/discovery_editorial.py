@@ -92,6 +92,7 @@ def read_discovery_reviews(
         page=page,
         page_size=page_size,
         pages=math.ceil(total / page_size) if total else 0,
+        total_pages=math.ceil(total / page_size) if total else 0,
     )
 
 

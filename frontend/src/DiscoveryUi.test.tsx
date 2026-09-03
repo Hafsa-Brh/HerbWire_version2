@@ -34,7 +34,7 @@ const discovery = {
   section_sources: {},
   hero_image: { local_path: "/media/plants/ginger.jpg", alt_text: "Ginger", caption: "Botanical reference image; not an image from the reported study.", attribution: "Licensed image", license: "CC BY-SA 4.0" },
   geography: [],
-  linked_plants: [{ id: "plant-1", slug: "ginger", common_name: "Ginger", scientific_name: "Zingiber officinale Roscoe" }],
+  linked_plants: [{ id: "plant-1", slug: "ginger", common_name: "Ginger", scientific_name: "Zingiber officinale Roscoe", distribution: [{ code: "native", name: "South and Southeast Asia", status: "native", level: 0, map_countries: ["IN", "CN"] }], distribution_summary: "A verified WCVP-backed botanical range.", distribution_sources: [{ id: "distribution-source", provider: "kew", support_role: "distribution", external_identifier: "powo:ginger", pmid: null, doi: null, canonical_url: "https://powo.science.kew.org/", title: "Plants of the World Online", authors: [], journal: null, publication_date: null }] }],
   botanical_identity: null,
   category: "research_discovery_safety",
   relevance_reasons: ["supported_scientific_plant_name"],
@@ -70,7 +70,15 @@ const page = (items = [discovery]) => ({
   total: items.length,
   page: 1,
   page_size: 50,
-  pages: items.length ? 1 : 0,
+  pages: 1,
+  total_pages: 1,
+  filters: {
+    plants: [{ value: "Ginger", label: "Ginger (Zingiber officinale Roscoe)" }],
+    study_types: [{ value: "Randomized controlled trial", label: "Randomized controlled trial" }],
+    evidence_strengths: [{ value: "limited", label: "limited" }],
+    publication_years: [{ value: "2026", label: "2026" }],
+    research_countries: [{ value: "MX", label: "Mexico" }],
+  },
 })
 
 function response(body: unknown, status = 200) {
@@ -119,6 +127,42 @@ describe("Milestone 4B discovery UI", () => {
     )
   })
 
+  it("renders the compact discovery archive without promotional sections", async () => {
+    vi.mocked(fetch).mockImplementation(() =>
+      response({ ...page([{ ...discovery, status: "published", published_at: "2026-09-02T13:00:00Z" }]), total: 22, total_pages: 2, pages: 2 }),
+    )
+    renderAt("/discoveries")
+    expect(await screen.findByRole("heading", { level: 1, name: "TRADITIONAL MEDICINE DISCOVERIES" })).toBeInTheDocument()
+    expect(screen.getByText("22 published")).toBeInTheDocument()
+    expect(screen.getByLabelText("Search discoveries")).toBeInTheDocument()
+    expect(screen.getByRole("navigation", { name: "Discovery archive pagination" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: discovery.headline })).toBeInTheDocument()
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument()
+    expect(screen.queryByRole("heading", { name: "New Discoveries" })).not.toBeInTheDocument()
+    expect(screen.queryByText(/Evidence-qualified reports linking current research/)).not.toBeInTheDocument()
+    expect(screen.queryByText("Editorial standard")).not.toBeInTheDocument()
+    expect(screen.queryByRole("heading", { name: "A study report is not a prescription." })).not.toBeInTheDocument()
+  })
+
+  it("persists public archive search, filters, and pagination in the request URL", async () => {
+    vi.mocked(fetch).mockImplementation(() => response({ ...page([{ ...discovery, status: "published", published_at: "2026-09-02T13:00:00Z" }]), total: 13, total_pages: 2, pages: 2 }))
+    renderAt("/discoveries")
+    await screen.findByRole("heading", { name: discovery.headline })
+    fireEvent.change(screen.getByLabelText("Search discoveries"), { target: { value: "ginger" } })
+    fireEvent.change(screen.getByLabelText("Filter by plant"), { target: { value: "Ginger" } })
+    fireEvent.change(screen.getByLabelText("Filter by study type"), { target: { value: "Randomized controlled trial" } })
+    fireEvent.change(screen.getByLabelText("Filter by evidence strength"), { target: { value: "limited" } })
+    fireEvent.change(screen.getByLabelText("Filter by publication year"), { target: { value: "2026" } })
+    fireEvent.change(screen.getByLabelText("Filter by research country"), { target: { value: "MX" } })
+    fireEvent.click(screen.getByRole("button", { name: "Search" }))
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringMatching(/query=ginger/), expect.anything()))
+    expect(fetch).toHaveBeenCalledWith(expect.stringMatching(/plant=Ginger/), expect.anything())
+    expect(fetch).toHaveBeenCalledWith(expect.stringMatching(/study_type=Randomized/), expect.anything())
+    expect(screen.getByText("Page 1 of 2")).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: /Next/i }))
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringMatching(/page=2/), expect.anything()))
+  })
+
   it("renders a rich published detail with source and plant linkage", async () => {
     const published = {
       ...discovery,
@@ -158,8 +202,8 @@ describe("Milestone 4B discovery UI", () => {
         accepted: true,
       },
       geography: [
-        { country_or_region: "India and Pakistan", iso_country_code: null, iso_country_codes: [], geography_kind: "botanical_distribution" as const, evidence_type: "native_distribution", source_id: "powo:584736-1", supporting_text_location: "POWO: Distribution", confidence: "high", qualification: "Documented native range.", display_label: "India and Pakistan", map_title: "Documented botanical distribution" },
-        { country_or_region: "Mexico", iso_country_code: null, iso_country_codes: [], geography_kind: "research_geography" as const, evidence_type: "participant_location", source_id: "pubmed:39900001", supporting_text_location: "Abstract", confidence: "high", qualification: "Participants were reported in Mexico.", display_label: "Mexico", map_title: "Participant location" },
+        { country_or_region: "India and Pakistan", iso_country_code: null, iso_country_codes: ["IN", "PK"], geography_kind: "botanical_distribution" as const, evidence_type: "native_distribution", source_id: "powo:584736-1", supporting_text_location: "POWO: Distribution", confidence: "high", qualification: "Documented native range.", display_label: "India and Pakistan", map_title: "Documented botanical distribution" },
+        { country_or_region: "Mexico", iso_country_code: "MX", iso_country_codes: [], geography_kind: "research_geography" as const, evidence_type: "participant_location", source_id: "pubmed:39900001", supporting_text_location: "Abstract", confidence: "high", qualification: "Participants were reported in Mexico.", display_label: "Mexico", map_title: "Participant location" },
       ],
     }
     vi.mocked(fetch).mockImplementation(() => response(published))
@@ -195,6 +239,9 @@ describe("Milestone 4B discovery UI", () => {
     const workspace = await screen.findByRole("region", { name: "Discovery review workspace" })
     expect(within(workspace).getAllByText(discovery.headline).length).toBeGreaterThan(0)
     expect(within(workspace).getByText(/Zingiber officinale Roscoe/)).toBeInTheDocument()
+    expect(within(workspace).getByText("Detail page 1 of 4.")).toBeInTheDocument()
+    fireEvent.click(within(workspace).getByRole("button", { name: /4\. Safety, geography, and provenance/ }))
+    expect(await within(workspace).findByRole("heading", { name: "Safety, geography, and provenance" })).toHaveFocus()
     expect(within(workspace).getByText(/abstract_sentence:1/)).toBeInTheDocument()
     expect(within(workspace).getByRole("link", { name: discovery.sources[0].title })).toHaveAttribute(
       "href",
@@ -302,7 +349,12 @@ describe("Milestone 4B discovery UI", () => {
     const workspace = await screen.findByRole("region", { name: "Discovery review workspace" })
     expect(within(workspace).getByText("Page 1 of 2")).toBeInTheDocument()
     expect(within(workspace).queryByText("Discovery draft 7")).not.toBeInTheDocument()
+    fireEvent.click(within(workspace).getByRole("button", { name: /3\. Findings and evidence/ }))
+    expect(within(workspace).getByText("Detail page 3 of 4.")).toBeInTheDocument()
     fireEvent.click(within(workspace).getByRole("button", { name: "Next discovery page" }))
     expect(await within(workspace).findAllByText("Discovery draft 7")).not.toHaveLength(0)
     expect(within(workspace).getByText("Page 2 of 2")).toBeInTheDocument()
+    expect(within(workspace).getByText("Detail page 3 of 4.")).toBeInTheDocument()
+    fireEvent.click(within(workspace).getByRole("button", { name: /Discovery draft 7/i }))
+    expect(within(workspace).getByText("Detail page 1 of 4.")).toBeInTheDocument()
   })})

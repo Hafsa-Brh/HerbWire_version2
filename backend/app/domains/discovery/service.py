@@ -30,8 +30,10 @@ from backend.app.models.encyclopedia import (
     PipelineRun,
     PipelineStageResult,
     PlantProfile,
+    PlantProfileSource,
+    SourceRecord,
 )
-from sqlalchemy import select
+from sqlalchemy import exists, func, or_, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, selectinload
 
@@ -45,6 +47,20 @@ DISCOVERY_STAGES = (
     "qa_policy_gate",
     "queue_editorial_review",
 )
+
+
+def discovery_article_load_options():
+    return (
+        selectinload(DiscoveryArticle.event).selectinload(DiscoveryEvent.source_record),
+        selectinload(DiscoveryArticle.sources).selectinload(
+            DiscoveryArticleSource.source_record
+        ),
+        selectinload(DiscoveryArticle.reviews),
+        selectinload(DiscoveryArticle.plant_links)
+        .selectinload(DiscoveryArticlePlant.plant_profile)
+        .selectinload(PlantProfile.sources)
+        .selectinload(PlantProfileSource.source_record),
+    )
 
 
 def utc_now() -> datetime:
@@ -519,18 +535,7 @@ def list_discovery_articles(session: Session) -> list[DiscoveryArticle]:
     return list(
         session.scalars(
             select(DiscoveryArticle)
-            .options(
-                selectinload(DiscoveryArticle.event).selectinload(
-                    DiscoveryEvent.source_record
-                ),
-                selectinload(DiscoveryArticle.sources).selectinload(
-                    DiscoveryArticleSource.source_record
-                ),
-                selectinload(DiscoveryArticle.reviews),
-                selectinload(DiscoveryArticle.plant_links).selectinload(
-                    DiscoveryArticlePlant.plant_profile
-                ),
-            )
+            .options(*discovery_article_load_options())
             .order_by(DiscoveryArticle.created_at.desc())
         ).all()
     )
@@ -542,19 +547,141 @@ def get_discovery_article(
     return session.scalar(
         select(DiscoveryArticle)
         .where(DiscoveryArticle.id == article_id)
-        .options(
-            selectinload(DiscoveryArticle.event).selectinload(
-                DiscoveryEvent.source_record
-            ),
-            selectinload(DiscoveryArticle.sources).selectinload(
-                DiscoveryArticleSource.source_record
-            ),
-            selectinload(DiscoveryArticle.reviews),
-            selectinload(DiscoveryArticle.plant_links).selectinload(
-                DiscoveryArticlePlant.plant_profile
+        .options(*discovery_article_load_options())
+    )
+
+
+def list_published_discovery_articles(
+    session: Session,
+    *,
+    query: str | None = None,
+    plant: str | None = None,
+    study_type: str | None = None,
+    evidence_strength: str | None = None,
+    publication_year: int | None = None,
+    research_country: str | None = None,
+    page: int = 1,
+    page_size: int = 12,
+) -> tuple[list[DiscoveryArticle], int, int]:
+    filters = [
+        DiscoveryArticle.status == "published",
+        DiscoveryArticle.published_at.is_not(None),
+    ]
+    primary_source = SourceRecord
+    base = select(DiscoveryArticle).join(DiscoveryEvent).join(primary_source)
+
+    normalized_query = (query or "").strip().lower()
+    linked_plant_match = exists(
+        select(1)
+        .select_from(DiscoveryArticlePlant)
+        .join(PlantProfile)
+        .where(
+            DiscoveryArticlePlant.discovery_article_id == DiscoveryArticle.id,
+            or_(
+                func.lower(PlantProfile.display_common_name).like(
+                    f"%{normalized_query}%"
+                ),
+                func.lower(PlantProfile.accepted_scientific_name).like(
+                    f"%{normalized_query}%"
+                ),
             ),
         )
     )
+    if normalized_query:
+        needle = f"%{normalized_query}%"
+        identity = DiscoveryEvent.evidence_package["botanical_identity"]
+        filters.append(
+            or_(
+                func.lower(DiscoveryArticle.headline).like(needle),
+                func.lower(DiscoveryArticle.standfirst).like(needle),
+                func.lower(primary_source.journal).like(needle),
+                func.lower(primary_source.external_identifier).like(needle),
+                func.lower(identity["common_name"].astext).like(needle),
+                func.lower(identity["accepted_scientific_name"].astext).like(needle),
+                linked_plant_match,
+            )
+        )
+    if plant:
+        plant_needle = plant.strip().lower()
+        identity = DiscoveryEvent.evidence_package["botanical_identity"]
+        filters.append(
+            or_(
+                func.lower(identity["common_name"].astext) == plant_needle,
+                func.lower(identity["accepted_scientific_name"].astext) == plant_needle,
+                exists(
+                    select(1)
+                    .select_from(DiscoveryArticlePlant)
+                    .join(PlantProfile)
+                    .where(
+                        DiscoveryArticlePlant.discovery_article_id
+                        == DiscoveryArticle.id,
+                        or_(
+                            func.lower(PlantProfile.display_common_name)
+                            == plant_needle,
+                            func.lower(PlantProfile.accepted_scientific_name)
+                            == plant_needle,
+                        ),
+                    )
+                ),
+            )
+        )
+    if study_type:
+        filters.append(
+            func.lower(DiscoveryArticle.article_type) == study_type.strip().lower()
+        )
+    if evidence_strength:
+        filters.append(
+            func.lower(DiscoveryArticle.evidence_strength)
+            == evidence_strength.strip().lower()
+        )
+    if publication_year:
+        filters.append(
+            func.left(primary_source.source_publication_date, 4)
+            == str(publication_year)
+        )
+    if research_country:
+        filters.append(
+            text(
+                """EXISTS (
+                    SELECT 1
+                    FROM jsonb_array_elements(discovery_articles.geography) AS geo
+                    WHERE coalesce(
+                        geo->>'geography_kind', 'research_geography'
+                    ) = 'research_geography'
+                      AND (
+                        upper(geo->>'iso_country_code') = upper(:research_country)
+                        OR jsonb_exists(
+                            coalesce(geo->'iso_country_codes', '[]'::jsonb),
+                            upper(:research_country)
+                        )
+                      )
+                )"""
+            ).bindparams(research_country=research_country.strip())
+        )
+
+    count_statement = (
+        select(func.count(DiscoveryArticle.id))
+        .join(DiscoveryEvent)
+        .join(primary_source)
+        .where(*filters)
+    )
+    total = session.scalar(count_statement) or 0
+    total_pages = max(1, (total + page_size - 1) // page_size)
+    normalized_page = min(max(1, page), total_pages)
+    articles = list(
+        session.scalars(
+            base.where(*filters)
+            .options(*discovery_article_load_options())
+            .order_by(
+                DiscoveryArticle.published_at.desc(),
+                primary_source.source_publication_date.desc().nullslast(),
+                DiscoveryArticle.id.asc(),
+            )
+            .offset((normalized_page - 1) * page_size)
+            .limit(page_size)
+        ).all()
+    )
+    return articles, total, normalized_page
 
 
 def decide_discovery_article(

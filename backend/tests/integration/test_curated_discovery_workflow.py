@@ -1,4 +1,5 @@
 from copy import deepcopy
+from datetime import datetime, timezone
 
 import pytest
 from backend.app.db.session import get_engine, get_session_factory
@@ -169,3 +170,92 @@ def test_publication_commit_failure_rolls_back(monkeypatch) -> None:
         assert stored is not None
         assert stored.status == "approved"
         assert stored.published_at is None
+
+
+def test_public_archive_filters_paginates_and_reuses_plant_distribution(client) -> None:
+    _prepare()
+    with get_session_factory()() as session:
+        import_curated_discoveries(session, load_curated_discovery_corpus())
+        articles = list(
+            session.scalars(
+                select(DiscoveryArticle).order_by(DiscoveryArticle.id)
+            ).all()
+        )
+        published_at = datetime(2026, 9, 3, 12, tzinfo=timezone.utc)
+        for article in articles[:3]:
+            article.status = "published"
+            article.published_at = published_at
+            article.reviews[0].status = "approved"
+            article.event.source_record.source_publication_date = "2026-08-15"
+        articles[0].geography = [
+            {
+                "geography_kind": "research_geography",
+                "evidence_type": "study_site",
+                "iso_country_code": "MA",
+                "iso_country_codes": [],
+                "display_label": "Morocco",
+                "qualification": "Explicitly reported study site.",
+                "supporting_text_location": "Methods",
+                "source_id": "pubmed:test",
+                "confidence": "high",
+                "country_or_region": "Morocco",
+                "map_title": "Where the study was conducted",
+            }
+        ]
+        session.commit()
+        expected_ids = [str(article.id) for article in articles[:3]]
+
+    page_one = client.get("/api/v1/discoveries?page=1&page_size=2")
+    assert page_one.status_code == 200
+    payload = page_one.json()
+    assert payload["total"] == 3
+    assert payload["page"] == 1
+    assert payload["total_pages"] == payload["pages"] == 2
+    assert [item["id"] for item in payload["items"]] == expected_ids[:2]
+    assert payload["filters"]["plants"]
+    assert payload["filters"]["study_types"]
+    assert payload["filters"]["publication_years"] == [
+        {"value": "2026", "label": "2026"}
+    ]
+
+    normalized = client.get("/api/v1/discoveries?page=999&page_size=2").json()
+    assert normalized["page"] == 2
+    assert [item["id"] for item in normalized["items"]] == expected_ids[2:]
+
+    item = payload["items"][0]
+    search = client.get(
+        "/api/v1/discoveries",
+        params={
+            "query": item["headline"],
+            "plant": item["linked_plants"][0]["common_name"],
+        },
+    ).json()
+    assert search["total"] == 1
+    assert search["items"][0]["linked_plants"][0]["distribution"]
+    assert search["items"][0]["linked_plants"][0]["distribution_sources"]
+    assert (
+        client.get(
+            "/api/v1/discoveries", params={"study_type": item["article_type"]}
+        ).json()["total"]
+        >= 1
+    )
+    assert (
+        client.get(
+            "/api/v1/discoveries",
+            params={"evidence_strength": item["evidence_strength"]},
+        ).json()["total"]
+        >= 1
+    )
+    assert (
+        client.get("/api/v1/discoveries", params={"research_country": "MA"}).json()[
+            "total"
+        ]
+        == 1
+    )
+    assert (
+        client.get("/api/v1/discoveries", params={"publication_year": 2025}).json()[
+            "total"
+        ]
+        == 0
+    )
+    assert client.get("/api/v1/discoveries", params={"query": "   "}).status_code == 200

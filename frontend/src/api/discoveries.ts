@@ -1,4 +1,5 @@
 import { requestJson } from "./plants"
+import type { ApiDistributionRegion } from "./plants"
 
 export type ApiDiscoverySource = {
   id: string
@@ -19,6 +20,9 @@ export type ApiDiscoveryPlant = {
   slug: string
   common_name: string
   scientific_name: string
+  distribution: ApiDistributionRegion[]
+  distribution_summary: string
+  distribution_sources: ApiDiscoverySource[]
 }
 
 export type ApiDiscoveryGeography = {
@@ -97,11 +101,36 @@ export type ApiPublicDiscoveryArticle = Omit<ApiDiscoveryArticle,
   "reviewed_at"
 > & { published_at: string }
 
-export type ApiPublicDiscoveryPage = { items: ApiPublicDiscoveryArticle[]; total: number; page: number; page_size: number; pages: number }
-export type ApiDiscoveryPage = { items: ApiDiscoveryArticle[]; total: number; page: number; page_size: number; pages: number }
+export type ApiDiscoveryFilterOption = { value: string; label: string }
+export type ApiPublicDiscoveryFilters = {
+  plants: ApiDiscoveryFilterOption[]
+  study_types: ApiDiscoveryFilterOption[]
+  evidence_strengths: ApiDiscoveryFilterOption[]
+  publication_years: ApiDiscoveryFilterOption[]
+  research_countries: ApiDiscoveryFilterOption[]
+}
+export type ApiPublicDiscoveryPage = { items: ApiPublicDiscoveryArticle[]; total: number; page: number; page_size: number; pages: number; total_pages: number; filters: ApiPublicDiscoveryFilters }
+export type ApiDiscoveryPage = { items: ApiDiscoveryArticle[]; total: number; page: number; page_size: number; pages: number; total_pages: number }
 
-export function fetchPublishedDiscoveries(signal?: AbortSignal): Promise<ApiPublicDiscoveryPage> {
-  return requestJson<ApiPublicDiscoveryPage>("/api/v1/discoveries?page=1&page_size=12", { signal })
+export type DiscoveryArchiveQuery = {
+  query?: string
+  plant?: string
+  studyType?: string
+  evidenceStrength?: string
+  publicationYear?: string
+  researchCountry?: string
+  page?: number
+}
+
+export function fetchPublishedDiscoveries(query: DiscoveryArchiveQuery = {}, signal?: AbortSignal): Promise<ApiPublicDiscoveryPage> {
+  const params = new URLSearchParams({ page: String(query.page ?? 1), page_size: "12" })
+  if (query.query?.trim()) params.set("query", query.query.trim())
+  if (query.plant) params.set("plant", query.plant)
+  if (query.studyType) params.set("study_type", query.studyType)
+  if (query.evidenceStrength) params.set("evidence_strength", query.evidenceStrength)
+  if (query.publicationYear) params.set("publication_year", query.publicationYear)
+  if (query.researchCountry) params.set("research_country", query.researchCountry)
+  return requestJson<ApiPublicDiscoveryPage>(`/api/v1/discoveries?${params}`, { signal })
 }
 
 export function fetchPublishedDiscovery(slug: string, signal?: AbortSignal): Promise<ApiPublicDiscoveryArticle> {

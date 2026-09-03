@@ -230,6 +230,9 @@ class DiscoveryPlantResponse(BaseModel):
     slug: str
     common_name: str
     scientific_name: str
+    distribution: list = Field(default_factory=list)
+    distribution_summary: str = ""
+    distribution_sources: list[DiscoverySourceResponse] = Field(default_factory=list)
 
 
 class DiscoveryArticleResponse(BaseModel):
@@ -283,6 +286,20 @@ class DiscoveryArticlePageResponse(BaseModel):
     page: int
     page_size: int
     pages: int
+    total_pages: int
+
+
+class DiscoveryFilterOption(BaseModel):
+    value: str
+    label: str
+
+
+class PublicDiscoveryFilters(BaseModel):
+    plants: list[DiscoveryFilterOption] = Field(default_factory=list)
+    study_types: list[DiscoveryFilterOption] = Field(default_factory=list)
+    evidence_strengths: list[DiscoveryFilterOption] = Field(default_factory=list)
+    publication_years: list[DiscoveryFilterOption] = Field(default_factory=list)
+    research_countries: list[DiscoveryFilterOption] = Field(default_factory=list)
 
 
 class PublicDiscoveryArticleResponse(BaseModel):
@@ -325,3 +342,5 @@ class PublicDiscoveryArticlePageResponse(BaseModel):
     page: int
     page_size: int
     pages: int
+    total_pages: int
+    filters: PublicDiscoveryFilters

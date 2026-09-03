@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react"
 import { useCallback } from "react"
 import { Link } from "react-router-dom"
-import type { ApiPlantDetail, ApiPlantListItem, ApiPlantMedia } from "../../api/plants"
+import type { ApiDistributionRegion, ApiPlantDetail, ApiPlantListItem, ApiPlantMedia } from "../../api/plants"
 import { useAsyncResource } from "../../hooks/useAsyncResource"
 import loginMonsteraImage from "../../assets/login-monstera.png"
 
@@ -36,9 +36,15 @@ export function BotanicalImage({ label, image, compact = false }: { label: strin
 }
 
 export function PlantDistributionMap({ plant }: { plant: ApiPlantDetail }) {
+  const distributionSource = plant.sources.find((source) => source.supports.distribution)
+  const mapSource = plant.sources.find((source) => source.canonical_url.includes("gbif.org/dataset")) ?? distributionSource
+  return <BotanicalDistributionMap name={plant.display_common_name} distribution={plant.distribution} sourceUrl={mapSource?.url} sourceLabel={mapSource?.publisher} />
+}
+
+export function BotanicalDistributionMap({ name, distribution, sourceUrl, sourceLabel }: { name: string; distribution: ApiDistributionRegion[]; sourceUrl?: string; sourceLabel?: string }) {
   type WorldMap = { viewBox: string; locations: Array<{ id: string; name: string; path: string }> }
   const countryStatuses = new Map<string, Set<string>>()
-  plant.distribution.forEach((region) => region.map_countries?.forEach((country) => {
+  distribution.forEach((region) => region.map_countries?.forEach((country) => {
     const statuses = countryStatuses.get(country) ?? new Set<string>()
     statuses.add(region.status)
     countryStatuses.set(country, statuses)
@@ -48,8 +54,6 @@ export function PlantDistributionMap({ plant }: { plant: ApiPlantDetail }) {
     const candidate = module.default as WorldMap | { default: WorldMap }
     return "locations" in candidate ? candidate : candidate.default
   }, []))
-  const distributionSource = plant.sources.find((source) => source.supports.distribution)
-  const mapSource = plant.sources.find((source) => source.canonical_url.includes("gbif.org/dataset")) ?? distributionSource
   const fill = (country: string) => {
     const statuses = countryStatuses.get(country.toUpperCase())
     if (statuses?.has("native") && statuses.has("introduced")) return "fill-rust/70"
@@ -69,12 +73,12 @@ export function PlantDistributionMap({ plant }: { plant: ApiPlantDetail }) {
   if (map.error || !map.data) return <p className="mt-4 font-sans text-xs leading-relaxed text-muted">The country basemap could not be loaded; the sourced distribution lists remain available below.</p>
 
   return <figure className="mt-7 border border-line bg-sage/10 p-3 sm:p-5">
-    <svg viewBox={map.data.viewBox} role="img" aria-label={`Country-level distribution overview for ${plant.display_common_name}`} className="h-auto w-full" preserveAspectRatio="xMidYMid meet">
-      <title>Country-level distribution overview for {plant.display_common_name}</title>
+    <svg viewBox={map.data.viewBox} role="img" aria-label={`Country-level distribution overview for ${name}`} className="h-auto w-full" preserveAspectRatio="xMidYMid meet">
+      <title>Country-level distribution overview for {name}</title>
       {map.data.locations.map((location) => <path key={location.id} id={`map-${location.id}`} d={location.path} className={`${fill(location.id)} stroke-paper stroke-[0.7] transition-colors`}><title>{location.name}: {label(location.id)}</title></path>)}
     </svg>
     <div aria-label="Map legend" className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-line pt-3 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-muted"><span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-leaf" />Native</span><span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-gold" />Introduced</span><span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-rust" />Both statuses</span><span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-muted" />Origin uncertain</span><span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-sage" />Not listed</span></div>
-    <figcaption className="mt-3 font-sans text-[10px] leading-relaxed text-muted">Country-level overview aggregated from WCVP botanical regions; subnational WGSRPD regions are not implied to cover an entire country uniformly. Distribution: {mapSource ? <a href={mapSource.url} target="_blank" rel="noreferrer" className="font-bold text-leaf hover:text-forest">{mapSource.publisher}</a> : "profile provenance"}. Basemap: <a href="https://github.com/VictorCazanave/svg-maps/tree/master/packages/world" target="_blank" rel="noreferrer" className="font-bold text-leaf hover:text-forest">SVG Maps World</a>, CC BY 4.0.</figcaption>
+    <figcaption className="mt-3 font-sans text-[10px] leading-relaxed text-muted">Country-level overview aggregated from validated botanical distribution records; subnational botanical regions are not implied to cover an entire country uniformly. Distribution: {sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-leaf hover:text-forest">{sourceLabel || "source record"}</a> : "profile provenance"}. Basemap: <a href="https://github.com/VictorCazanave/svg-maps/tree/master/packages/world" target="_blank" rel="noreferrer" className="font-bold text-leaf hover:text-forest">SVG Maps World</a>, CC BY 4.0.</figcaption>
   </figure>
 }
 export function PlantCard({ plant }: { plant: ApiPlantListItem }) {
