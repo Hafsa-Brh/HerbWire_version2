@@ -65,6 +65,13 @@ npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 
 The API client aligns local loopback hostnames, so both `http://127.0.0.1:5173` and `http://localhost:5173` can use the HttpOnly editorial session correctly.
 
+For a disposable editorial-review database, run
+.scriptsstart_local_review.ps1 -DatabaseName APPROVED_DISPOSABLE_DATABASE
+from the repository root. The guarded launcher requires the existing ignored
+root .env, never reads or writes credential values itself, refuses protected
+database names and occupied ports, disables development-only endpoints, and
+pins the browser API origin to http://127.0.0.1:8000.
+
 ## Local URLs
 
 - Homepage: `http://127.0.0.1:5173/`

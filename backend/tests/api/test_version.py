@@ -8,6 +8,7 @@ from backend.app.core.settings import Settings, get_settings
 def isolated_settings_environment(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     for key in (
         "HERBWIRE_DATABASE_URL",
+        "HERBWIRE_LOCAL_DATABASE_NAME",
         "HERBWIRE_FRONTEND_ORIGIN",
         "HERBWIRE_API_HOST",
         "HERBWIRE_API_PORT",

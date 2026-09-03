@@ -1,0 +1,1634 @@
+{
+  "schema_version": 1,
+  "articles": [
+    {
+      "slug": "ginger-metabolic-markers-nafld-trial",
+      "content_version": 1,
+      "content_checksum": "07bc96ec46353997e56195ea45feb987a40fea278e73a0706e19a4a6a8922c9d",
+      "plant_slug": "ginger",
+      "common_name": "Ginger",
+      "scientific_name": "Zingiber officinale Roscoe",
+      "headline": "Ginger trial separates metabolic changes from unchanged liver imaging",
+      "standfirst": "A three-month randomized trial in adults with type 2 diabetes and fatty liver reported selected metabolic and blood-pressure changes, while inflammatory markers and FibroScan measures did not differ meaningfully.",
+      "publication_date": "2023-10-11",
+      "research_date": null,
+      "article_type": "Randomized controlled trial",
+      "research_question": "Does ginger supplementation change metabolic, blood-pressure, inflammatory, or liver-imaging measures in adults living with both type 2 diabetes and non-alcoholic fatty liver disease?",
+      "research_context": "Ginger has a long food and traditional-use history, but this study tested a defined preparation against placebo in a specific clinical population rather than assuming that traditional use predicts a clinical effect.",
+      "study_design": "Two-arm, double-blind, placebo-controlled randomized clinical trial lasting three months.",
+      "evidence_base": "Seventy-six adults diagnosed with type 2 diabetes and non-alcoholic fatty liver disease were randomized. The study assessed body measures, blood pressure, biochemical markers, safety measures, and FibroScan imaging before and after intervention.",
+      "intervention": "Ginger powder capsules, 1,000 mg twice daily for three months, as reported by the study.",
+      "comparator": "Matching placebo capsules on the same schedule.",
+      "main_findings": [
+        "Between-group findings favored ginger for systolic and diastolic blood pressure.",
+        "Insulin, HOMA-IR, and HDL cholesterol improved from baseline in the ginger group.",
+        "Inflammatory markers and FibroScan steatosis measures did not show significant changes."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Randomization and blinding strengthen the comparison, but this was a single, short trial with 76 participants and several outcomes. Some reported changes were within-group rather than clearly superior to placebo.",
+      "why_matters": "The mixed result is informative because it distinguishes selected metabolic signals from unchanged inflammation and liver imaging. It provides a testable basis for larger studies rather than a broad claim about liver treatment.",
+      "limitations": [
+        "Small single trial with a three-month follow-up.",
+        "Multiple endpoints increase the risk of chance findings.",
+        "Within-group improvement does not by itself establish an effect beyond placebo.",
+        "The indexed abstract calls for longer studies with larger samples."
+      ],
+      "safety_context": "The investigators evaluated safety measures, but the indexed abstract does not provide detailed adverse-event results. People with diabetes or liver disease should not use this report to change treatment or add a supplement without clinical guidance.",
+      "cannot_conclude": [
+        "The trial does not prove that ginger reverses fatty liver disease.",
+        "It does not establish long-term cardiovascular or liver outcomes.",
+        "It does not support a general dosage recommendation outside the studied protocol."
+      ],
+      "practical_interpretation": "Read this as an early controlled signal with important null findings, not as treatment advice. The most useful next evidence would be a larger, longer trial with prespecified primary outcomes and detailed adverse-event reporting.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:37817641"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:37817641",
+          "pmid": "37817641",
+          "doi": "10.1080/19390211.2023.2263788",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/37817641/",
+          "title": "The Effects of Ginger (Zingiber Officinale Roscoe) on Non-Alcoholic Fatty Liver Disease in Patients with Type 2 Diabetes Mellitus: A Randomized Double-Blinded Placebo-Controlled Clinical Trial.",
+          "authors": [
+            "Parissa Sadat Ghoreishi",
+            "Mesbah Shams",
+            "Majid Nimrouzi",
+            "Mohammad M Zarshenas",
+            "Kamran Bagheri Lankarani",
+            "Ebrahim Fallahzadeh Abarghooei",
+            "Mozaffar Talebzadeh",
+            "Mohammad Hashem Hashempur"
+          ],
+          "journal": "Journal of Dietary Supplements",
+          "publication_date": "2023-10-11",
+          "publication_types": [
+            "Randomized Controlled Trial",
+            "Journal Article"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "curcumin-103-trials-evidence-map",
+      "content_version": 1,
+      "content_checksum": "95151186adf2ec5cdd61ece6dfb8933cd429283c4863d869c021864a8ae5849d",
+      "plant_slug": "turmeric",
+      "common_name": "Turmeric",
+      "scientific_name": "Curcuma longa L.",
+      "headline": "Across 103 curcumin trials, evidence quality varied sharply by outcome",
+      "standfirst": "A systematic review of 103 randomized trials found statistically significant signals for many outcomes, but high-certainty evidence was limited to four measures and methodological weaknesses constrained most conclusions.",
+      "publication_date": "2024-10-31",
+      "research_date": null,
+      "article_type": "Systematic review and meta-analysis",
+      "research_question": "Across randomized placebo-controlled trials, which measured health outcomes changed with Curcuma longa or curcumin interventions, and how certain was the accumulated evidence?",
+      "research_context": "Curcumin is studied across many conditions and biomarkers. Pooling such a broad literature can show where evidence is comparatively mature, but it can also hide variation in products, participants, and trial quality.",
+      "study_design": "Systematic review and random-effects meta-analysis of randomized clinical trials, with risk-of-bias assessment and GRADE certainty ratings.",
+      "evidence_base": "The review included 103 randomized controlled trials, 7,216 participants, and 42 outcomes. Searches covered PubMed, EMBASE, Scopus, and Web of Science through September 2023.",
+      "intervention": "Curcuma longa or curcumin interventions as defined in the included trials.",
+      "comparator": "Placebo in eligible randomized trials.",
+      "main_findings": [
+        "Twenty-three of 42 outcomes had statistically significant pooled effect estimates.",
+        "Evidence was rated high certainty for fasting blood sugar, C-reactive protein, HDL cholesterol, and weight.",
+        "Most remaining outcomes were graded moderate, low, or very low certainty."
+      ],
+      "evidence_strength": "mixed",
+      "evidence_strength_rationale": "The large evidence base and GRADE assessment are strengths, yet breadth is not the same as uniform reliability. Only four outcomes received high-certainty ratings, and the authors identified methodological limitations in included studies.",
+      "why_matters": "The review helps readers separate a small set of better-supported biomarker findings from a much larger field of uncertain signals. That is more useful than treating every positive curcumin result as equivalent.",
+      "limitations": [
+        "Products, populations, follow-up periods, and outcomes varied across 103 trials.",
+        "Most outcomes were supported by moderate, low, or very low certainty evidence.",
+        "Biomarker changes do not automatically translate into improved clinical outcomes.",
+        "The authors called for larger, longer, better-designed trials."
+      ],
+      "safety_context": "The indexed abstract focuses on efficacy outcomes and does not provide a pooled adverse-event analysis. Curcumin products can differ substantially, and this review should not be used to assume that every formulation is equally safe.",
+      "cannot_conclude": [
+        "The analysis does not prove that curcumin treats every condition represented.",
+        "It does not establish equivalence among extracts, preparations, or doses.",
+        "It does not justify replacing established care with a turmeric product."
+      ],
+      "practical_interpretation": "The review is best understood as an evidence map. Four outcomes had comparatively strong support, while most claims remain less certain and require attention to the specific product and clinical context.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:39478418"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:39478418",
+          "pmid": "39478418",
+          "doi": "10.1002/ptr.8340",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/39478418/",
+          "title": "Curcumin on Human Health: A Comprehensive Systematic Review and Meta-Analysis of 103 Randomized Controlled Trials.",
+          "authors": [
+            "Ali Jafari",
+            "Maryam Abbastabar",
+            "Alireza Alaghi",
+            "Javad Heshmati",
+            "Francesca L Crowe",
+            "Mahdi Sepidarkish"
+          ],
+          "journal": "Phytotherapy Research",
+          "publication_date": "2024-10-31",
+          "publication_types": [
+            "Journal Article",
+            "Meta-Analysis",
+            "Systematic Review"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "lavender-menopause-trial-narrow-benefit",
+      "content_version": 1,
+      "content_checksum": "12adf8c664d6d30e8a8a834d039664e8f795770ac914a8d29de25182c037f649",
+      "plant_slug": "lavender",
+      "common_name": "English lavender",
+      "scientific_name": "Lavandula angustifolia Mill.",
+      "headline": "Lavender menopause trial found a narrow between-group benefit, not broad change",
+      "standfirst": "In a 72-person placebo-controlled trial, menopause symptom scores improved in both groups; the only reported between-group symptom advantage was for sexual dysfunction, while cortisol and lipid measures were unchanged.",
+      "publication_date": "2024-05-15",
+      "research_date": "2022-05-10 to 2023-05-22",
+      "article_type": "Randomized controlled trial",
+      "research_question": "Could oral Lavandula angustifolia essential oil improve menopausal symptoms, serum cortisol, or lipid measures in postmenopausal women?",
+      "research_context": "Lavender preparations are often discussed for mood and sleep-related symptoms. This trial asked a narrower clinical question in postmenopausal women and included both symptom scores and laboratory outcomes.",
+      "study_design": "Triple-blind, parallel-arm randomized controlled trial conducted over 60 days.",
+      "evidence_base": "Seventy-two women aged 50 to 65 attending health-care centers in Tabriz, Iran were randomized equally. Researchers used the Greene menopause symptom scale and measured serum cortisol and lipid profiles.",
+      "intervention": "An oral Lavandula angustifolia essential-oil soft gel reported as 80 mg daily for 60 days.",
+      "comparator": "A similar placebo soft gel for 60 days.",
+      "main_findings": [
+        "Total symptom scores fell substantially in both groups.",
+        "The reported between-group advantage was limited to the sexual-dysfunction domain.",
+        "No significant changes or between-group differences were found for the measured lipid profile or cortisol."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Triple blinding and placebo control reduce bias, but the sample was small, follow-up was short, and broad symptom improvement in both groups makes the narrow between-group result especially important.",
+      "why_matters": "The result resists a simple success narrative. It suggests one possible symptom-specific signal while showing no broad advantage across total symptoms or laboratory measures.",
+      "limitations": [
+        "Only 72 participants from one city were studied.",
+        "The intervention lasted 60 days, so durability is unknown.",
+        "Many symptom domains were tested, while the between-group difference was narrow.",
+        "The indexed abstract does not establish whether the change was clinically important to participants."
+      ],
+      "safety_context": "Oral essential-oil products are concentrated preparations. The indexed abstract does not provide detailed adverse-event findings, so this report cannot establish safety for self-directed use or for people taking other medicines.",
+      "cannot_conclude": [
+        "The trial does not show that lavender broadly relieves all menopausal symptoms.",
+        "It does not show an effect on cortisol or the measured lipid profile.",
+        "It does not establish long-term benefit or support unsupervised use of essential oil."
+      ],
+      "practical_interpretation": "The careful reading is that one symptom domain differed from placebo in a small trial, while most comparisons did not. Replication with larger samples and clearer clinical thresholds is needed.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:38754638"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [
+        {
+          "country_or_region": "Iran",
+          "iso_country_code": "IR",
+          "evidence_type": "study_site",
+          "source_id": "pubmed:38754638",
+          "supporting_text_location": "Abstract: methods (health-care centers in Tabriz, Iran)",
+          "confidence": "high",
+          "qualification": "The source explicitly identifies the recruiting health-care centers; this is a study-site label, not a claim about broader national representation.",
+          "display_label": "Tabriz, Iran",
+          "map_title": "Where the clinical study was conducted"
+        }
+      ],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:38754638",
+          "pmid": "38754638",
+          "doi": "10.1016/j.ctim.2024.103050",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/38754638/",
+          "title": "The efficacy of oral Lavandula angustifolia Mill. essential oil on menopausal symptoms, serum lipid profile, and cortisol concentration in postmenopausal women: A triple-blind, randomized, controlled trial.",
+          "authors": [
+            "Morteza Haramshahi",
+            "Soraya Babaie",
+            "Mahnaz Shahnazi",
+            "Behnam Kafil",
+            "Azizeh Farshbaf-Khalili",
+            "Mina Naghdi"
+          ],
+          "journal": "Complementary Therapies in Medicine",
+          "publication_date": "2024-05-15",
+          "publication_types": [
+            "Journal Article",
+            "Randomized Controlled Trial"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "peppermint-inhalation-cardiac-surgery-trial",
+      "content_version": 1,
+      "content_checksum": "74dde021ba7119d2fbc985a8049a21b26fd27ec59ad190ddf6225a3318c14565",
+      "plant_slug": "peppermint",
+      "common_name": "Peppermint",
+      "scientific_name": "Mentha × piperita L.",
+      "headline": "Peppermint inhalation trial reported less pain and better sleep after heart surgery",
+      "standfirst": "A small double-blind trial in 64 post-operative cardiac patients reported lower pain scores and better short-term sleep measures with peppermint essence than with distilled-water placebo.",
+      "publication_date": "2024-01-08",
+      "research_date": "2020",
+      "article_type": "Randomized controlled trial",
+      "research_question": "Does inhaled peppermint essence affect pain intensity and sleep quality during the first days after open-heart surgery?",
+      "research_context": "Pain and disturbed sleep are common after major surgery. Aromatherapy offers a non-drug exposure that can be tested alongside usual care, but any signal must be interpreted within the closely monitored hospital setting.",
+      "study_design": "Double-blind randomized clinical trial with aromatherapy and placebo groups.",
+      "evidence_base": "Sixty-four cardiac-surgery patients selected by convenience sampling were randomized, 32 per group. Pain was measured with a numeric scale and sleep with the St Mary’s Hospital Sleep Questionnaire over the short post-operative period.",
+      "intervention": "Inhaled peppermint essence administered as aromatherapy in the reported hospital protocol.",
+      "comparator": "Inhaled distilled water used as placebo.",
+      "main_findings": [
+        "Mean pain scores were lower in the peppermint group than in the placebo group.",
+        "Sleep questionnaire scores favored peppermint on both reported post-intervention days.",
+        "The study measured short-term symptoms rather than recovery, complications, or long-term outcomes."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Random allocation, blinding, and a comparator support the signal, but convenience sampling, 64 participants, a single national setting, subjective measures, and very short follow-up limit confidence and generalizability.",
+      "why_matters": "The trial suggests that a low-complexity supportive intervention deserves further study in post-operative care. It does not establish peppermint inhalation as a substitute for analgesia or clinical monitoring.",
+      "limitations": [
+        "Convenience sampling can reduce representativeness.",
+        "The sample contained only 64 patients.",
+        "Outcomes were subjective and measured over a very short period.",
+        "The indexed abstract does not detail usual-care analgesia, protocol fidelity, or adverse events."
+      ],
+      "safety_context": "People recovering from heart surgery require clinician-directed pain management and monitoring. The indexed abstract does not provide detailed adverse-event data, so this small study cannot establish the safety of peppermint inhalation beyond its reported protocol.",
+      "cannot_conclude": [
+        "The trial does not show faster recovery or fewer surgical complications.",
+        "It does not justify replacing prescribed pain treatment.",
+        "It does not establish safety or effectiveness in other operations or home settings."
+      ],
+      "practical_interpretation": "This is a preliminary supportive-care signal from one small trial. A larger multicenter study should report usual care, masking success, adverse events, and clinically meaningful symptom thresholds.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:37536755"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [
+        {
+          "country_or_region": "Iran",
+          "iso_country_code": "IR",
+          "evidence_type": "study_site",
+          "source_id": "pubmed:37536755",
+          "supporting_text_location": "Abstract: methods (trial carried out in Iran in 2020)",
+          "confidence": "high",
+          "qualification": "The indexed abstract names Iran but does not provide a more specific site in the abstract.",
+          "display_label": "Iran",
+          "map_title": "Where the clinical study was conducted"
+        }
+      ],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:37536755",
+          "pmid": "37536755",
+          "doi": "10.1136/spcare-2023-004214",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/37536755/",
+          "title": "Pain and sleep after open-heart surgery-inhalation peppermint essence: double-blind randomized clinical trial.",
+          "authors": [
+            "Mahla Maghami",
+            "Mohammad-Sadegh Pour-Abbasi",
+            "Safoura Yadollahi",
+            "Mahboobeh Maghami",
+            "Ismail Azizi-Fini",
+            "Mohammad-Reza Afazel"
+          ],
+          "journal": "BMJ Supportive & Palliative Care",
+          "publication_date": "2024-01-08",
+          "publication_types": [
+            "Randomized Controlled Trial",
+            "Journal Article"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "green-tea-extract-memory-connectivity-trial",
+      "content_version": 1,
+      "content_checksum": "780bc9545f4e1416208864bb2c3c301c516a58abecc5ad338e2d704b7764e793",
+      "plant_slug": "green-tea",
+      "common_name": "Green tea",
+      "scientific_name": "Camellia sinensis (L.) Kuntze",
+      "headline": "Heat-treated green tea extract trial links memory scores with a brain-network signal",
+      "standfirst": "An 80-person randomized trial reported improved memory composite scores and altered default-mode-network connectivity after 12 weeks, but the small, specialized study cannot establish lasting cognitive benefit.",
+      "publication_date": "2025-04-24",
+      "research_date": null,
+      "article_type": "Randomized controlled trial",
+      "research_question": "Does a heat-treated green tea extract change memory performance and resting-state default-mode-network connectivity in adults with subjective memory impairment?",
+      "research_context": "Green tea contains compounds studied for cognitive effects. This trial combined standardized memory testing with functional-connectivity imaging, asking whether behavioral and brain-network measures changed together.",
+      "study_design": "Twelve-week randomized, double-blind, placebo-controlled clinical trial.",
+      "evidence_base": "Eighty middle-aged adults with subjective memory impairment, mean age about 50 years, were assigned equally to heat-treated green tea extract or placebo. Memory composite scores and default-mode-network functional connectivity were assessed at baseline and week 12.",
+      "intervention": "A heat-treated green tea extract used for 12 weeks; the indexed abstract does not report the product dose.",
+      "comparator": "Placebo for the same 12-week period.",
+      "main_findings": [
+        "Memory composite scores increased more in the extract group than with placebo.",
+        "Functional connectivity increased in the right precuneus within the default mode network.",
+        "The study linked a cognitive test signal with an imaging signal but did not measure dementia prevention or durable functional change."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Randomization, blinding, placebo control, and converging behavioral and imaging measures are useful. The trial remained small, short, and limited to people reporting subjective memory problems.",
+      "why_matters": "The paired memory and imaging outcomes offer a plausible direction for replication. They are hypothesis-strengthening measures, not evidence that green tea prevents cognitive disease.",
+      "limitations": [
+        "Only 80 participants completed a 12-week comparison.",
+        "Participants had subjective impairment, so results may not apply to diagnosed cognitive disorders or the general population.",
+        "The indexed abstract does not report durability after treatment ended.",
+        "Multiple cognitive and imaging analyses can increase false-positive risk."
+      ],
+      "safety_context": "The indexed abstract does not summarize adverse events or provide enough product detail to generalize safety to other green tea extracts. Its safety conclusions cannot be extended beyond the studied product, participants, and 12-week protocol.",
+      "cannot_conclude": [
+        "The trial does not prove prevention or treatment of dementia.",
+        "It does not show that ordinary green tea has the same effect as the studied extract.",
+        "It does not establish long-term functional benefit."
+      ],
+      "practical_interpretation": "The result is best treated as a small controlled signal that deserves independent replication with longer follow-up and transparent product characterization, not as a reason to self-treat memory concerns.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:40272820"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:40272820",
+          "pmid": "40272820",
+          "doi": "10.1089/jmf.2024.k.0260",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/40272820/",
+          "title": "Effects of Heat-Treated Green Tea Extract on Memory Function and Default Mode Network Connectivity in Individuals with Subjective Memory Impairment: A Randomized, Double-Blinded, Placebo-Controlled Trial.",
+          "authors": [
+            "Yoonji Joo",
+            "Hyeonji Lee",
+            "Hyeonseok Jeong",
+            "Chaewon Suh",
+            "Haejin Hong",
+            "Yejin Kim",
+            "Seoyoung Yu",
+            "Chaerin Lee",
+            "Youngeun Shim",
+            "Sujung Yoon"
+          ],
+          "journal": "Journal of Medicinal Food",
+          "publication_date": "2025-04-24",
+          "publication_types": [
+            "Journal Article",
+            "Randomized Controlled Trial"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "ashwagandha-anxiety-insomnia-meta-analysis",
+      "content_version": 1,
+      "content_checksum": "d68c4ac98394355abdaa41343945edd568fc82fe86683475c376c52f2b77fabb",
+      "plant_slug": "ashwagandha",
+      "common_name": "Ashwagandha",
+      "scientific_name": "Withania somnifera (L.) Dunal",
+      "headline": "Ashwagandha review finds promising sleep signals amid extreme anxiety heterogeneity",
+      "standfirst": "A meta-analysis of five randomized trials and 254 participants reported improvements in anxiety and several sleep measures, but the anxiety estimate varied dramatically across studies and remains uncertain.",
+      "publication_date": "2024-07-31",
+      "research_date": null,
+      "article_type": "Systematic review and meta-analysis",
+      "research_question": "What do placebo-controlled randomized trials show about the safety and efficacy of Withania somnifera extracts for anxiety and insomnia?",
+      "research_context": "Ashwagandha has a long traditional-use history and is widely marketed for stress and sleep. A systematic review can test whether small trials converge, while exposing inconsistency that individual reports may obscure.",
+      "study_design": "Systematic review and random-effects meta-analysis of randomized placebo-controlled trials found through searches ending in August 2023.",
+      "evidence_base": "Five randomized controlled trials with 254 total participants contributed to pooled analyses of anxiety and sleep outcomes, including HAM-A, sleep onset, total sleep time, sleep efficiency, and PSQI.",
+      "intervention": "Withania somnifera extracts as defined in the five included trials.",
+      "comparator": "Placebo in eligible randomized trials.",
+      "main_findings": [
+        "The pooled anxiety score favored ashwagandha, but between-study heterogeneity was extremely high at I²=98%.",
+        "Several sleep outcomes favored ashwagandha, while wake after sleep onset and total time in bed did not.",
+        "The authors characterized the evidence as promising and called for larger studies."
+      ],
+      "evidence_strength": "low",
+      "evidence_strength_rationale": "Randomized evidence and formal pooling are strengths, but only five small trials were available. Extreme anxiety heterogeneity means the pooled estimate is not a stable single answer across studies.",
+      "why_matters": "The review clarifies both the signal and its uncertainty. The null findings for some sleep measures and the severe inconsistency for anxiety are as important as the favorable pooled results.",
+      "limitations": [
+        "Only five trials and 254 participants were included.",
+        "Anxiety results were extremely heterogeneous.",
+        "Extracts, populations, and measurement approaches may differ.",
+        "The indexed abstract does not provide a detailed pooled adverse-event account."
+      ],
+      "safety_context": "The review set out to assess safety, yet its indexed abstract does not provide enough adverse-event detail for a broad safety conclusion. The available report cannot establish that different Withania extracts share the same safety profile.",
+      "cannot_conclude": [
+        "The review does not prove a dependable effect for every anxiety or sleep condition.",
+        "It does not establish equivalence among commercial extracts.",
+        "It does not support replacing mental-health or sleep care."
+      ],
+      "practical_interpretation": "The evidence is promising but fragile. Readers should focus on the small number of trials and extreme inconsistency, and wait for larger, independently replicated studies with standardized products and fuller safety reporting.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:39083548"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:39083548",
+          "pmid": "39083548",
+          "doi": "10.1002/hup.2911",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/39083548/",
+          "title": "Safety and efficacy of Withania somnifera for anxiety and insomnia: Systematic review and meta-analysis.",
+          "authors": [
+            "Kaneez Fatima",
+            "Javeria Malik",
+            "Fariha Muskan",
+            "Ghana Raza",
+            "Areesha Waseem",
+            "Hiba Shahid",
+            "Syeda Fatima Jaffery",
+            "Umeed Khan",
+            "Muhammad Kashan Zaheer",
+            "Yasmeen Shaikh",
+            "Ahmed Mustafa Rashid"
+          ],
+          "journal": "Human Psychopharmacology",
+          "publication_date": "2024-07-31",
+          "publication_types": [
+            "Systematic Review",
+            "Journal Article",
+            "Meta-Analysis"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "raw-garlic-human-evidence-mini-review",
+      "content_version": 1,
+      "content_checksum": "ecb64389a1a03786133d1234044cc29e54da521e26e317e5d5a4e33e3449c2b4",
+      "plant_slug": "garlic",
+      "common_name": "Garlic",
+      "scientific_name": "Allium sativum L.",
+      "headline": "Raw garlic review exposes a gap between widespread use and uneven human evidence",
+      "standfirst": "A focused review identified 12 clinical trials and 10 observational studies of raw white garlic, finding diverse signals but substantial differences in design and limited geographic coverage.",
+      "publication_date": "2024-08-30",
+      "research_date": null,
+      "article_type": "Focused narrative review",
+      "research_question": "What human clinical and observational evidence specifically addresses raw white garlic, rather than aged black garlic or standardized extracts?",
+      "research_context": "Garlic research often groups unlike preparations together. This review deliberately narrowed the question to raw white garlic, a common food and traditional preparation that has received less focused clinical attention.",
+      "study_design": "Mini-review based on a structured PubMed and Scopus search for clinical and observational human studies.",
+      "evidence_base": "Twelve clinical trials and ten observational studies met the review criteria. Outcomes covered lipids, blood pressure, fibrinolysis, antioxidant markers, glucose metabolism, cancer risk, cardiovascular disease, insulin homeostasis, and liver function.",
+      "intervention": "Raw white garlic consumption as defined by individual included studies.",
+      "comparator": "Comparators varied across clinical studies; observational studies compared naturally occurring consumption patterns.",
+      "main_findings": [
+        "Clinical trials reported diverse favorable biomarker signals, but study designs and outcomes varied.",
+        "Observational studies reported associations rather than causal effects.",
+        "The authors found that raw garlic evidence remains less developed than evidence for extracts or aged products."
+      ],
+      "evidence_strength": "low",
+      "evidence_strength_rationale": "The focused preparation question is valuable, but a mini-review cannot eliminate heterogeneity. Observational associations are vulnerable to confounding, and the source reports that those studies were limited to Asian populations.",
+      "why_matters": "Separating raw garlic from extracts prevents evidence from one preparation being casually transferred to another. The review identifies where claims are plausible and where direct trials are still missing.",
+      "limitations": [
+        "Studies varied in design, participants, duration, preparation, and outcomes.",
+        "Observational results cannot establish cause and effect.",
+        "Observational evidence was limited to Asian populations.",
+        "The indexed abstract does not describe a formal certainty rating for each outcome."
+      ],
+      "safety_context": "The indexed abstract does not provide a systematic adverse-event synthesis. Food use does not substitute for safety assessment of a defined intervention, and the review cannot establish one safety profile across heterogeneous raw-garlic studies.",
+      "cannot_conclude": [
+        "The review does not prove that raw garlic prevents cancer or cardiovascular disease.",
+        "It does not show that results from extracts apply to raw cloves.",
+        "It does not define a universally effective or safe intake."
+      ],
+      "practical_interpretation": "The key lesson is preparation specificity: raw garlic deserves direct, longer randomized trials. Current evidence is too heterogeneous to support a simple health prescription.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:39279902"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [
+        {
+          "country_or_region": "Asia",
+          "iso_country_code": null,
+          "evidence_type": "review_coverage",
+          "source_id": "pubmed:39279902",
+          "supporting_text_location": "Abstract: results (observational studies limited to Asian populations)",
+          "confidence": "qualified",
+          "qualification": "This label describes the reported coverage of observational evidence, not where every included clinical trial occurred.",
+          "display_label": "Asian populations in the observational evidence",
+          "map_title": "Countries represented in the evidence review"
+        }
+      ],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:39279902",
+          "pmid": "39279902",
+          "doi": "10.3389/fnut.2024.1459627",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/39279902/",
+          "title": "Exploring the health benefits of raw white garlic consumption in humans: a mini review.",
+          "authors": [
+            "Rebeka Fejes",
+            "Catherine P Bondonno",
+            "Simone Radavelli-Bagatini",
+            "Tilman Kühn",
+            "Karl-Heinz Wagner"
+          ],
+          "journal": "Frontiers in Nutrition",
+          "publication_date": "2024-08-30",
+          "publication_types": [
+            "Journal Article",
+            "Review"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "chamomile-sleep-evidence-review",
+      "content_version": 1,
+      "content_checksum": "bd08c2d1e298a0f3f58bed517e084eb569c12758a80b0dc5739ed236a316b996",
+      "plant_slug": "german-chamomile",
+      "common_name": "German chamomile",
+      "scientific_name": "Matricaria chamomilla L.",
+      "headline": "Chamomile sleep review finds fewer awakenings, but not longer or more efficient sleep",
+      "standfirst": "A review of ten clinical studies found a modest pooled improvement in sleep-quality scores and some evidence for fewer awakenings, alongside high heterogeneity and no consistent gains in sleep duration or daytime function.",
+      "publication_date": "2024-08-04",
+      "research_date": null,
+      "article_type": "Systematic review and meta-analysis",
+      "research_question": "Across adult clinical studies, which aspects of sleep change with Matricaria chamomilla and which remain unchanged?",
+      "research_context": "Sleep is not one outcome: falling asleep, staying asleep, duration, efficiency, and daytime function can move differently. The review separated these domains instead of collapsing them into a single claim.",
+      "study_design": "Systematic review of clinical trials with random-effects meta-analysis where at least three sufficiently comparable studies measured an outcome.",
+      "evidence_base": "Ten studies with 772 participants were included. Five studies contributed to the pooled Pittsburgh Sleep Quality Index result; other outcomes were summarized when pooling was not appropriate.",
+      "intervention": "Chamomile preparations as defined in the included adult clinical studies.",
+      "comparator": "Control conditions varied among included trials.",
+      "main_findings": [
+        "Pooled PSQI scores favored chamomile, with high heterogeneity at I²=88.4%.",
+        "Several studies reported easier sleep onset or fewer awakenings.",
+        "Sleep duration, sleep efficiency, and daytime-function measures did not improve consistently."
+      ],
+      "evidence_strength": "low",
+      "evidence_strength_rationale": "Systematic methods and domain-specific analysis are helpful, but heterogeneity was high, products varied, and only a subset of studies could be pooled. Most studies used passive adverse-event surveillance.",
+      "why_matters": "The review replaces the vague claim that chamomile “improves sleep” with a more precise pattern: some subjective quality and continuity measures changed, while duration and daytime functioning did not.",
+      "limitations": [
+        "The pooled sleep-quality estimate was highly heterogeneous.",
+        "Preparation purity or potency was rarely tested.",
+        "Only one study assessed whether blinding worked.",
+        "Many outcomes could not be pooled because studies and participants differed."
+      ],
+      "safety_context": "No adverse events were reported in the included studies, but surveillance was passive in all but one. Absence of reported events under limited monitoring is not proof of safety across different populations or preparations.",
+      "cannot_conclude": [
+        "The review does not prove that chamomile treats chronic insomnia.",
+        "It does not show longer sleep or better daytime functioning.",
+        "It does not establish equal effects across teas, extracts, oils, or other preparations."
+      ],
+      "practical_interpretation": "Chamomile may affect selected subjective sleep measures, but the uneven outcome pattern and weak safety surveillance call for better standardized trials with objective sleep measures.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:39106912"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:39106912",
+          "pmid": "39106912",
+          "doi": "10.1016/j.ctim.2024.103071",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/39106912/",
+          "title": "Effects of chamomile (Matricaria chamomilla L.) on sleep: A systematic review and meta-analysis of clinical trials.",
+          "authors": [
+            "Asma Kazemi",
+            "Sara Shojaei-Zarghani",
+            "Parham Eskandarzadeh",
+            "Mohammad Hashem Hashempur"
+          ],
+          "journal": "Complementary Therapies in Medicine",
+          "publication_date": "2024-08-04",
+          "publication_types": [
+            "Systematic Review",
+            "Journal Article",
+            "Meta-Analysis"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "panax-ginseng-sprout-memory-trial",
+      "content_version": 1,
+      "content_checksum": "130e5c0016348e2cc04209672eb382573f8c8a2b34e32846e3815ccabaf36f9e",
+      "plant_slug": "asian-ginseng",
+      "common_name": "Asian ginseng",
+      "scientific_name": "Panax ginseng C.A.Mey.",
+      "headline": "Panax ginseng sprout extract trial reports memory signals that need independent replication",
+      "standfirst": "An 80-person placebo-controlled trial reported differences in several memory and sleep measures after 12 weeks, while disclosed commercial relationships and the product-specific design limit generalization.",
+      "publication_date": "2024-06-19",
+      "research_date": null,
+      "article_type": "Randomized controlled trial",
+      "research_question": "Does a branded Panax ginseng sprout extract change memory measures in adults aged 55 to 75 with subjective memory impairment?",
+      "research_context": "Sprouted ginseng products differ chemically and commercially from whole root preparations. Testing one defined extract can answer a product-specific question, not a general question about every ginseng product.",
+      "study_design": "Twelve-week randomized, double-blind, placebo-controlled clinical trial.",
+      "evidence_base": "Eighty adults aged 55 to 75 with subjective memory impairment were assigned equally to extract or placebo. Assessments included verbal and visual memory, cognitive screening, sleep quality, acetylcholinesterase, adverse events, laboratory tests, vital signs, and electrocardiography.",
+      "intervention": "The branded Panax ginseng sprout extract ThinkGIN™, reported as 450 mg daily for 12 weeks.",
+      "comparator": "Placebo for 12 weeks.",
+      "main_findings": [
+        "Several memory, cognitive, sleep, and acetylcholinesterase measures differed between groups after 12 weeks.",
+        "The indexed abstract reports no clinically significant safety changes in the monitored measures.",
+        "The result is specific to one branded sprout extract and one small subjective-memory population."
+      ],
+      "evidence_strength": "limited",
+      "evidence_strength_rationale": "Randomization, blinding, placebo control, and multiple safety measures are strengths. The sample was small and follow-up short; several authors disclosed employment by companies, including the product manufacturer.",
+      "why_matters": "The study offers a product-specific controlled signal and transparent safety monitoring. Its commercial context and multiple endpoints make independent replication particularly important.",
+      "limitations": [
+        "Only 80 participants were studied for 12 weeks.",
+        "Multiple cognitive and biomarker outcomes were tested.",
+        "Subjective memory impairment is not the same as a diagnosed neurocognitive disorder.",
+        "The indexed conflict statement reports commercial employment relationships, including with the manufacturer."
+      ],
+      "safety_context": "The trial monitored adverse events, laboratory measures, vital signs, and ECGs and reported no clinically significant changes. That finding is limited to the studied participants, duration, and branded extract.",
+      "cannot_conclude": [
+        "The trial does not prove that ginseng prevents or treats dementia.",
+        "It does not show that whole-root or other ginseng products have the same effect.",
+        "It does not establish long-term safety or durable benefit."
+      ],
+      "practical_interpretation": "This controlled result merits independent, larger replication before it can support broad conclusions. Readers should keep the branded formulation and disclosed commercial relationships in view.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:38931306"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:38931306",
+          "pmid": "38931306",
+          "doi": "10.3390/nu16121952",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/38931306/",
+          "title": "Efficacy and Safety of Panax ginseng Sprout Extract in Subjective Memory Impairment: A Randomized, Double-Blind, Placebo-Controlled Clinical Trial.",
+          "authors": [
+            "Hyang-Im Baek",
+            "Ki-Chan Ha",
+            "Yu-Kyung Park",
+            "Tae-Young Kim",
+            "Soo-Jung Park"
+          ],
+          "journal": "Nutrients",
+          "publication_date": "2024-06-19",
+          "publication_types": [
+            "Journal Article",
+            "Randomized Controlled Trial"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    },
+    {
+      "slug": "cranberry-uti-network-meta-analysis",
+      "content_version": 1,
+      "content_checksum": "cf2b95b5ad36b9a4fd1b9699909f65474f14c97233af17d335c0b5a6e13fccea",
+      "plant_slug": "cranberry",
+      "common_name": "American cranberry",
+      "scientific_name": "Vaccinium macrocarpon Aiton",
+      "headline": "Cranberry network meta-analysis favors juice for UTI prevention, with moderate-to-low certainty",
+      "standfirst": "A network meta-analysis of 20 randomized trials and 3,091 participants found fewer urinary tract infections with cranberry juice than with no treatment or placebo liquid, but certainty ranged from moderate to low.",
+      "publication_date": "2024-07-18",
+      "research_date": null,
+      "article_type": "Systematic review and network meta-analysis",
+      "research_question": "How do cranberry juice, cranberry tablets, increased liquids, placebo liquid, and no treatment compare for urinary tract infection outcomes?",
+      "research_context": "Cranberry is available as beverages and solid products, while increased fluid intake is itself a competing non-drug strategy. Network meta-analysis allows indirect and direct comparisons among these approaches.",
+      "study_design": "Systematic review and network meta-analysis of randomized controlled trials, including risk-of-bias assessment and GRADE certainty evaluation.",
+      "evidence_base": "Twenty trials with 3,091 participants were included. Eighteen contributed to UTI-rate comparisons, while a six-study network informed antibiotic-use comparisons.",
+      "intervention": "Cranberry juice or cranberry compounds in the included randomized trials.",
+      "comparator": "Placebo liquid, no treatment, increased liquids, or other eligible trial comparators.",
+      "main_findings": [
+        "Cranberry juice was associated with a lower UTI rate than no treatment and placebo liquid in the network estimates.",
+        "A six-study network associated juice with lower antibiotic use than placebo liquid or no treatment.",
+        "The authors rated the supporting evidence moderate to low certainty."
+      ],
+      "evidence_strength": "moderate",
+      "evidence_strength_rationale": "The synthesis included 20 randomized trials, formal risk-of-bias review, and GRADE. Network estimates depend on comparability across trials, and moderate-to-low certainty means the effect size remains open to change.",
+      "why_matters": "The analysis compares liquid cranberry with both inactive and active fluid strategies, helping distinguish a cranberry-specific signal from simply drinking more liquid.",
+      "limitations": [
+        "Products, participant groups, and trial protocols varied.",
+        "Some comparisons relied on network rather than head-to-head evidence.",
+        "Antibiotic-use estimates came from only six studies.",
+        "Moderate-to-low certainty means residual bias and imprecision remain important."
+      ],
+      "safety_context": "The indexed abstract does not provide a pooled adverse-event account. Prevention findings should not be read as evidence that symptomatic infection can be assessed or managed without appropriate clinical care.",
+      "cannot_conclude": [
+        "The review does not show that cranberry cures an active urinary tract infection.",
+        "It does not prove that every juice or tablet formulation is equivalent.",
+        "It does not justify avoiding antibiotics when a clinician determines they are needed."
+      ],
+      "practical_interpretation": "The review supports a cautious prevention signal, strongest for juice within the analyzed network. Product variation and evidence certainty should remain visible in any clinical discussion.",
+      "section_sources": {
+        "overview": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Article title",
+            "Abstract"
+          ]
+        },
+        "research_question": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: objective"
+          ]
+        },
+        "why_studied": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: background"
+          ]
+        },
+        "methods": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "evidence_base": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: methods"
+          ]
+        },
+        "findings": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: results"
+          ]
+        },
+        "why_matters": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: conclusion"
+          ]
+        },
+        "evidence_strength": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Publication type",
+            "Abstract: methods and results"
+          ]
+        },
+        "limitations": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: limitations and reported methods"
+          ]
+        },
+        "safety": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: safety or adverse-event reporting"
+          ]
+        },
+        "cannot_conclude": {
+          "source_ids": [
+            "pubmed:39030132"
+          ],
+          "evidence_locations": [
+            "Abstract: study design and conclusion"
+          ]
+        }
+      },
+      "geography": [],
+      "image_caption": "Botanical reference image; not an image from the reported study.",
+      "sources": [
+        {
+          "source_id": "pubmed:39030132",
+          "pmid": "39030132",
+          "doi": "10.1016/j.euf.2024.07.002",
+          "canonical_url": "https://pubmed.ncbi.nlm.nih.gov/39030132/",
+          "title": "Cranberry Juice, Cranberry Tablets, or Liquid Therapies for Urinary Tract Infection: A Systematic Review and Network Meta-analysis.",
+          "authors": [
+            "Christian Moro",
+            "Charlotte Phelps",
+            "Vineesha Veer",
+            "Mark Jones",
+            "Paul Glasziou",
+            "Justin Clark",
+            "Kari A O Tikkinen",
+            "Anna Mae Scott"
+          ],
+          "journal": "European Urology Focus",
+          "publication_date": "2024-07-18",
+          "publication_types": [
+            "Journal Article",
+            "Systematic Review",
+            "Network Meta-Analysis"
+          ],
+          "retraction_status": "checked_clear"
+        }
+      ]
+    }
+  ]
+}

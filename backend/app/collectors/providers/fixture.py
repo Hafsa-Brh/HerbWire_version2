@@ -2,6 +2,7 @@
 from backend.app.collectors.providers.base import (
     CollectedDiscoveryRecord,
     CollectionProvider,
+    CollectionRequest,
 )
 
 
@@ -11,7 +12,9 @@ class FixtureDiscoveryProvider(CollectionProvider):
     def __init__(self, mode: str = "success") -> None:
         self.mode = mode
 
-    def collect(self) -> list[CollectedDiscoveryRecord]:
+    def collect(
+        self, request: CollectionRequest | None = None
+    ) -> list[CollectedDiscoveryRecord]:
         if self.mode == "source_failure":
             raise RuntimeError("fixture source unavailable")
         if self.mode == "malformed":

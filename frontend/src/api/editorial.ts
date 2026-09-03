@@ -63,6 +63,8 @@ export type ApiPipelineStage = {
   status: string
   attempt: number
   duration_ms: number
+  input_count: number
+  output_count: number
   input_refs: unknown[]
   output_refs: unknown[]
   error_code: string | null

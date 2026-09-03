@@ -247,7 +247,7 @@ describe("Milestone 2 final UI and functionality", () => {
     expect(screen.getByRole("heading", { name: "No operational dashboard yet" })).toBeInTheDocument()
     expect(screen.queryByRole("region", { name: "Review workspace" })).not.toBeInTheDocument()
     const nav = screen.getByRole("navigation", { name: "Editorial navigation" })
-    expect(within(nav).getByRole("link", { name: /Review Queue/i })).toHaveAttribute("href", "/admin/reviews")
+    expect(within(nav).getByRole("link", { name: /Plants Review/i })).toHaveAttribute("href", "/admin/reviews")
     expect(within(nav).getByRole("link", { name: /Flashes/i })).toHaveAttribute("href", "/admin/flashes")
     expect(within(nav).getByRole("link", { name: /Agent Performance/i })).toHaveAttribute("href", "/admin/agents")
     expect(screen.getByText("HB")).toBeInTheDocument()
@@ -264,7 +264,7 @@ describe("Milestone 2 final UI and functionality", () => {
     installMockApi({ authenticated: true, reviews })
     renderAt("/admin/reviews")
 
-    await screen.findByRole("heading", { name: "Review Queue" })
+    await screen.findByRole("heading", { name: "Plants Review" })
     const workspace = await screen.findByRole("region", { name: "Review workspace" })
     expect(workspace).toHaveClass("items-stretch", "lg:grid-cols-[.75fr_1.25fr]")
     expect(within(workspace).getByText("Article review")).toBeInTheDocument()
@@ -493,7 +493,7 @@ describe("Milestone 2 final UI and functionality", () => {
     installMockApi({ authenticated: true, reviews: [draftReview] })
     renderAt("/admin/reviews")
 
-    await screen.findByRole("heading", { name: "Review Queue" })
+    await screen.findByRole("heading", { name: "Plants Review" })
     await screen.findByRole("button", { name: "Publish" })
     expect(screen.getByRole("button", { name: "Publish" })).toBeDisabled()
     fireEvent.click(screen.getByRole("button", { name: "Approve" }))

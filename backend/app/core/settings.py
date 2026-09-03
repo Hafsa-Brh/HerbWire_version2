@@ -20,6 +20,7 @@ class Settings(BaseSettings):
         default="postgresql+psycopg://herbwire:herbwire_dev@127.0.0.1:5433/herbwire",
         validation_alias=AliasChoices("HERBWIRE_DATABASE_URL", "DATABASE_URL"),
     )
+    local_database_name: str | None = Field(default=None, pattern=r"^[a-z0-9_]+$")
     frontend_origin: str = Field(default="http://127.0.0.1:5173")
     api_host: str = Field(default="127.0.0.1")
     api_port: int = Field(default=8000)
@@ -37,12 +38,22 @@ class Settings(BaseSettings):
     zyte_api_key: str | None = Field(default=None)
     zyte_request_timeout_seconds: float = Field(default=10.0)
     zyte_max_retries: int = Field(default=2)
+    ncbi_email: str | None = Field(default=None)
+    ncbi_request_timeout_seconds: float = Field(default=10.0)
+    ncbi_max_retries: int = Field(default=2)
 
     @model_validator(mode="after")
     def validate_runtime_contract(self) -> Self:
         database_url = make_url(self.database_url)
         if database_url.drivername in {"postgres", "postgresql"}:
             database_url = database_url.set(drivername="postgresql+psycopg")
+
+        if self.local_database_name:
+            if self.environment != "local":
+                raise ValueError(
+                    "HERBWIRE_LOCAL_DATABASE_NAME is permitted only for local runtime"
+                )
+            database_url = database_url.set(database=self.local_database_name)
 
         if self.environment in {"staging", "production"}:
             database_url = database_url.update_query_dict({"sslmode": "require"})

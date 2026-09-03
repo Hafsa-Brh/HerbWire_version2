@@ -6,6 +6,7 @@ from backend.app.db.base import Base
 from sqlalchemy import (
     CheckConstraint,
     DateTime,
+    Float,
     ForeignKey,
     Index,
     String,
@@ -64,6 +65,9 @@ class SourceRecord(Base):
     source_publication_date: Mapped[str | None] = mapped_column(
         String(50), nullable=True
     )
+    doi: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    authors: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    journal: Mapped[str | None] = mapped_column(String(500), nullable=True)
     collected_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utc_now
     )
@@ -77,13 +81,202 @@ class SourceRecord(Base):
     plant_links: Mapped[list["PlantProfileSource"]] = relationship(
         back_populates="source_record"
     )
+    discovery_events: Mapped[list["DiscoveryEvent"]] = relationship(
+        back_populates="source_record"
+    )
+    discovery_article_links: Mapped[list["DiscoveryArticleSource"]] = relationship(
+        back_populates="source_record"
+    )
 
     __table_args__ = (
         UniqueConstraint(
             "source_id", "external_identifier", name="uq_source_records_source_external"
         ),
         UniqueConstraint("canonical_url", name="uq_source_records_canonical_url"),
+        UniqueConstraint("doi", name="uq_source_records_doi"),
+        UniqueConstraint(
+            "source_id", "content_hash", name="uq_source_records_source_content_hash"
+        ),
         Index("ix_source_records_source_id", "source_id"),
+    )
+
+
+class DiscoveryEvent(Base):
+    __tablename__ = "discovery_events"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    source_record_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("source_records.id", ondelete="RESTRICT"),
+        nullable=False,
+        unique=True,
+    )
+    status: Mapped[str] = mapped_column(String(50), nullable=False)
+    category: Mapped[str] = mapped_column(String(100), nullable=False)
+    relevance_confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    reasons: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    evidence_signals: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    detected_entities: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    evidence_package: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utc_now
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utc_now, onupdate=utc_now
+    )
+
+    source_record: Mapped[SourceRecord] = relationship(
+        back_populates="discovery_events"
+    )
+    article: Mapped["DiscoveryArticle | None"] = relationship(
+        back_populates="event", uselist=False
+    )
+
+    __table_args__ = (
+        CheckConstraint(
+            "status in ('relevant','irrelevant','enriched','held')",
+            name="ck_discovery_events_status",
+        ),
+        Index("ix_discovery_events_status", "status"),
+        Index("ix_discovery_events_category", "category"),
+    )
+
+
+class DiscoveryArticle(Base):
+    __tablename__ = "discovery_articles"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    event_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("discovery_events.id", ondelete="RESTRICT"),
+        nullable=False,
+        unique=True,
+    )
+    slug: Mapped[str] = mapped_column(String(180), nullable=False, unique=True)
+    status: Mapped[str] = mapped_column(String(50), nullable=False, default="draft")
+    headline: Mapped[str] = mapped_column(String(500), nullable=False)
+    standfirst: Mapped[str] = mapped_column(Text, nullable=False)
+    body_blocks: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    limitations: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    safety_context: Mapped[str] = mapped_column(Text, nullable=False)
+    cannot_conclude: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    qa_payload: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    content_checksum: Mapped[str] = mapped_column(
+        String(64), nullable=False, unique=True
+    )
+    version: Mapped[int] = mapped_column(nullable=False, default=1)
+    content_origin: Mapped[str] = mapped_column(
+        String(50), nullable=False, default="automated"
+    )
+    article_type: Mapped[str | None] = mapped_column(String(100))
+    research_date: Mapped[str | None] = mapped_column(String(50))
+    research_question: Mapped[str | None] = mapped_column(Text)
+    research_context: Mapped[str | None] = mapped_column(Text)
+    study_design: Mapped[str | None] = mapped_column(Text)
+    evidence_base: Mapped[str | None] = mapped_column(Text)
+    intervention: Mapped[str | None] = mapped_column(Text)
+    comparator: Mapped[str | None] = mapped_column(Text)
+    main_findings: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    evidence_strength: Mapped[str | None] = mapped_column(String(50))
+    evidence_strength_rationale: Mapped[str | None] = mapped_column(Text)
+    why_matters: Mapped[str | None] = mapped_column(Text)
+    practical_interpretation: Mapped[str | None] = mapped_column(Text)
+    section_sources: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    hero_image: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    geography: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utc_now
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utc_now, onupdate=utc_now
+    )
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    event: Mapped[DiscoveryEvent] = relationship(back_populates="article")
+    sources: Mapped[list["DiscoveryArticleSource"]] = relationship(
+        back_populates="article", cascade="all, delete-orphan"
+    )
+    reviews: Mapped[list["EditorialReview"]] = relationship(
+        back_populates="discovery_article"
+    )
+    plant_links: Mapped[list["DiscoveryArticlePlant"]] = relationship(
+        back_populates="article", cascade="all, delete-orphan"
+    )
+
+    __table_args__ = (
+        CheckConstraint(
+            "status in ('draft','needs_review','approved','rejected','held','published')",
+            name="ck_discovery_articles_status",
+        ),
+        CheckConstraint("version > 0", name="ck_discovery_articles_version"),
+        CheckConstraint(
+            "content_origin in ('automated','curated','synthetic')",
+            name="ck_discovery_articles_content_origin",
+        ),
+        Index("ix_discovery_articles_status", "status"),
+        Index("ix_discovery_articles_created_at", "created_at"),
+    )
+
+
+class DiscoveryArticlePlant(Base):
+    __tablename__ = "discovery_article_plants"
+
+    discovery_article_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("discovery_articles.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    plant_profile_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("plant_profiles.id", ondelete="RESTRICT"),
+        primary_key=True,
+    )
+
+    article: Mapped[DiscoveryArticle] = relationship(back_populates="plant_links")
+    plant_profile: Mapped["PlantProfile"] = relationship()
+
+    __table_args__ = (Index("ix_discovery_article_plants_profile", "plant_profile_id"),)
+
+
+class DiscoveryArticleSource(Base):
+    __tablename__ = "discovery_article_sources"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    discovery_article_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("discovery_articles.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    source_record_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("source_records.id", ondelete="RESTRICT"),
+        nullable=False,
+    )
+    support_role: Mapped[str] = mapped_column(String(100), nullable=False)
+    evidence_locations: Mapped[list] = mapped_column(
+        JSONB, nullable=False, default=list
+    )
+
+    article: Mapped[DiscoveryArticle] = relationship(back_populates="sources")
+    source_record: Mapped[SourceRecord] = relationship(
+        back_populates="discovery_article_links"
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "discovery_article_id",
+            "source_record_id",
+            "support_role",
+            name="uq_discovery_article_sources_role",
+        ),
+        Index("ix_discovery_article_sources_article", "discovery_article_id"),
     )
 
 
@@ -149,6 +342,10 @@ class PlantProfile(Base):
         CheckConstraint(
             "status in ('collected','normalized','draft','needs_review','approved','rejected','held','published')",
             name="ck_plant_profiles_status",
+        ),
+        CheckConstraint(
+            "readiness_status in ('legacy','ready_for_review','held')",
+            name="ck_plant_profiles_readiness_status",
         ),
         Index("ix_plant_profiles_status", "status"),
         Index("ix_plant_profiles_common_name", "display_common_name"),
@@ -241,10 +438,16 @@ class EditorialReview(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    plant_profile_id: Mapped[uuid.UUID] = mapped_column(
+    plant_profile_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("plant_profiles.id", ondelete="RESTRICT"),
-        nullable=False,
+        nullable=True,
+    )
+    discovery_article_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("discovery_articles.id", ondelete="RESTRICT"),
+        nullable=True,
+        unique=True,
     )
     content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     status: Mapped[str] = mapped_column(
@@ -259,11 +462,19 @@ class EditorialReview(Base):
     decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     plant_profile: Mapped[PlantProfile | None] = relationship(back_populates="reviews")
+    discovery_article: Mapped[DiscoveryArticle | None] = relationship(
+        back_populates="reviews"
+    )
 
     __table_args__ = (
         CheckConstraint(
             "status in ('needs_review','approved','rejected','held')",
             name="ck_editorial_reviews_status",
+        ),
+        CheckConstraint(
+            "(plant_profile_id IS NOT NULL AND discovery_article_id IS NULL) OR "
+            "(plant_profile_id IS NULL AND discovery_article_id IS NOT NULL)",
+            name="ck_editorial_reviews_exactly_one_content",
         ),
         Index("ix_editorial_reviews_status", "status"),
     )
@@ -331,6 +542,8 @@ class PipelineStageResult(Base):
     status: Mapped[str] = mapped_column(String(50), nullable=False)
     attempt: Mapped[int] = mapped_column(nullable=False, default=1)
     duration_ms: Mapped[int] = mapped_column(nullable=False, default=0)
+    input_count: Mapped[int] = mapped_column(nullable=False, default=0)
+    output_count: Mapped[int] = mapped_column(nullable=False, default=0)
     input_refs: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     output_refs: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     error_code: Mapped[str | None] = mapped_column(String(100), nullable=True)

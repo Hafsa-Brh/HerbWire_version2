@@ -1,6 +1,10 @@
 from pathlib import Path
 
 from backend.app.api.routes.auth import router as auth_router
+from backend.app.api.routes.discoveries import router as discoveries_router
+from backend.app.api.routes.discovery_editorial import (
+    router as discovery_editorial_router,
+)
 from backend.app.api.routes.editorial import router as editorial_router
 from backend.app.api.routes.health import router as health_router
 from backend.app.api.routes.newsletter import router as newsletter_router
@@ -29,7 +33,13 @@ def create_app(frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(auth_router, prefix="/api/v1", tags=["auth"])
     application.include_router(newsletter_router, prefix="/api/v1", tags=["newsletter"])
     application.include_router(plants_router, prefix="/api/v1", tags=["plants"])
+    application.include_router(
+        discoveries_router, prefix="/api/v1", tags=["discoveries"]
+    )
     application.include_router(editorial_router, prefix="/api/v1", tags=["editorial"])
+    application.include_router(
+        discovery_editorial_router, prefix="/api/v1", tags=["editorial"]
+    )
     mount_frontend(application, frontend_dist or DEFAULT_FRONTEND_DIST)
     return application
 
