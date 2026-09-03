@@ -4,6 +4,7 @@ import pytest
 from backend.app.db.session import get_engine, get_session_factory
 from backend.app.domains.discovery.corpus import (
     load_curated_discovery_corpus,
+    load_final_discovery_corpus,
     load_new_plant_discovery_corpus,
 )
 from backend.app.domains.discovery.curated_import import import_curated_discoveries
@@ -104,3 +105,41 @@ def test_changed_same_version_rolls_back_without_overwriting() -> None:
         with pytest.raises(ValueError, match="changed same-version"):
             import_curated_discoveries(session, changed)
         assert session.scalar(select(func.count()).select_from(DiscoveryArticle)) == 12
+
+
+def test_final_eight_are_idempotent_and_preserve_existing_twenty_two() -> None:
+    _prepare()
+    with get_session_factory()() as session:
+        import_curated_discoveries(session, load_curated_discovery_corpus())
+        import_curated_discoveries(session, load_new_plant_discovery_corpus())
+        existing = {
+            article.slug: (article.content_checksum, article.status)
+            for article in session.scalars(select(DiscoveryArticle)).all()
+        }
+        first = import_curated_discoveries(session, load_final_discovery_corpus())
+        second = import_curated_discoveries(session, load_final_discovery_corpus())
+        changed = deepcopy(load_final_discovery_corpus())
+        changed.articles[0].headline += " changed"
+        changed.articles[0].content_checksum = changed.articles[0].calculated_checksum()
+        with pytest.raises(ValueError, match="changed same-version"):
+            import_curated_discoveries(session, changed)
+        articles = list(session.scalars(select(DiscoveryArticle)).all())
+        reviews = session.scalar(
+            select(func.count())
+            .select_from(EditorialReview)
+            .where(EditorialReview.discovery_article_id.is_not(None))
+        )
+    assert first.created == first.reviews_created == 8
+    assert second.created == second.reviews_created == 0
+    assert second.unchanged == 8
+    assert len(articles) == reviews == 30
+    assert all(
+        (article.content_checksum, article.status) == existing[article.slug]
+        for article in articles
+        if article.slug in existing
+    )
+    assert all(
+        article.status == "needs_review"
+        for article in articles
+        if article.slug not in existing
+    )

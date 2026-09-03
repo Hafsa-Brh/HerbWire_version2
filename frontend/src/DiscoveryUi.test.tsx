@@ -263,6 +263,33 @@ describe("Milestone 4B discovery UI", () => {
     expect(await within(workspace).findByRole("alert")).toHaveTextContent("held")
   })
 
+  it("labels and filters the final eight review batch", async () => {
+    const finalDraft = {
+      ...discovery,
+      id: "final-eight-draft",
+      evidence_package: {
+        ...discovery.evidence_package,
+        batch_id: "milestone-4c-final-eight",
+      },
+    }
+    vi.mocked(fetch).mockImplementation((input) => {
+      const url = String(input)
+      if (url.endsWith("/api/v1/auth/session")) {
+        return response({ authenticated: true, user: { initials: "HB", label: "Editor", role: "Editor" } })
+      }
+      if (url.includes("/api/v1/admin/discovery/reviews")) return response(page([finalDraft]))
+      return response({})
+    })
+    renderAt("/admin/discoveries")
+
+    const workspace = await screen.findByRole("region", { name: "Discovery review workspace" })
+    expect(within(workspace).getByText(/final eight/)).toBeInTheDocument()
+    fireEvent.change(within(workspace).getByLabelText("Filter discovery batch"), {
+      target: { value: "milestone-4c-final-eight" },
+    })
+    expect(within(workspace).getByText(/final eight/)).toBeInTheDocument()
+  })
+
   it("renders stage failures and submits only bounded PubMed trigger fields", async () => {
     const run = {
       id: "run-1",

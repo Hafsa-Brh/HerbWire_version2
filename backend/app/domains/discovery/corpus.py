@@ -16,6 +16,9 @@ from pydantic import (
 
 CORPUS_PATH = Path(__file__).with_name("curated_corpus.json")
 NEW_PLANT_CORPUS_PATH = Path(__file__).with_name("curated_new_plant_corpus.json")
+FINAL_DISCOVERY_CORPUS_PATH = Path(__file__).with_name(
+    "curated_final_discovery_corpus.json"
+)
 REQUIRED_SECTIONS = {
     "overview",
     "research_question",
@@ -295,14 +298,14 @@ class CuratedDiscovery(BaseModel):
 
 class CuratedDiscoveryCorpus(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    schema_version: Literal[1, 2]
+    schema_version: Literal[1, 2, 3]
     batch_id: str = "milestone-4b"
     selection_audit: list[dict] = []
     articles: list[CuratedDiscovery]
 
     @model_validator(mode="after")
     def validate_corpus(self):
-        expected_count = 10 if self.schema_version == 1 else 12
+        expected_count = {1: 10, 2: 12, 3: 8}[self.schema_version]
         if len(self.articles) != expected_count:
             raise ValueError(
                 f"the curated corpus must contain exactly {expected_count} articles"
@@ -352,6 +355,17 @@ class CuratedDiscoveryCorpus(BaseModel):
                 )
             if len(self.selection_audit) < 12:
                 raise ValueError("Milestone 4C selection audit is incomplete")
+        if self.schema_version == 3:
+            if self.batch_id != "milestone-4c-final-eight":
+                raise ValueError("unexpected final Milestone 4C batch identifier")
+            if len(self.articles) != 8:
+                raise ValueError(
+                    "the final Milestone 4C corpus must contain eight articles"
+                )
+            if any(article.plant_slug is not None for article in self.articles):
+                raise ValueError("final Milestone 4C plants must be standalone")
+            if len(self.selection_audit) < 8:
+                raise ValueError("final Milestone 4C selection audit is incomplete")
         return self
 
 
@@ -367,4 +381,15 @@ def load_new_plant_discovery_corpus(
     )
     if corpus.schema_version != 2:
         raise ValueError("the new-plant corpus must use schema version 2")
+    return corpus
+
+
+def load_final_discovery_corpus(
+    path: Path = FINAL_DISCOVERY_CORPUS_PATH,
+) -> CuratedDiscoveryCorpus:
+    corpus = CuratedDiscoveryCorpus.model_validate_json(
+        path.read_text(encoding="utf-8")
+    )
+    if corpus.schema_version != 3:
+        raise ValueError("the final discovery corpus must use schema version 3")
     return corpus
