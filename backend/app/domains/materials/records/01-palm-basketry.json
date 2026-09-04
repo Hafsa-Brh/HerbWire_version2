@@ -1,0 +1,101 @@
+{
+  "content_version": 1,
+  "id": "8d7c6eb6-80b1-4d46-8b0f-469b43d20a01",
+  "slug": "palm-fibre-basketry-morocco",
+  "title": "Palm fibres, coiled form: reading Moroccan basketry closely",
+  "deck": "A close look at how palm fibres become structured vessels, and at what museum objects and living-heritage documentation can responsibly tell us about Moroccan basketry.",
+  "category": "Fibres",
+  "material_labels": [
+    "palm fibre",
+    "basketry",
+    "weaving"
+  ],
+  "geography_label": "Morocco",
+  "reading_time_minutes": 7,
+  "featured": true,
+  "sort_order": 1,
+  "published_at": "2026-09-03T09:00:00Z",
+  "hero_media": {
+    "local_path": "/media/materials/moroccan-basketry.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Moroccan_berber_baskets.jpg",
+    "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Moroccan_berber_baskets.jpg",
+    "creator": "RoubinakiM",
+    "title": "Traditional colourful Moroccan baskets",
+    "attribution": "RoubinakiM / Wikimedia Commons",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "checksum_sha256": "78ffab1a429a28cc58066705f7a8799bcb98a136365ff307c32fd664af381ea7",
+    "alt_text": "Colourful handmade palm-fibre baskets displayed in a market in Marrakesh, Morocco"
+  },
+  "sources": [
+    {
+      "source_id": "unesco:palm-fibres-02282",
+      "provider": "unesco",
+      "institution": "UNESCO Intangible Cultural Heritage",
+      "title": "Al Saafiyat and plant fibres: craft and social traditions — 2026 nomination material",
+      "canonical_url": "https://ich.unesco.org/en/files-2026-under-process-01395?call=slideshow&id=02282&include=slideshow_inc.php&mode=scroll&width=620",
+      "source_type": "cultural_heritage"
+    },
+    {
+      "source_id": "british-museum:maktaf-2010-2029-1",
+      "provider": "british-museum",
+      "institution": "The British Museum",
+      "title": "Māktaf: coiled palm-leaf basket from Morocco — collection record",
+      "canonical_url": "https://www.britishmuseum.org/collection/image/1180159001",
+      "source_type": "museum_collection"
+    }
+  ],
+  "sections": [
+    {
+      "key": "overview",
+      "heading": "A vessel begins as a plant",
+      "text": "Palm-leaf basketry turns flexible plant material into a load-bearing form through repeated coiling, wrapping and joining. The finished basket is useful, but it is also a record of material selection, hand pressure and accumulated skill.",
+      "source_ids": [
+        "unesco:palm-fibres-02282",
+        "british-museum:maktaf-2010-2029-1"
+      ]
+    },
+    {
+      "key": "material",
+      "heading": "The living material",
+      "text": "The documented objects use palm fibres rather than a generic idea of natural fibre. Leaves are gathered, dried and divided into workable elements; wool or other fibres may wrap the structural core in coloured market baskets.",
+      "source_ids": [
+        "unesco:palm-fibres-02282",
+        "british-museum:maktaf-2010-2029-1"
+      ]
+    },
+    {
+      "key": "making",
+      "heading": "How structure is built",
+      "text": "Coiled basketry grows in a spiral. A bundle forms the core while a wrapping element binds each new pass to the previous row. Small changes in tension, spacing and the angle of the coil determine the wall and rim.",
+      "source_ids": [
+        "british-museum:maktaf-2010-2029-1"
+      ]
+    },
+    {
+      "key": "context",
+      "heading": "Documented context, not a single origin story",
+      "text": "UNESCO’s current multinational nomination documentation includes Moroccan practitioners and objects within a wider set of plant-fibre traditions. That supports a living practice, but not a claim that every Moroccan basket shares one technique or history.",
+      "source_ids": [
+        "unesco:palm-fibres-02282"
+      ]
+    },
+    {
+      "key": "objects",
+      "heading": "What museum records can show",
+      "text": "A museum collection record can preserve dimensions, materials and acquisition context for an individual basket. It cannot, by itself, describe the full working knowledge of a maker or prove that a historic object represents current practice.",
+      "source_ids": [
+        "british-museum:maktaf-2010-2029-1"
+      ]
+    },
+    {
+      "key": "limits",
+      "heading": "What the evidence does not establish",
+      "text": "These sources do not justify claims that all palm-fibre work is environmentally benign, unchanged through time or made by one culturally uniform group. Responsible interpretation stays close to the named object, place and documentation.",
+      "source_ids": [
+        "unesco:palm-fibres-02282",
+        "british-museum:maktaf-2010-2029-1"
+      ]
+    }
+  ]
+}

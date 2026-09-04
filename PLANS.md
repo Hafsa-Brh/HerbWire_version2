@@ -9,10 +9,28 @@
 - Detailed product and architecture requirements live in
   `docs/specs/HERBWIRE_SPEC.md`.
 
+## Demo Materials & Craft curated-domain increment
+
+Status: In progress and awaiting owner visual review
+
+### Goal
+
+Add seven authoritative, licensed-media, database-backed Materials & Craft stories as HerbWire's third curated public domain; refine the real-data homepage carousel; align Plants Review and Discovery Review structure; and keep the combined Media & Geography Agent visibly planned rather than presenting curated assets as runtime output.
+
+### Boundaries
+
+- Deterministic curated corpus and public list/detail APIs only.
+- No autonomous Materials pipeline and no activation of Agent 9.
+- No mutation of existing plant or discovery content or editorial state.
+- No deployment, push, or Heroku action during owner visual review.
+
+### Verification required
+
+Corpus validation, idempotent import and conflict rejection; migration upgrade/check/round trip; complete backend/frontend checks; unchanged plant/discovery fingerprints; seven working public stories and licensed local images; responsive owner review.
 ## Current status
 
 Project phase: Milestone 1 complete
-Active milestone: None
+Active milestone: Demo Materials & Craft curated-domain increment
 Governance baseline status: Milestone 0 completed and merged into `main`
 Authoritative specifications: Present
 Initial ADRs: Accepted
@@ -22,7 +40,7 @@ Heroku resources created: None
 Heroku deployment and billing operations in this milestone: Not authorized
 Zyte status: Student account activated but not integrated
 Production secrets configured: No
-Active branch: `feat/milestone-1-walking-skeleton`
+Active branch: feat/demo-frontend-enhancement
 Application implementation status: Walking skeleton implemented and fully runtime-verified
 
 ## Milestone 1 - Deployable walking skeleton

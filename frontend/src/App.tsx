@@ -6,6 +6,9 @@ import { DiscoveriesPage } from "./pages/DiscoveriesPage"
 import { DiscoveryArticlePage } from "./pages/DiscoveryArticlePage"
 import { LoginPage } from "./pages/LoginPage"
 import { AdminApp } from "./pages/admin/AdminApp"
+import { CollectionPlaceholderPage } from "./pages/CollectionPlaceholderPage"
+import { MaterialsAndCraftPage } from "./pages/MaterialsAndCraftPage"
+import { MaterialStoryPage } from "./pages/MaterialStoryPage"
 import { NotFoundPage } from "./pages/NotFoundPage"
 
 export default function App() {
@@ -16,6 +19,9 @@ export default function App() {
       <Route path="/plants/:slug" element={<PlantArticlePage />} />
       <Route path="/discoveries" element={<DiscoveriesPage />} />
       <Route path="/discoveries/:slug" element={<DiscoveryArticlePage />} />
+      <Route path="/materials-and-craft" element={<MaterialsAndCraftPage />} />
+      <Route path="/materials-and-craft/:slug" element={<MaterialStoryPage />} />
+      <Route path="/field-cabinet" element={<CollectionPlaceholderPage title="The Field Cabinet" />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/admin/*" element={<AdminApp />} />
       <Route path="*" element={<NotFoundPage />} />

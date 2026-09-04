@@ -6,6 +6,8 @@ import { Link, NavLink, useLocation, useNavigate, useSearchParams } from "react-
 const navItems = [
   { label: "Plants", to: "/plants" },
   { label: "New Discoveries", to: "/discoveries" },
+  { label: "Materials & Craft", to: "/materials-and-craft" },
+  { label: "The Field Cabinet", to: "/field-cabinet" },
 ] as const
 
 export function SiteShell({ children }: { children: ReactNode }) {
@@ -112,7 +114,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
         </header>
         <div className={`${menuOpen ? "block" : "hidden"} border-b border-line bg-paper/95 backdrop-blur md:block`}>
           <nav aria-label="Primary navigation">
-            <div className="hw-container flex flex-col gap-0 md:flex-row md:items-center md:justify-center md:gap-8">
+            <div className="hw-container flex flex-col gap-0 md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-8">
               {navItems.map((item) => <NavLink key={item.to} to={item.to} className={({ isActive }) => `border-b border-line py-3 font-sans text-xs font-semibold transition md:border-0 md:py-4 ${isActive ? "text-leaf" : "text-forest hover:text-leaf"}`}>{item.label}</NavLink>)}
               <Link to="/login" className="border-b border-line py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-leaf md:hidden">Editorial login</Link>
             </div>
@@ -149,6 +151,8 @@ export function Footer() {
           <div className="mt-4 grid gap-2 font-sans text-sm text-cream/75">
             <Link to="/plants" className="hover:text-white">Plants</Link>
             <Link to="/discoveries" className="hover:text-white">New Discoveries</Link>
+            <Link to="/materials-and-craft" className="hover:text-white">Materials &amp; Craft</Link>
+            <Link to="/field-cabinet" className="hover:text-white">The Field Cabinet</Link>
           </div>
         </div>
         <div>

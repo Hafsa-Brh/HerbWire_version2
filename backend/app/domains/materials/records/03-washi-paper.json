@@ -1,0 +1,101 @@
+{
+  "content_version": 1,
+  "id": "8d7c6eb6-80b1-4d46-8b0f-469b43d20a03",
+  "slug": "washi-plant-fibres-handmade-paper",
+  "title": "Long fibres, quiet strength: how washi holds together",
+  "deck": "Traditional Japanese handmade paper begins with carefully prepared plant fibres whose length, alignment and handling help explain both the sheet’s character and its conservation uses.",
+  "category": "Paper",
+  "material_labels": [
+    "paper mulberry",
+    "plant fibre",
+    "washi"
+  ],
+  "geography_label": "Japan",
+  "reading_time_minutes": 7,
+  "featured": false,
+  "sort_order": 3,
+  "published_at": "2026-09-03T08:40:00Z",
+  "hero_media": {
+    "local_path": "/media/materials/washi-paper.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Washi(Sugihara_paper).JPG",
+    "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Washi%28Sugihara_paper%29.JPG",
+    "creator": "Tomomarusan",
+    "title": "Sugihara washi paper",
+    "attribution": "Tomomarusan / Wikimedia Commons",
+    "license": "CC BY 2.5",
+    "license_url": "https://creativecommons.org/licenses/by/2.5/",
+    "checksum_sha256": "273598b8590a7b2d18c73996a63fbffa1ca412e07554e10e402615d4183006d7",
+    "alt_text": "Sheets of pale handmade Sugihara washi paper arranged together"
+  },
+  "sources": [
+    {
+      "source_id": "unesco:washi-02291",
+      "provider": "unesco",
+      "institution": "UNESCO Intangible Cultural Heritage",
+      "title": "Washi, craftsmanship of traditional Japanese hand-made paper",
+      "canonical_url": "https://ich.unesco.org/en/RL/washi-craftsmanship-of-traditional-japanese-hand-made-paper-02291",
+      "source_type": "cultural_heritage"
+    },
+    {
+      "source_id": "loc:paper-deterioration-care",
+      "provider": "library-of-congress",
+      "institution": "Library of Congress",
+      "title": "The Deterioration and Preservation of Paper: Some Essential Facts",
+      "canonical_url": "https://www.loc.gov/preservation/care/deterioratebrochure.html",
+      "source_type": "conservation"
+    }
+  ],
+  "sections": [
+    {
+      "key": "overview",
+      "heading": "Paper as an engineered web",
+      "text": "A handmade sheet is not simply flattened pulp. It is a web of cellulose fibres whose length, condition and distribution affect strength, flexibility and surface. Washi practice makes those relationships unusually visible.",
+      "source_ids": [
+        "unesco:washi-02291",
+        "loc:paper-deterioration-care"
+      ]
+    },
+    {
+      "key": "plants",
+      "heading": "The plants behind the sheet",
+      "text": "UNESCO identifies paper mulberry among the plant fibres used in the inscribed washi traditions. The material is prepared so usable inner fibres can be separated from bark and impurities before sheet formation.",
+      "source_ids": [
+        "unesco:washi-02291"
+      ]
+    },
+    {
+      "key": "process",
+      "heading": "From prepared fibre to sheet",
+      "text": "The documented process includes soaking and working the plant material before fibres are suspended and gathered on a screen. Repeated movement distributes the fibres; drainage and drying then consolidate the fragile wet web.",
+      "source_ids": [
+        "unesco:washi-02291"
+      ]
+    },
+    {
+      "key": "strength",
+      "heading": "Why fibre length matters",
+      "text": "Library of Congress preservation guidance explains that paper strength depends in part on fibre quality and bonding. Long, well-preserved fibres can make a thin sheet strong, though manufacture and later storage still matter.",
+      "source_ids": [
+        "loc:paper-deterioration-care"
+      ]
+    },
+    {
+      "key": "use",
+      "heading": "A material that carries knowledge",
+      "text": "Washi supports writing, printing, screens and conservation work, but those uses do not make every sheet interchangeable. Fibre, formation, sizing, thickness and intended purpose all influence how a paper behaves.",
+      "source_ids": [
+        "unesco:washi-02291",
+        "loc:paper-deterioration-care"
+      ]
+    },
+    {
+      "key": "limits",
+      "heading": "Tradition does not suspend material change",
+      "text": "Handmade paper still responds to light, moisture, pollutants and handling. Heritage recognition documents knowledge and community practice; it is not a blanket guarantee that every product labelled washi follows the same process.",
+      "source_ids": [
+        "unesco:washi-02291",
+        "loc:paper-deterioration-care"
+      ]
+    }
+  ]
+}

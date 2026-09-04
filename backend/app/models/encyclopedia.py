@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime, timezone
 
 from backend.app.db.base import Base
+from backend.app.models.materials import MaterialStorySource
 from sqlalchemy import (
     CheckConstraint,
     DateTime,
@@ -85,6 +86,9 @@ class SourceRecord(Base):
         back_populates="source_record"
     )
     discovery_article_links: Mapped[list["DiscoveryArticleSource"]] = relationship(
+        back_populates="source_record"
+    )
+    material_story_links: Mapped[list["MaterialStorySource"]] = relationship(
         back_populates="source_record"
     )
 

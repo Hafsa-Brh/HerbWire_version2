@@ -1,0 +1,101 @@
+{
+  "content_version": 1,
+  "id": "8d7c6eb6-80b1-4d46-8b0f-469b43d20a02",
+  "slug": "apothecary-glass-storage-vessels",
+  "title": "Clear evidence: why apothecaries trusted glass vessels",
+  "deck": "Glass jars and bottles made medicines visible, sortable and portable, while their surviving labels and forms now help museums reconstruct changing pharmacy practice.",
+  "category": "Glass",
+  "material_labels": [
+    "glass",
+    "apothecary vessels",
+    "storage"
+  ],
+  "geography_label": "Europe and North America",
+  "reading_time_minutes": 6,
+  "featured": false,
+  "sort_order": 2,
+  "published_at": "2026-09-03T08:50:00Z",
+  "hero_media": {
+    "local_path": "/media/materials/apothecary-glass.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Apothecary_glass_vials_01.jpg",
+    "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Apothecary_glass_vials_01.jpg",
+    "creator": "Oxfordian Kissuth",
+    "title": "Apothecary glass vials",
+    "attribution": "Oxfordian Kissuth / Wikimedia Commons",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "checksum_sha256": "a37228f61532d515c21604a40d9e10eaf5faddc6648acd2722bcd744077062da",
+    "alt_text": "A group of historic brown and clear glass apothecary vials"
+  },
+  "sources": [
+    {
+      "source_id": "smithsonian:glass-apothecary-containers",
+      "provider": "smithsonian",
+      "institution": "Smithsonian National Museum of American History",
+      "title": "Glass Apothecary Containers in the Bristol-Myers Squibb collection",
+      "canonical_url": "https://americanhistory.si.edu/collections/object-groups/bristol-myers-squibb-european-apothecary/glass-apothecary-containers",
+      "source_type": "museum_collection"
+    },
+    {
+      "source_id": "corning:apothecarys-coffer-40487",
+      "provider": "corning-museum",
+      "institution": "Corning Museum of Glass",
+      "title": "Apothecary’s Coffer, with fitted glass bottles, 1700–1725",
+      "canonical_url": "https://glasscollection.cmog.org/objects/40487/apothecarys-coffer",
+      "source_type": "museum_collection"
+    }
+  ],
+  "sections": [
+    {
+      "key": "overview",
+      "heading": "A working material for pharmacy",
+      "text": "Glass answered several practical needs in an apothecary: it could hold liquids and powders, reveal contents and accept labels or painted inscriptions. Surviving collections show that shape, closure and colour varied with place and use.",
+      "source_ids": [
+        "smithsonian:glass-apothecary-containers"
+      ]
+    },
+    {
+      "key": "forms",
+      "heading": "Bottles, jars and fitted sets",
+      "text": "The Smithsonian catalogue distinguishes jars, bottles and other containers rather than treating pharmacy glass as one standard form. The Corning coffer shows a portable fitted set in which individual bottles belonged to a larger working kit.",
+      "source_ids": [
+        "smithsonian:glass-apothecary-containers",
+        "corning:apothecarys-coffer-40487"
+      ]
+    },
+    {
+      "key": "visibility",
+      "heading": "Seeing and naming contents",
+      "text": "Transparent or translucent walls let a practitioner inspect a container without opening it. Labels added another layer of organisation, although a surviving label should not be assumed to prove the identity of any residue now present.",
+      "source_ids": [
+        "smithsonian:glass-apothecary-containers"
+      ]
+    },
+    {
+      "key": "portability",
+      "heading": "Storage on the move",
+      "text": "The early-eighteenth-century apothecary’s coffer at Corning places glass bottles inside a protective traveling case. Fragile vessels could travel when a fitted container restrained and organised them.",
+      "source_ids": [
+        "corning:apothecarys-coffer-40487"
+      ]
+    },
+    {
+      "key": "care",
+      "heading": "Reading wear and replacement",
+      "text": "Chips, replaced stoppers and faded inscriptions can be evidence of use as well as damage. Museum conservation preserves those traces while avoiding unsupported claims about the exact medicines once held in every vessel.",
+      "source_ids": [
+        "smithsonian:glass-apothecary-containers",
+        "corning:apothecarys-coffer-40487"
+      ]
+    },
+    {
+      "key": "limits",
+      "heading": "What these objects cannot prove",
+      "text": "Historic containers document material culture, not the safety or effectiveness of their former contents. Their beauty should not romanticise hazardous substances, uncertain formulations or pharmacy practices that predate modern controls.",
+      "source_ids": [
+        "smithsonian:glass-apothecary-containers",
+        "corning:apothecarys-coffer-40487"
+      ]
+    }
+  ]
+}
