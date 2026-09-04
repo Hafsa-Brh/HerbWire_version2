@@ -1,0 +1,101 @@
+{
+  "id": "8d7c6eb6-80b1-4d46-8b0f-469b43d20a05",
+  "slug": "cork-oak-bark-harvest-material",
+  "title": "The bark that returns: cork harvest as a material cycle",
+  "deck": "Cork oak can rebuild its protective bark after careful harvest, creating an unusual renewable material system whose benefits still depend on skilled management and viable woodlands.",
+  "category": "Cork",
+  "material_labels": [
+    "cork oak",
+    "bark",
+    "harvesting"
+  ],
+  "geography_label": "Western Mediterranean",
+  "reading_time_minutes": 6,
+  "featured": false,
+  "sort_order": 5,
+  "published_at": "2026-09-03T08:20:00Z",
+  "hero_media": {
+    "local_path": "/media/materials/cork-harvest.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:IAPH_Saca_del_corcho.jpg",
+    "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/3/33/IAPH_Saca_del_corcho.jpg",
+    "creator": "Juan Carlos Cazalla Montijano / Instituto Andaluz del Patrimonio Histórico",
+    "title": "Cork harvesting near Aracena, Spain",
+    "attribution": "Juan Carlos Cazalla Montijano, IAPH / Wikimedia Commons",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "checksum_sha256": "0f46727bd11467e9fb956df577250da0905d95057025a99bee7a581f00c08e55",
+    "alt_text": "A cork oak trunk during careful bark harvesting near Aracena, Spain"
+  },
+  "sources": [
+    {
+      "source_id": "kew:quercus-suber-powo",
+      "provider": "kew-powo",
+      "institution": "Royal Botanic Gardens, Kew",
+      "title": "Quercus suber L. — accepted taxonomy, distribution and uses",
+      "canonical_url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:296785-1/general-information",
+      "source_type": "botanical"
+    },
+    {
+      "source_id": "fao:cork-oak-forestry-a0917e",
+      "provider": "fao",
+      "institution": "Food and Agriculture Organization of the United Nations",
+      "title": "Cork oak landscapes, harvesting and forest-product management",
+      "canonical_url": "https://www.fao.org/4/a0917e/a0917e03.pdf",
+      "source_type": "forestry"
+    }
+  ],
+  "sections": [
+    {
+      "key": "overview",
+      "heading": "Harvesting without felling",
+      "text": "Cork is the outer bark of the cork oak, Quercus suber. Skilled stripping removes harvestable bark while leaving the living tissues that allow a new protective layer to form, distinguishing cork from timber extraction.",
+      "source_ids": [
+        "kew:quercus-suber-powo",
+        "fao:cork-oak-forestry-a0917e"
+      ]
+    },
+    {
+      "key": "tree",
+      "heading": "The tree and its range",
+      "text": "Kew recognises Quercus suber as an accepted species native to parts of the western Mediterranean. Botanical distribution describes species occurrence and should not be confused with the geography of processing industries.",
+      "source_ids": [
+        "kew:quercus-suber-powo"
+      ]
+    },
+    {
+      "key": "harvest",
+      "heading": "A slow working calendar",
+      "text": "Kew notes that bark is harvested manually at intervals measured in years rather than seasons. The cycle depends on tree maturity, bark growth and regulation, and a careless cut can damage tissues needed for recovery.",
+      "source_ids": [
+        "kew:quercus-suber-powo",
+        "fao:cork-oak-forestry-a0917e"
+      ]
+    },
+    {
+      "key": "properties",
+      "heading": "Light, cellular and compressible",
+      "text": "Cork’s cellular structure helps explain its low density, resilience and insulating behaviour. Those properties support closures as well as flooring, panels and products that require cushioning or thermal separation.",
+      "source_ids": [
+        "kew:quercus-suber-powo"
+      ]
+    },
+    {
+      "key": "landscape",
+      "heading": "Material and managed woodland",
+      "text": "FAO documentation places cork production within managed forest landscapes. Continued ecological value is not automatic: it depends on regeneration, fire risk, grazing, labour, markets and management choices.",
+      "source_ids": [
+        "fao:cork-oak-forestry-a0917e"
+      ]
+    },
+    {
+      "key": "limits",
+      "heading": "Renewable is not impact-free",
+      "text": "The bark’s capacity to regrow supports a renewable cycle, but it does not make every cork product or supply chain sustainable by definition. Transport, processing, adhesives, harvest practice and land management still require evidence.",
+      "source_ids": [
+        "kew:quercus-suber-powo",
+        "fao:cork-oak-forestry-a0917e"
+      ]
+    }
+  ],
+  "content_version": 1
+}

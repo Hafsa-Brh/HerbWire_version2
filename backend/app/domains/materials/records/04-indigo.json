@@ -1,0 +1,108 @@
+{
+  "id": "8d7c6eb6-80b1-4d46-8b0f-469b43d20a04",
+  "slug": "indigo-plant-dyes-colour-craft",
+  "title": "Colour from a vat: understanding plant-derived indigo",
+  "deck": "Indigo dyeing is a sequence of plant knowledge, chemistry and patient handwork; institutional records also show why colourfastness and cultural specificity need careful language.",
+  "category": "Pigments & Dyes",
+  "material_labels": [
+    "indigo",
+    "plant dye",
+    "textile"
+  ],
+  "geography_label": "Documented practices in Asia",
+  "reading_time_minutes": 7,
+  "featured": false,
+  "sort_order": 4,
+  "published_at": "2026-09-03T08:30:00Z",
+  "hero_media": {
+    "local_path": "/media/materials/natural-indigo.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Indigo_dyed_fabric_is_raised_from_the_dye_vat.jpg",
+    "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Indigo_dyed_fabric_is_raised_from_the_dye_vat.jpg",
+    "creator": "Markmcnbowe97",
+    "title": "Indigo dyed fabric raised from a dye vat",
+    "attribution": "Markmcnbowe97 / Wikimedia Commons",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "checksum_sha256": "85fa5d2fe30c4278214ead66d8f9e0decaeaa22980b13c47a0c0b20791216812",
+    "alt_text": "Blue indigo-dyed cloth being lifted from a dye vat by hand"
+  },
+  "sources": [
+    {
+      "source_id": "smithsonian:batik-botanic-dyes",
+      "provider": "smithsonian",
+      "institution": "Smithsonian National Museum of Asian Art",
+      "title": "Batik and Botanic Dyes: documented Miao and Dong textile practice",
+      "canonical_url": "https://asia-archive.si.edu/learn/for-educators/teaching-china-with-the-smithsonian/videos/batik-and-botanic-dyes/",
+      "source_type": "cultural_heritage"
+    },
+    {
+      "source_id": "kew:natures-true-colours",
+      "provider": "kew",
+      "institution": "Royal Botanic Gardens, Kew",
+      "title": "Nature’s true colours: plants, pigments and the history of natural dyes",
+      "canonical_url": "https://www.kew.org/read-and-watch/natures-true-colours",
+      "source_type": "botanical"
+    },
+    {
+      "source_id": "smithsonian:natural-dyes-lightfastness",
+      "provider": "smithsonian-mci",
+      "institution": "Smithsonian Museum Conservation Institute",
+      "title": "Natural dyes, mordants and lightfastness in textile conservation research",
+      "canonical_url": "https://mci.si.edu/node/1211590",
+      "source_type": "conservation"
+    }
+  ],
+  "sections": [
+    {
+      "key": "overview",
+      "heading": "Blue appears through process",
+      "text": "Indigo is associated with plants, yet the blue on cloth is the result of preparation and controlled chemistry rather than direct rubbing of a blue petal. Dyeing makes a soluble form available before oxidation develops colour.",
+      "source_ids": [
+        "kew:natures-true-colours"
+      ]
+    },
+    {
+      "key": "practice",
+      "heading": "Pattern, reserve and the working vat",
+      "text": "Smithsonian teaching material documents batik and botanical dye practice among named Miao and Dong makers in Guizhou. Wax-resist patterning and vat dyeing are related steps, each demanding control of material and timing.",
+      "source_ids": [
+        "smithsonian:batik-botanic-dyes"
+      ]
+    },
+    {
+      "key": "plants",
+      "heading": "Several plants, not one universal recipe",
+      "text": "Different regions have obtained indigo precursors from different botanical sources. Kew’s account separates the chemical colourant from a single species story, while the Smithsonian example stays tied to documented makers.",
+      "source_ids": [
+        "kew:natures-true-colours",
+        "smithsonian:batik-botanic-dyes"
+      ]
+    },
+    {
+      "key": "fastness",
+      "heading": "Colourfast is always qualified",
+      "text": "Conservation research shows that natural dyes vary in resistance to light and washing. Mordants, fibre type, concentration and later exposure can change performance, so natural is not a technical synonym for permanent.",
+      "source_ids": [
+        "smithsonian:natural-dyes-lightfastness"
+      ]
+    },
+    {
+      "key": "context",
+      "heading": "Technique carries cultural knowledge",
+      "text": "A dye vat is both a chemical system and part of a learned practice. Institutional documentation can describe materials and visible steps, but it cannot replace the language, experience and authority of sustaining communities.",
+      "source_ids": [
+        "smithsonian:batik-botanic-dyes"
+      ]
+    },
+    {
+      "key": "limits",
+      "heading": "What the evidence does not establish",
+      "text": "These sources do not support universal sustainability claims for natural dyes or the idea that one recipe represents all indigo traditions. Crop production, water use, mordants and workshop conditions require case-specific evidence.",
+      "source_ids": [
+        "kew:natures-true-colours",
+        "smithsonian:natural-dyes-lightfastness"
+      ]
+    }
+  ],
+  "content_version": 1
+}

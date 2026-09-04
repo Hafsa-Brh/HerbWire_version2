@@ -79,6 +79,8 @@ const draftReview = { id: "review-1", content_type: "plant_profile", status: "ne
 const publishedReview = { id: "review-2", content_type: "plant_profile", status: "approved", reviewer_name: "Local editor", decision_reason: null, review_payload: { seed_slug: "peppermint" }, created_at: "2026-08-30T12:00:00Z", decided_at: "2026-08-30T12:30:00Z", plant_profile: plantDetail }
 const pipelineRun = { id: "run-1", pipeline_type: "curated_seed", trigger: "manual", provider: "local", idempotency_key: "seed-1", status: "succeeded", current_stage: "publisher", summary: {}, started_at: "2026-08-30T12:00:00Z", finished_at: "2026-08-30T12:01:00Z", stages: [{ name: "editorial_qa", status: "succeeded", attempt: 1, duration_ms: 10, input_refs: [], output_refs: [], error_code: null, error_message: null }] }
 const performance = { total_runs: 1, succeeded_runs: 1, failed_runs: 0, held_runs: 0, auto_published: 0, last_execution: "2026-08-30T12:00:00Z", stages: [{ name: "editorial_qa", total_runs: 1, succeeded: 1, failed: 0, held: 0, skipped: 0, average_duration_ms: 10, last_status: "succeeded", last_completed_at: "2026-08-30T12:00:00Z" }] }
+const adminContentPage = { summary: { total_content: 60, published_plants: 30, published_discoveries: 30, published_materials: 0, source_records: 150, provenance_relationships: 245, needs_review: 0 }, items: [{ id: "plant-1", title: "Peppermint", content_type: "plant_profile", content_type_label: "Plant Profile", status: "published", timestamp: "2026-08-30T12:00:00Z", plant_identity: "Mentha x piperita", source_count: 3, origin: "curated corpus", public_path: "/plants/peppermint", editorial_path: "/admin/reviews", pmid: null }], total: 60, page: 1, page_size: 10, total_pages: 6, statuses: ["published"] }
+const adminSourcePage = { items: [{ id: "source-record-1", source_name: "PubMed", source_type: "research", authoritative_domain: "pubmed.ncbi.nlm.nih.gov", external_identifier: "12345678", doi: "10.1000/test", title: "A real source record", publisher: "Test journal", provenance_roles: ["primary_research"], linked_content_count: 1, associated_content: [{ content_id: "plant-1", content_type: "plant_profile", title: "Peppermint", internal_path: "/plants/peppermint" }], created_at: "2026-08-30T12:00:00Z", external_url: "https://pubmed.ncbi.nlm.nih.gov/12345678/" }], total: 150, page: 1, page_size: 12, total_pages: 13, source_count: 7, source_record_count: 150, source_types: ["research"] }
 const plantRevision = {
   id: "revision-1",
   plant_profile_id: publishedPlant.id,
@@ -143,6 +145,8 @@ function installMockApi({ authenticated = true, plants = [publishedPlant], revie
       return jsonResponse({ items, total: filtered.length, page, page_size: pageSize, pages: Math.max(1, Math.ceil(filtered.length / pageSize)) })
     }
     if (!authed && url.includes("/api/v1/admin/")) return jsonResponse({ detail: "Authentication required." }, 401)
+    if (url.includes("/api/v1/admin/catalog/content")) return jsonResponse(adminContentPage)
+    if (url.includes("/api/v1/admin/catalog/sources")) return jsonResponse(adminSourcePage)
     if (url.endsWith("/api/v1/admin/revisions") && !init?.method) {
       if (revisionFailures > 0) { revisionFailures -= 1; return jsonResponse({ detail: "Unavailable" }, 503) }
       return jsonResponse(revisions.map((revision) => ({
@@ -244,12 +248,12 @@ describe("Milestone 2 final UI and functionality", () => {
     renderAt("/admin")
 
     await screen.findByRole("heading", { name: "Dashboard" })
-    expect(screen.getByRole("heading", { name: "No operational dashboard yet" })).toBeInTheDocument()
-    expect(screen.queryByRole("region", { name: "Review workspace" })).not.toBeInTheDocument()
+    expect(await screen.findByRole("heading", { name: "Content operations" })).toBeInTheDocument()
+    expect(screen.queryByRole("region", { name: "Plants review workspace" })).not.toBeInTheDocument()
     const nav = screen.getByRole("navigation", { name: "Editorial navigation" })
     expect(within(nav).getByRole("link", { name: /Plants Review/i })).toHaveAttribute("href", "/admin/reviews")
     expect(within(nav).getByRole("link", { name: /Flashes/i })).toHaveAttribute("href", "/admin/flashes")
-    expect(within(nav).getByRole("link", { name: /Agent Performance/i })).toHaveAttribute("href", "/admin/agents")
+    expect(within(nav).getByRole("link", { name: /Agent Performance/i })).toHaveAttribute("href", "/admin/performance")
     expect(screen.getByText("HB")).toBeInTheDocument()
     fireEvent.click(screen.getByRole("button", { name: "Logout" }))
     await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringContaining("/api/v1/auth/logout"), expect.objectContaining({ method: "POST" })))
@@ -265,17 +269,17 @@ describe("Milestone 2 final UI and functionality", () => {
     renderAt("/admin/reviews")
 
     await screen.findByRole("heading", { name: "Plants Review" })
-    const workspace = await screen.findByRole("region", { name: "Review workspace" })
-    expect(workspace).toHaveClass("items-stretch", "lg:grid-cols-[.75fr_1.25fr]")
+    const workspace = await screen.findByRole("region", { name: "Plants review workspace" })
+    expect(workspace).toHaveClass("items-stretch", "lg:grid-cols-[.72fr_1.28fr]")
     expect(within(workspace).getByText("Article review")).toBeInTheDocument()
     expect(within(workspace).getByRole("heading", { name: "Overview" })).toBeInTheDocument()
-    expect(within(workspace).getByText("Section 1 of 5")).toBeInTheDocument()
-    const sectionNav = within(workspace).getByRole("navigation", { name: "Article review sections" })
-    for (const section of ["Overview", "Botanical content", "Traditional use & preparation", "Safety & evidence", "Distribution & sources"]) {
-      expect(within(sectionNav).getByRole("button", { name: `Open ${section} section` })).toBeInTheDocument()
+    expect(within(workspace).getByText("Page 1 of 5")).toBeInTheDocument()
+    const sectionNav = within(workspace).getByRole("navigation", { name: "Plant detail pages" })
+    for (const section of ["1. Overview", "2. Botanical content", "3. Traditional use & preparation", "4. Safety & evidence", "5. Distribution & sources"]) {
+      expect(within(sectionNav).getByRole("button", { name: section })).toBeInTheDocument()
     }
-    const previousSection = within(workspace).getByRole("button", { name: "Previous review section" })
-    const nextSection = within(workspace).getByRole("button", { name: "Next review section" })
+    const previousSection = within(workspace).getByRole("button", { name: "Previous detail page" })
+    const nextSection = within(workspace).getByRole("button", { name: "Next detail page" })
     expect(previousSection).toBeDisabled()
     expect(within(workspace).getByText(/Media attribution:/i)).toBeInTheDocument()
 
@@ -287,12 +291,12 @@ describe("Milestone 2 final UI and functionality", () => {
     fireEvent.click(previousSection)
     expect(await within(workspace).findByRole("heading", { name: "Overview" })).toHaveFocus()
 
-    fireEvent.click(within(sectionNav).getByRole("button", { name: "Open Safety & evidence section" }))
+    fireEvent.click(within(sectionNav).getByRole("button", { name: "4. Safety & evidence" }))
     expect(await within(workspace).findByRole("heading", { name: "Safety & evidence" })).toHaveFocus()
     expect(within(workspace).getByText(/Allergy caution/i)).toBeInTheDocument()
     expect(within(workspace).getByText(/Traditional use is not clinical proof/i)).toBeInTheDocument()
 
-    fireEvent.click(within(sectionNav).getByRole("button", { name: "Open Distribution & sources section" }))
+    fireEvent.click(within(sectionNav).getByRole("button", { name: "5. Distribution & sources" }))
     expect(await within(workspace).findByRole("heading", { name: "Distribution & sources" })).toHaveFocus()
     expect(nextSection).toBeDisabled()
     expect(await within(workspace).findByRole("img", { name: "Country-level distribution overview for Review plant 1" }, { timeout: 8000 })).toBeInTheDocument()
@@ -325,20 +329,20 @@ describe("Milestone 2 final UI and functionality", () => {
     expect(within(workspace).getByText("Expanded version-three overview from the corpus manifest.")).toBeInTheDocument()
     const promote = within(workspace).getByRole("button", { name: "Promote revision" })
     expect(promote).toBeDisabled()
-    expect(within(workspace).getByRole("button", { name: "Previous review section" })).toBeDisabled()
+    expect(within(workspace).getByRole("button", { name: "Previous detail page" })).toBeDisabled()
 
     const mutationCallsBefore = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST").length
-    fireEvent.click(within(workspace).getByRole("button", { name: "Open Traditional use & preparation section" }))
+    fireEvent.click(within(workspace).getByRole("button", { name: "3. Traditional use & preparation" }))
     expect(await within(workspace).findByRole("heading", { name: "Traditional use & preparation" })).toHaveFocus()
     expect(within(workspace).getAllByText(/Documented infusion tradition without dosage/i)).toHaveLength(2)
-    fireEvent.click(within(workspace).getByRole("button", { name: "Open Safety & evidence section" }))
+    fireEvent.click(within(workspace).getByRole("button", { name: "4. Safety & evidence" }))
     expect(within(workspace).getAllByText(/Allergy caution/i)).toHaveLength(2)
-    fireEvent.click(within(workspace).getByRole("button", { name: "Open Distribution & sources section" }))
+    fireEvent.click(within(workspace).getByRole("button", { name: "5. Distribution & sources" }))
     expect(await within(workspace).findAllByRole("img", { name: "Country-level distribution overview for Peppermint" }, { timeout: 8000 })).toHaveLength(2)
     expect(within(workspace).getAllByLabelText("Map legend")).toHaveLength(2)
     expect(within(workspace).getAllByText("Source title")).toHaveLength(2)
     expect(within(workspace).queryByText("Peppermint image source")).not.toBeInTheDocument()
-    expect(within(workspace).getByRole("button", { name: "Next review section" })).toBeDisabled()
+    expect(within(workspace).getByRole("button", { name: "Next detail page" })).toBeDisabled()
     const mutationCallsAfter = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST").length
     expect(mutationCallsAfter).toBe(mutationCallsBefore)
 
@@ -409,7 +413,7 @@ describe("Milestone 2 final UI and functionality", () => {
     renderAt("/admin/revisions")
 
     const workspace = await screen.findByRole("region", { name: "Profile revision workspace" })
-    fireEvent.click(within(workspace).getByRole("button", { name: "Open Safety & evidence section" }))
+    fireEvent.click(within(workspace).getByRole("button", { name: "4. Safety & evidence" }))
     expect(await within(workspace).findByRole("heading", { name: "Safety & evidence" })).toBeInTheDocument()
     expect(within(workspace).getByText("Page 1 of 2")).toBeInTheDocument()
     expect(within(workspace).queryByText("Revision plant 7")).not.toBeInTheDocument()
@@ -448,12 +452,11 @@ describe("Milestone 2 final UI and functionality", () => {
 
   it("renders Agent Performance from pipeline metrics", async () => {
     installMockApi({ authenticated: true })
-    renderAt("/admin/agents")
+    renderAt("/admin/performance")
 
-    await screen.findByRole("heading", { name: "Agent Performance" })
-    expect((await screen.findAllByText("editorial_qa")).length).toBeGreaterThan(0)
-    expect(screen.getByText("Auto-published")).toBeInTheDocument()
-    expect(screen.getAllByText("0").length).toBeGreaterThan(0)
+    await screen.findByRole("heading", { name: "Agent performance" })
+    expect((await screen.findAllByText("Editorial QA Agent")).length).toBeGreaterThan(0)
+    expect(screen.getByText("Agent roster")).toBeInTheDocument()
   })
 
   it("keeps draft plants absent publicly and renders complete peppermint detail", async () => {

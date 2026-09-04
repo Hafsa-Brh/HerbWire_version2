@@ -1,0 +1,100 @@
+{
+  "id": "8d7c6eb6-80b1-4d46-8b0f-469b43d20a06",
+  "slug": "wood-grain-carving-hand-tools",
+  "title": "Following the grain: wood, tools and the discipline of carving",
+  "deck": "Woodcarving joins botanical material to learned hand skills: the grain guides each cut, while chisels, mallets and repeated patterns carry knowledge between makers.",
+  "category": "Wood",
+  "material_labels": [
+    "wood",
+    "carving",
+    "hand tools"
+  ],
+  "geography_label": "Konjic, Bosnia and Herzegovina; comparative workshop image from Uzbekistan",
+  "reading_time_minutes": 7,
+  "featured": false,
+  "sort_order": 6,
+  "published_at": "2026-09-03T08:10:00Z",
+  "hero_media": {
+    "local_path": "/media/materials/woodcarver.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Master_woodcarver_Nasrullo_ata.jpg",
+    "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Master_woodcarver_Nasrullo_ata.jpg",
+    "creator": "Sinchalak Musulmon",
+    "title": "Master woodcarver Nasrullo ata in his workshop",
+    "attribution": "Sinchalak Musulmon / Wikimedia Commons",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "checksum_sha256": "5414a7acb8de3725850e7f27f40edc640a55057de6f8b03d0bb8dd1a40f3f2d0",
+    "alt_text": "A master woodcarver working carefully with hand tools in an Uzbekistan workshop"
+  },
+  "sources": [
+    {
+      "source_id": "unesco:konjic-woodcarving-01288",
+      "provider": "unesco",
+      "institution": "UNESCO Intangible Cultural Heritage",
+      "title": "Konjic woodcarving — traditional craftsmanship in Bosnia and Herzegovina",
+      "canonical_url": "https://ich.unesco.org/en/RL/konjic-woodcarving-01288",
+      "source_type": "cultural_heritage"
+    },
+    {
+      "source_id": "vam:sculpture-techniques-wood",
+      "provider": "victoria-albert-museum",
+      "institution": "Victoria and Albert Museum",
+      "title": "Sculpture techniques: carving wood and understanding material direction",
+      "canonical_url": "https://www.vam.ac.uk/articles/sculpture-techniques",
+      "source_type": "museum_collection"
+    }
+  ],
+  "sections": [
+    {
+      "key": "overview",
+      "heading": "The material answers each cut",
+      "text": "Wood is anisotropic: it does not behave identically in every direction. A carver reads grain, knots and density before choosing the angle and depth of a cut, adapting a planned form to the particular piece in hand.",
+      "source_ids": [
+        "vam:sculpture-techniques-wood"
+      ]
+    },
+    {
+      "key": "tools",
+      "heading": "Chisel, gouge and mallet",
+      "text": "Carving tools remove wood in controlled increments. Straight chisels define planes and edges, curved gouges open hollows and channels, and a mallet supplies measured force while the maker directs the edge.",
+      "source_ids": [
+        "vam:sculpture-techniques-wood",
+        "unesco:konjic-woodcarving-01288"
+      ]
+    },
+    {
+      "key": "konjic",
+      "heading": "A documented tradition in Konjic",
+      "text": "UNESCO describes Konjic woodcarving as a living craft used for furniture, interiors and smaller decorative objects. Recognisable patterns are drawn and cut, while knowledge passes through workshops and apprenticeships.",
+      "source_ids": [
+        "unesco:konjic-woodcarving-01288"
+      ]
+    },
+    {
+      "key": "learning",
+      "heading": "Repetition builds judgement",
+      "text": "A pattern can be transferred, but the cut is never fully automatic. Tool sharpness, hand position and the changing grain require continuous judgement. Apprentices learn motifs and when to stop, turn or change tools.",
+      "source_ids": [
+        "unesco:konjic-woodcarving-01288",
+        "vam:sculpture-techniques-wood"
+      ]
+    },
+    {
+      "key": "care",
+      "heading": "Durability and repair",
+      "text": "Wooden objects move as humidity changes and can split along grain or joints. Conservation attends to environment, coatings and prior repairs; aggressive refinishing may remove tool marks and evidence of manufacture.",
+      "source_ids": [
+        "vam:sculpture-techniques-wood"
+      ]
+    },
+    {
+      "key": "limits",
+      "heading": "One image is not one tradition",
+      "text": "The cover documents a woodcarver in Uzbekistan and is a comparative workshop image, not Konjic practice. Cultural claims remain tied to UNESCO’s named Bosnian tradition rather than generalized across regions.",
+      "source_ids": [
+        "unesco:konjic-woodcarving-01288"
+      ]
+    }
+  ],
+  "content_version": 1
+}

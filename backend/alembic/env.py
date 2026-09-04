@@ -3,6 +3,7 @@ from logging.config import fileConfig
 from backend.app.core.settings import get_settings
 from backend.app.db.base import Base
 from backend.app.models import encyclopedia as encyclopedia_models  # noqa: F401
+from backend.app.models import materials as material_models  # noqa: F401
 from backend.app.models import source as source_models  # noqa: F401
 from sqlalchemy import engine_from_config, pool
 

@@ -46,15 +46,16 @@ The previous HerbWire repository is not a code donor. Its botanical color palett
 
 HerbWire is an English-language knowledge and editorial platform dedicated to medicinal plants and traditional systems of medicine worldwide. It combines a curated plant encyclopedia with a scheduled discovery pipeline that finds, normalizes, evaluates, drafts, reviews, and publishes relevant developments with transparent provenance.
 
-HerbWire has two public editorial products:
+HerbWire has three public editorial products:
 
 1. **Medicinal Plant Encyclopedia** — reviewed, structured, comparatively stable plant profiles assembled from authoritative botanical, traditional-medicine, safety, conservation, geographic, and licensing-aware media sources.
 2. **Traditional Medicine Discovery Briefs** — timely English-language articles about medicinal-plant and traditional-medicine research, pharmacopoeias, conservation, authentication, cultivation, cultural heritage, digitization, regulation, and other relevant developments.
+3. **Materials & Craft Stories** — curated, non-medical editorial stories about natural materials, making practices, tools, vessels, and the botanical and cultural knowledge carried by responsibly sourced material traditions.
 
 It also has two private operational products:
 
 3. **Editorial Desk** — review queues, source evidence, claim checks, safety controls, draft comparison, publish/reject actions, and audit history.
-4. **Pipeline Monitor** — scheduled runs, stages, agents, retries, failures, duration, source yield, publication outcome, and operational diagnostics.
+5. **Pipeline Monitor** — scheduled runs, stages, agents, retries, failures, duration, source yield, publication outcome, and operational diagnostics.
 
 ## 1.2 Geographic scope
 
@@ -116,6 +117,7 @@ The MVP is successful when it can demonstrate, in production:
 |---|---|
 | Plant Profile | The published encyclopedia unit representing one accepted plant taxon and its reviewed traditional-use, distribution, media, safety, and provenance data. |
 | Discovery Brief | An English editorial article about a relevant new development, grounded in one or more approved source records. |
+| Material Story | A curated, non-medical public article about a natural material or making practice, with structured sections, institutional provenance, and licensed media. |
 | Source | An approved origin such as an official institution, database, feed, journal index, publication, or permitted website. |
 | Source Policy | Machine-readable and human-readable rules defining trust, access, licensing, rate limits, allowed fields, retention, and automation status for a source. |
 | Source Record | An immutable or append-only representation of one collected item, including original metadata, normalized extract, checksum, retrieval time, and access method. |
@@ -304,7 +306,13 @@ Required fields:
 
 Target length is 500–900 English words for a normal brief. Short notices may be 250–450 words. Long-form features are deferred.
 
-## 4.5 Source coverage requirements
+## 4.5 Materials & Craft Story contract
+
+Materials & Craft is a separate curated public domain. A story must include a stable identifier and slug, versioned structured sections, a supported category and material identity, publication state and timestamp, source relationships, reading-time metadata, and licensed local media with creator, source page, license, and checksum. Geographic or cultural labels appear only when directly supported.
+
+The current bounded implementation uses a deterministic, schema-validated curated corpus and idempotent importer. Its public list and detail APIs expose published stories only. Materials stories are non-medical: they must not be represented as Plant Profiles, Discovery Briefs, or live autonomous-pipeline output. Future collection automation may produce review candidates through the canonical provenance and human-publication boundaries, but it is not part of this increment.
+
+## 4.6 Source coverage requirements
 
 - Every published factual claim must link to at least one source excerpt or structured source field.
 - A Discovery Brief normally requires at least two independent sources unless it is explicitly a single-source announcement or paper summary.
@@ -522,7 +530,7 @@ These labels describe the source, not a universal verdict about treatment effica
 - Never publish directly.
 - Deterministic templates must remain available when no model provider exists.
 
-## Agent 9 — Media and Geography
+## Agent 9 — Media & Geography Agent
 
 **Purpose:** Find or validate licensed plant imagery, construct attribution, normalize distribution data, and produce map-ready GeoJSON.
 
@@ -531,6 +539,8 @@ These labels describe the source, not a universal verdict about treatment effica
 **Map behavior:** maps represent documented geographic occurrence/distribution, not medical prevalence or guaranteed native range. Data uncertainty and source date are visible.
 
 **Gate:** missing license, creator, source page, or plant relevance rejects the media candidate.
+
+**Current status:** Planned/postponed. Curated licensed images and structured maps may exist in published content, but they are not evidence of Agent 9 runtime execution and must be excluded from operational duration or success metrics until genuine runs exist.
 
 ## Agent 10 — Related Content
 
@@ -1445,6 +1455,9 @@ Deliver scheduled metadata collection, dedupe, relevance, evidence package, dete
 
 Acceptance: repeated run produces no duplicate and one approved English brief is public.
 
+### Approved bounded increment — Materials & Craft curated domain
+
+Deliver seven source-verified, licensed-media Material Stories through a deterministic curated-corpus importer, PostgreSQL-backed public list/detail APIs, and the shared HerbWire public shell. This increment does not activate an autonomous Materials pipeline or the postponed Media & Geography Agent.
 ## Milestone 5 — Zyte collector vertical slice
 
 Deliver one legally reviewed institutional website spider deployed to Scrapy Cloud, scheduled, fixture-tested, and integrated through the canonical ingestion contract.

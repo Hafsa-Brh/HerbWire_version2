@@ -49,7 +49,7 @@ function PlantArticleContent({ plant }: { plant: ApiPlantDetail }) {
           </div>
           <div className="mt-6 flex flex-wrap justify-center gap-2"><StatusPill>{plant.status}</StatusPill>{plant.parts_used.map((part) => <span key={part} className="rounded-full border border-line px-3 py-1 font-sans text-[10px] font-semibold uppercase tracking-[.12em] text-forest">{part}</span>)}</div>
         </div>
-        <figure>
+        <figure className="mx-auto md:w-[92%]">
           <BotanicalImage label={plant.display_common_name} image={media} />
           <figcaption className="mx-auto max-w-3xl py-3 font-sans text-[10px] uppercase tracking-[.13em] text-muted">
             <span>{media.caption ?? plant.display_common_name}</span>

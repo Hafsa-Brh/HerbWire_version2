@@ -1,0 +1,101 @@
+{
+  "id": "8d7c6eb6-80b1-4d46-8b0f-469b43d20a07",
+  "slug": "zlakusa-hand-wheel-pottery-vessels",
+  "title": "Clay, calcite and fire: the working vessels of Zlakusa",
+  "deck": "In the Serbian village of Zlakusa, hand-wheel pottery brings local clay, ground calcite and open firing together in vessels made for preparing and storing food.",
+  "category": "Clay & Glass",
+  "material_labels": [
+    "clay",
+    "calcite",
+    "pottery"
+  ],
+  "geography_label": "Zlakusa, Serbia",
+  "reading_time_minutes": 7,
+  "featured": false,
+  "sort_order": 7,
+  "published_at": "2026-09-03T08:00:00Z",
+  "hero_media": {
+    "local_path": "/media/materials/zlakusa-pottery.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Zlakuska_lon%C4%8Darija_02.jpg",
+    "direct_asset_url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Zlakuska_lon%C4%8Darija_02.jpg",
+    "creator": "Milica Buha",
+    "title": "Potters from Zlakusa",
+    "attribution": "Milica Buha / Wikimedia Commons",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "checksum_sha256": "4feae012529f2dd0ba7c6aa1ccf6cc1ea0eaa6c4feb1fe75645c58fc9ea2a1ab",
+    "alt_text": "Potters from Zlakusa shaping traditional vessels in a workshop"
+  },
+  "sources": [
+    {
+      "source_id": "unesco:zlakusa-01569",
+      "provider": "unesco",
+      "institution": "UNESCO Intangible Cultural Heritage",
+      "title": "Zlakusa pottery making, hand-wheel pottery making in the village of Zlakusa",
+      "canonical_url": "https://ich.unesco.org/en/RL/zlakusa-pottery-making-hand-wheel-pottery-making-in-the-village-of-zlakusa-01569",
+      "source_type": "cultural_heritage"
+    },
+    {
+      "source_id": "unesco:decision-15com-8b5",
+      "provider": "unesco",
+      "institution": "UNESCO Intangible Cultural Heritage Committee",
+      "title": "Decision 15.COM 8.b.5 on Zlakusa pottery making",
+      "canonical_url": "https://ich.unesco.org/en/decisions/15.COM/8.B.5",
+      "source_type": "cultural_heritage"
+    }
+  ],
+  "sections": [
+    {
+      "key": "overview",
+      "heading": "A vessel designed for work",
+      "text": "Zlakusa pottery is unglazed hand-wheel ware associated with cooking and food storage. Its importance lies in an integrated process: locally understood raw materials, forming, surface treatment, drying and firing.",
+      "source_ids": [
+        "unesco:zlakusa-01569",
+        "unesco:decision-15com-8b5"
+      ]
+    },
+    {
+      "key": "materials",
+      "heading": "Clay tempered with calcite",
+      "text": "UNESCO’s documentation identifies a mixture of clay and ground calcite. Temper changes how a clay body handles and responds to heat; it is part of the vessel’s working design rather than a decorative addition.",
+      "source_ids": [
+        "unesco:decision-15com-8b5"
+      ]
+    },
+    {
+      "key": "forming",
+      "heading": "Building on a hand wheel",
+      "text": "The maker shapes the vessel on a hand-operated wheel, controlling symmetry and wall thickness through repeated turning and pressure. The pace permits correction while requiring practiced coordination.",
+      "source_ids": [
+        "unesco:zlakusa-01569",
+        "unesco:decision-15com-8b5"
+      ]
+    },
+    {
+      "key": "sequence",
+      "heading": "Seven to ten days of connected steps",
+      "text": "The formal record describes preparation, shaping, decorating, drying and firing across a multi-day sequence. Each stage constrains the next: uneven walls or rushed drying may emerge only when heat tests the vessel.",
+      "source_ids": [
+        "unesco:decision-15com-8b5"
+      ]
+    },
+    {
+      "key": "transmission",
+      "heading": "Knowledge held in practice",
+      "text": "Skills are transmitted in households and workshops, alongside public demonstration and local organisation. Inscription recognises that social system of knowledge; it does not freeze the craft or imply identical work.",
+      "source_ids": [
+        "unesco:zlakusa-01569"
+      ]
+    },
+    {
+      "key": "limits",
+      "heading": "Heritage is not a laboratory guarantee",
+      "text": "Documentation of thermal-food vessels does not establish universal performance, food-safety or durability for every pot sold under a regional name. Those questions depend on materials, firing, condition and use.",
+      "source_ids": [
+        "unesco:zlakusa-01569",
+        "unesco:decision-15com-8b5"
+      ]
+    }
+  ],
+  "content_version": 1
+}

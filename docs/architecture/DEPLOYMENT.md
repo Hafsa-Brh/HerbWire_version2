@@ -294,7 +294,7 @@ The corrected order is:
 20. Run remote invariants and HTTP smoke tests.
 21. Never run the review-gated bootstrap after a successful transfer.
 
-    Set-Location C:\Users\PC\Documents\ChatGPT\HerbWire_version2
+    Set-Location "C:\Users\PC\Documents\ChatGPT\HerbWire_version2"
     git switch main
     git pull --ff-only origin main
     git status --short
