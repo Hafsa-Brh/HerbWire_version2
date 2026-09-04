@@ -2,9 +2,11 @@ import { ArrowUpRight, Check } from "lucide-react"
 import { useCallback, useState } from "react"
 import { Link } from "react-router-dom"
 import { fetchPublishedDiscoveries, type ApiPublicDiscoveryArticle } from "../api/discoveries"
+import { fetchMaterials } from "../api/materials"
 import { subscribeNewsletter } from "../api/newsletter"
 import { ApiRequestError, fetchPlants } from "../api/plants"
 import { HomeDiscoveryCarousel } from "../components/home/HomeDiscoveryCarousel"
+import { HomeMaterialsCarousel } from "../components/home/HomeMaterialsCarousel"
 import { PlantCard } from "../components/plants/PlantPrimitives"
 import { RouteState } from "../components/site/RouteState"
 import { Footer, SiteShell } from "../components/site/SiteShell"
@@ -12,12 +14,25 @@ import { useAsyncResource } from "../hooks/useAsyncResource"
 
 const SUBSCRIBE_DECOR =
   "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9ABW0EekEPGKkE7l42ImkKQOCQPQa0.png"
+const HOMEPAGE_EXCLUDED_DISCOVERY_SLUG = "amla-36934568-cardiometabolic-meta-analysis"
+const HOMEPAGE_LEAD_MATERIAL_SLUG = "wood-grain-carving-hand-tools"
+
+function selectHomepageDiscoveries(items: ApiPublicDiscoveryArticle[]) {
+  return items.filter((article) => article.slug !== HOMEPAGE_EXCLUDED_DISCOVERY_SLUG).slice(0, 3)
+}
+
+function selectHomepageMaterials(items: Awaited<ReturnType<typeof fetchMaterials>>["items"]) {
+  const lead = items.find((story) => story.slug === HOMEPAGE_LEAD_MATERIAL_SLUG)
+  return lead ? [lead, ...items.filter((story) => story.slug !== HOMEPAGE_LEAD_MATERIAL_SLUG)] : items
+}
 
 export function HomePage() {
   const plants = useAsyncResource(useCallback((signal: AbortSignal) => fetchPlants(undefined, signal), []))
   const discoveries = useAsyncResource(useCallback((signal: AbortSignal) => fetchPublishedDiscoveries({}, signal), []))
+  const materials = useAsyncResource(useCallback((signal: AbortSignal) => fetchMaterials("", signal), []))
   const plantList = plants.data ?? []
   const discoveryList = discoveries.data?.items ?? []
+  const homepageDiscoveries = selectHomepageDiscoveries(discoveryList)
   const isLoading = plants.isLoading || discoveries.isLoading
   const hasError = plants.error || discoveries.error
 
@@ -26,9 +41,15 @@ export function HomePage() {
       <main id="top">
         {isLoading ? <RouteState eyebrow="HerbWire / loading" title="Loading the front page." description="Gathering the latest reviewed discoveries and plant profiles." primaryAction={{ label: "Return home", to: "/" }} /> : null}
         {hasError ? <RouteState eyebrow="HerbWire / interrupted" title="The wire paused unexpectedly." description="We could not load the reviewed archive right now. Try the front page again in a moment." primaryAction={{ label: "Try again", onClick: () => { plants.reload(); discoveries.reload() } }} secondaryAction={{ label: "Browse plants", to: "/plants" }} /> : null}
-        {!isLoading && !hasError && discoveryList.length ? <HomeDiscoveryCarousel items={discoveryList.slice(0, 4)} /> : null}
+        {!isLoading && !hasError && homepageDiscoveries.length ? <HomeDiscoveryCarousel items={homepageDiscoveries} /> : null}
         {!isLoading && !hasError && !discoveryList.length ? <RouteState eyebrow="HerbWire / discoveries" title="No published discoveries yet." description="Only explicitly published editorial work can appear on the homepage." primaryAction={{ label: "Browse plants", to: "/plants" }} /> : null}
         {!isLoading && !hasError ? <LatestDiscoveries items={discoveryList.slice(4, 7)} /> : null}
+        <HomeMaterialsCarousel
+          items={selectHomepageMaterials(materials.data?.items ?? [])}
+          isLoading={materials.isLoading}
+          error={materials.error}
+          onRetry={materials.reload}
+        />
         {!isLoading && !hasError ? <ReviewedPlants plants={plantList.slice(0, 3)} /> : null}
         <NewsletterSection />
       </main>
