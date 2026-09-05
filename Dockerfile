@@ -17,6 +17,8 @@ COPY backend/ ./backend/
 RUN pip install --no-cache-dir .
 COPY --from=frontend-build /build/frontend/dist ./frontend/dist
 
+RUN python -c "from backend.app.domains.materials.corpus import load_curated_material_corpus; from backend.app.domains.materials.curated_import import validate_curated_material_media; validate_curated_material_media(load_curated_material_corpus())"
+
 RUN addgroup --system herbwire \
     && adduser --system --ingroup herbwire herbwire \
     && chown -R herbwire:herbwire /app

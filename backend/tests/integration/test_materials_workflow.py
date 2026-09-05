@@ -41,10 +41,15 @@ def test_material_import_is_idempotent_and_rejects_same_version_changes() -> Non
     with get_session_factory()() as session:
         first = import_curated_materials(session, corpus)
         second = import_curated_materials(session, corpus)
-        assert first.created == 7
-        assert first.source_links_created == expected_links
-        assert second.created == 0
-        assert second.unchanged == 7
+        assert first.created == 7 and first.unchanged == 0
+        assert first.source_records_created == 15
+        assert first.source_links_created == expected_links == 15
+        assert (
+            second.created == 0
+            and second.unchanged == 7
+            and second.source_records_created == 0
+            and second.source_links_created == 0
+        )
         assert session.scalar(select(func.count()).select_from(MaterialStory)) == 7
         assert (
             session.scalar(select(func.count()).select_from(MaterialStorySource))

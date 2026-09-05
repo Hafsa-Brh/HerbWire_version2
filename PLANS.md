@@ -9,6 +9,39 @@
 - Detailed product and architecture requirements live in
   `docs/specs/HERBWIRE_SPEC.md`.
 
+## Production Material media import hotfix
+
+Status: Ready for owner review on `fix/material-media-production-import`
+
+### Goal
+
+Make curated Material media validation resolve the same pinned, repository-owned
+image bytes from both the source checkout (`frontend/public`) and the compiled
+production runtime (`frontend/dist`) without changing content or weakening
+checksum validation.
+
+### Boundaries
+
+- No production access, deployment, migration, import, rollback, or configuration.
+- No changes to licensed media bytes, corpus metadata, Plant content, or Discovery
+  content.
+- Reject path traversal and fail closed for missing or checksum-mismatched media.
+
+### Verification required
+
+Reproduce the failure in the unmodified production image; add source/runtime,
+checksum, missing, changed, traversal, and working-directory regression tests;
+run complete backend/frontend checks; build the exact production image; validate
+all seven runtime files and importer idempotency against a disposable database;
+review the final unstaged diff and repository hygiene.
+
+### Verified locally
+
+The unchanged image reproduced all seven failures while the files and checksums
+were present under `frontend/dist`. Focused tests, 143 backend tests, 50 frontend
+tests, linting, type checking, production builds, the final-image media gate, and
+disposable 7/0/15/15 then 0/7/0/0 importer runs passed.
+
 ## Demo Materials & Craft curated-domain increment
 
 Status: In progress and awaiting owner visual review

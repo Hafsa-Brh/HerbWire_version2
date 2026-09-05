@@ -19,6 +19,12 @@ committed plant images, and index.html for unknown frontend routes. Unknown API
 routes remain API 404 responses. Browser API requests are relative and
 therefore same-origin.
 
+Curated Material media keeps one set of licensed bytes. Source-checkout imports
+resolve canonical `/media/materials` paths under `frontend/public`; the final
+runtime resolves the same paths under the Vite-built `frontend/dist`. Resolution
+is application-root based, rejects traversal, and preserves pinned SHA-256
+validation. The Docker build validates all seven files after copying `dist`.
+
 The Heroku manifest defines one image and one web process. Its release phase
 runs only the Alembic upgrade to head. Web startup uses the backend web module,
 binds 0.0.0.0 at Heroku's PORT, and trusts Heroku router forwarded headers.
