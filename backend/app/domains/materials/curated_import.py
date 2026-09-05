@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 from uuid import UUID
 
@@ -14,6 +16,12 @@ from backend.app.models.materials import MaterialStory, MaterialStorySource
 from backend.app.models.source import Source
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
+APPLICATION_ROOT = Path(__file__).resolve().parents[4]
+MATERIAL_MEDIA_ROOTS = (
+    APPLICATION_ROOT / "frontend" / "public",
+    APPLICATION_ROOT / "frontend" / "dist",
+)
 
 
 @dataclass(frozen=True)
@@ -28,14 +36,55 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _validate_media(story) -> None:
-    relative = story.hero_media.local_path.removeprefix("/")
-    path = Path(__file__).resolve().parents[4] / "frontend" / "public" / relative
-    if not path.is_file():
+def resolve_material_media_path(
+    local_path: str, *, media_roots: Sequence[Path] | None = None
+) -> Path:
+    """Resolve one canonical public media path inside an owned application root."""
+    parsed = PurePosixPath(local_path)
+    parts = parsed.parts
+    if (
+        parsed.as_posix() != local_path
+        or len(parts) != 4
+        or parts[:3] != ("/", "media", "materials")
+        or re.fullmatch(r"[a-z0-9-]+\.jpg", parts[3]) is None
+    ):
+        raise ValueError("Material media path is outside the approved local directory.")
+
+    roots = MATERIAL_MEDIA_ROOTS if media_roots is None else tuple(media_roots)
+    relative = Path(*parts[1:])
+    for root in roots:
+        resolved_root = root.resolve()
+        candidate = (resolved_root / relative).resolve()
+        try:
+            candidate.relative_to(resolved_root)
+        except ValueError as error:
+            raise ValueError(
+                "Material media path is outside the approved local directory."
+            ) from error
+        if candidate.is_file():
+            return candidate
+    raise FileNotFoundError(local_path)
+
+
+def _validate_media(story, *, media_roots: Sequence[Path] | None = None) -> None:
+    try:
+        path = resolve_material_media_path(
+            story.hero_media.local_path, media_roots=media_roots
+        )
+    except FileNotFoundError:
         raise ValueError(f"Licensed media is missing for {story.slug}.")
+    except ValueError as error:
+        raise ValueError(f"Licensed media path is invalid for {story.slug}.") from error
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     if digest != story.hero_media.checksum_sha256:
         raise ValueError(f"Licensed media checksum differs for {story.slug}.")
+
+
+def validate_curated_material_media(
+    corpus: CuratedMaterialCorpus, *, media_roots: Sequence[Path] | None = None
+) -> None:
+    for story in corpus.stories:
+        _validate_media(story, media_roots=media_roots)
 
 
 def _registry_source(session: Session, item, now: datetime) -> Source:
@@ -106,8 +155,8 @@ def _source_record(
 def import_curated_materials(
     session: Session, corpus: CuratedMaterialCorpus
 ) -> MaterialImportSummary:
+    validate_curated_material_media(corpus)
     for item in corpus.stories:
-        _validate_media(item)
         existing = session.scalar(
             select(MaterialStory).where(MaterialStory.slug == item.slug)
         )
