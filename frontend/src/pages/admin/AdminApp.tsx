@@ -51,14 +51,14 @@ function AdminShell({ user }: { user: { initials: string; label: string; role: s
   return (
     <div className="min-h-screen bg-paper text-ink">
       <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
           <button className="grid h-9 w-9 place-items-center text-forest md:hidden" onClick={() => setOpen(!open)} aria-label="Toggle admin navigation">{open ? <X size={19} /> : <Menu size={19} />}</button>
           <AdminLogo />
           <div className="hidden items-center gap-3 sm:flex"><Link to="/" className="inline-flex items-center gap-2 border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-muted hover:border-leaf hover:text-leaf"><Eye size={14} /> View public site</Link></div>
         </div>
       </header>
-      <div className="mx-auto flex max-w-[1320px] items-start px-4 sm:px-6 lg:px-8">
-        <aside className={`${open ? "fixed inset-x-4 top-20 z-20 block shadow-xl" : "hidden"} w-64 shrink-0 border border-line bg-paper md:fixed md:bottom-8 md:left-[max(1.5rem,calc((100vw-1320px)/2+1.5rem))] md:top-24 md:block md:overflow-y-auto md:border-0 md:bg-transparent md:py-0 md:shadow-none`}>
+      <div className="mx-auto flex max-w-[1320px] items-start px-3 sm:px-6 lg:px-8">
+        <aside className={`${open ? "fixed inset-x-3 top-20 z-20 block max-h-[calc(100vh-6rem)] overflow-y-auto shadow-xl" : "hidden"} w-auto shrink-0 border border-line bg-paper sm:inset-x-6 md:fixed md:bottom-8 md:left-[max(1.5rem,calc((100vw-1320px)/2+1.5rem))] md:right-auto md:top-24 md:block md:w-64 md:overflow-y-auto md:border-0 md:bg-transparent md:py-0 md:shadow-none`}>
           <div className="flex min-h-full flex-col p-4 md:p-0">
             <p className="hw-eyebrow mb-4">Editorial desk</p>
             <nav className="grid gap-1" aria-label="Editorial navigation">{navItems.map((item) => { const Icon = item.icon; return <NavLink key={item.path} to={item.path} end={item.path === "/admin"} onClick={() => setOpen(false)} className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 font-sans text-sm ${isActive ? "bg-sage/35 font-semibold text-forest" : "text-muted hover:bg-sage/15 hover:text-forest"}`}><Icon size={16} />{item.label}</NavLink> })}</nav>

@@ -38,7 +38,7 @@ export function PubMedRunControl({ onCreated }: { onCreated: () => void }) {
 
   return (
     <Panel eyebrow="Manual authenticated trigger" title="Collect from PubMed">
-      <form onSubmit={submit} className="grid gap-4 sm:grid-cols-5">
+      <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <label className="grid gap-2 font-sans text-xs font-bold text-forest">
           Start date
           <input aria-label="PubMed start date" type="date" required value={startDate} onChange={(event) => setStartDate(event.target.value)} className="min-h-11 border border-line bg-paper px-3 font-normal" />

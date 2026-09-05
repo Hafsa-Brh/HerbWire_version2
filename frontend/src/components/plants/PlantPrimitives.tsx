@@ -12,7 +12,7 @@ export function StatusPill({ children }: { children: string }) {
     : normalized.includes("review") || normalized.includes("held")
       ? "bg-gold/20 text-deep"
       : "bg-rust/15 text-rust"
-  return <span className={"inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[.08em] " + tone}><span className="h-1.5 w-1.5 rounded-full bg-current" />{children}</span>
+  return <span className={"inline-flex max-w-full items-center gap-1.5 rounded-full px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[.08em] " + tone}><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current" />{children}</span>
 }
 
 export function BotanicalImage({ label, image, compact = false }: { label: string; image?: ApiPlantMedia; compact?: boolean }) {
