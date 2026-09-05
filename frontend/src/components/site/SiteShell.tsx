@@ -72,23 +72,23 @@ export function SiteShell({ children }: { children: ReactNode }) {
   return (
     <>
       <div ref={shellRef} className="fixed inset-x-0 top-0 z-40 bg-paper">
-        <div className="border-b border-line bg-deep px-4 py-2 text-center font-sans text-[10px] font-semibold uppercase tracking-[.18em] text-cream">
+        <div className="border-b border-line bg-deep px-3 py-2 text-center font-sans text-[9px] font-semibold uppercase leading-relaxed tracking-[.14em] text-cream sm:px-4 sm:text-[10px] sm:tracking-[.18em]">
           Reviewed medicinal-plant knowledge / safety-qualified and source-led
         </div>
         <header className="border-b border-line bg-paper">
-          <div className="hw-container flex h-[92px] items-center justify-between gap-6">
+          <div className="hw-container flex h-[82px] items-center justify-between gap-2 sm:h-[92px] sm:gap-6">
             <button aria-label="Open menu" className="flex h-10 w-10 items-center justify-start text-forest md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
-            <Link to="/" className="group flex items-center gap-3" aria-label="HerbWire home">
-              <span className="grid h-11 w-11 place-items-center rounded-full border border-leaf/40 text-leaf transition group-hover:bg-sage/30">
+            <Link to="/" className="group flex min-w-0 items-center gap-2 sm:gap-3" aria-label="HerbWire home">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-leaf/40 text-leaf transition group-hover:bg-sage/30 sm:h-11 sm:w-11">
                 <Sprout size={22} strokeWidth={1.6} />
               </span>
-              <span>
-                <span className="block font-serif text-[2rem] font-semibold leading-none tracking-[-.055em] text-deep">
+              <span className="min-w-0">
+                <span className="block font-serif text-[1.65rem] font-semibold leading-none tracking-[-.055em] text-deep sm:text-[2rem]">
                   Herb<span className="text-leaf">Wire</span>
                 </span>
-                <span className="mt-1 block font-sans text-[9px] font-bold uppercase tracking-[.21em] text-muted">Botanical knowledge, honestly grown</span>
+                <span className="mt-1 hidden font-sans text-[9px] font-bold uppercase tracking-[.18em] text-muted min-[390px]:block sm:tracking-[.21em]">Botanical knowledge, honestly grown</span>
               </span>
             </Link>
             <div className="hidden items-center gap-4 md:flex">

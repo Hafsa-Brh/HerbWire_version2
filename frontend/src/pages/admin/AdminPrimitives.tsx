@@ -11,14 +11,14 @@ const statusTone = (status: string) => {
 }
 
 export function AdminStatusPill({ children }: { children: string }) {
-  return <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[.08em] ${statusTone(children)}`}><span className="h-1.5 w-1.5 rounded-full bg-current" />{children}</span>
+  return <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[.08em] ${statusTone(children)}`}><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current" />{children}</span>
 }
 
 export function PageHeader({ eyebrow, title, description, action }: { eyebrow: string; title: string; description?: string; action?: ReactNode }) {
   return (
     <div className="mb-8 flex flex-col justify-between gap-5 border-b border-line pb-7 sm:flex-row sm:items-end">
-      <div><p className="hw-eyebrow">{eyebrow}</p><h1 className="mt-2 font-serif text-4xl font-semibold tracking-[-.045em] text-deep sm:text-5xl">{title}</h1>{description ? <p className="mt-3 max-w-2xl font-serif text-lg leading-relaxed text-muted">{description}</p> : null}</div>
-      {action}
+      <div className="min-w-0"><p className="hw-eyebrow">{eyebrow}</p><h1 className="mt-2 font-serif text-[clamp(2.25rem,9vw,3rem)] font-semibold leading-tight tracking-[-.045em] text-deep">{title}</h1>{description ? <p className="mt-3 max-w-2xl font-serif text-base leading-relaxed text-muted sm:text-lg">{description}</p> : null}</div>
+      {action ? <div className="max-w-full self-start sm:shrink-0 sm:self-auto">{action}</div> : null}
     </div>
   )
 }
@@ -28,7 +28,7 @@ export function Metric({ label, value, detail, icon: Icon = Activity }: { label:
 }
 
 export function Panel({ title, eyebrow, children, className = "" }: { title: string; eyebrow: string; children: ReactNode; className?: string }) {
-  return <div className={`border border-line bg-paper p-5 ${className}`}><div className="mb-3 flex items-end justify-between"><div><p className="hw-eyebrow">{eyebrow}</p><h2 className="mt-1 font-serif text-2xl font-semibold text-deep">{title}</h2></div><ChevronRight size={16} className="text-leaf" /></div>{children}</div>
+  return <div className={`min-w-0 border border-line bg-paper p-4 sm:p-5 ${className}`}><div className="mb-3 flex items-end justify-between gap-3"><div className="min-w-0"><p className="hw-eyebrow">{eyebrow}</p><h2 className="mt-1 font-serif text-2xl font-semibold leading-tight text-deep">{title}</h2></div><ChevronRight size={16} className="shrink-0 text-leaf" /></div>{children}</div>
 }
 
 export function AdminStateCard({ eyebrow = "Editorial desk", title, description, action }: { eyebrow?: string; title: string; description: string; action?: ReactNode }) {

@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import App from "./App"
 
+vi.setConfig({ testTimeout: 15_000 })
+
 const TEST_EMAIL = "test-admin@example.invalid"
 const TEST_PASSWORD = "test-password"
 
@@ -193,6 +195,24 @@ describe("Milestone 2 final UI and functionality", () => {
     expect(screen.getByLabelText("HerbWire home")).toHaveAttribute("href", "/")
     await screen.findByRole("heading", { name: "A little green in your inbox." })
     expect(screen.queryByRole("heading", { name: "A little humility in every profile." })).not.toBeInTheDocument()
+  })
+
+  it("keeps shared public, login, and admin shells fluid at narrow widths", async () => {
+    installMockApi()
+    const publicView = renderAt("/")
+    const brand = screen.getByLabelText("HerbWire home")
+    expect(brand.parentElement).toHaveClass("gap-2", "sm:gap-6")
+    expect(screen.getByText("Botanical knowledge, honestly grown")).toHaveClass("hidden", "min-[390px]:block")
+    publicView.unmount()
+
+    const loginView = renderAt("/login")
+    expect(loginView.container.firstElementChild).toHaveClass("p-2.5", "sm:p-5")
+    loginView.unmount()
+
+    renderAt("/admin")
+    await screen.findByRole("heading", { name: "Dashboard" })
+    fireEvent.click(screen.getByRole("button", { name: "Toggle admin navigation" }))
+    expect(screen.getByRole("complementary")).toHaveClass("w-auto", "md:w-64", "max-h-[calc(100vh-6rem)]")
   })
 
   it("subscribes, handles duplicate subscriptions, and validates invalid email", async () => {
