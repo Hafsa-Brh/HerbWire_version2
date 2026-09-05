@@ -12,10 +12,12 @@ from backend.app.api.routes.materials import router as materials_router
 from backend.app.api.routes.newsletter import router as newsletter_router
 from backend.app.api.routes.plants import router as plants_router
 from backend.app.api.routes.version import router as version_router
+from backend.app.core.http import CanonicalOriginMiddleware
 from backend.app.core.settings import get_settings
 from backend.app.frontend import mount_frontend
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 DEFAULT_FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
@@ -29,6 +31,10 @@ def create_app(frontend_dist: Path | None = None) -> FastAPI:
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
         allow_headers=["*"],
+    )
+    application.add_middleware(CanonicalOriginMiddleware, settings=settings)
+    application.add_middleware(
+        TrustedHostMiddleware, allowed_hosts=settings.allowed_host_values
     )
     application.include_router(version_router, prefix="/api/v1", tags=["system"])
     application.include_router(health_router, prefix="/api/v1", tags=["system"])
@@ -46,7 +52,11 @@ def create_app(frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(
         discovery_editorial_router, prefix="/api/v1", tags=["editorial"]
     )
-    mount_frontend(application, frontend_dist or DEFAULT_FRONTEND_DIST)
+    mount_frontend(
+        application,
+        frontend_dist or DEFAULT_FRONTEND_DIST,
+        public_site_url=settings.public_site_url,
+    )
     return application
 
 

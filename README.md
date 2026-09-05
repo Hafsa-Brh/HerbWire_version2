@@ -15,9 +15,9 @@ Milestone 2 and 2B provide:
 - An idempotent newsletter subscription endpoint and database table. No external email provider is connected.
 - A deterministic, schema-validated 30-profile encyclopedia corpus importer that preserves human editorial state and never auto-publishes.
 
-Heroku provisioning, production identity management, RAG, and live Zyte
-collection are not included. The repository contains staging deployment
-readiness only; no Heroku resource is created by this code.
+RAG, multi-user identity management, and live Zyte collection are not included.
+The deployed PFE/demo keeps a protected single-owner Editorial Desk. It is not
+a general-purpose production identity system.
 
 ## Local setup
 
@@ -66,7 +66,7 @@ npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 The API client aligns local loopback hostnames, so both `http://127.0.0.1:5173` and `http://localhost:5173` can use the HttpOnly editorial session correctly.
 
 For a disposable editorial-review database, run
-.scriptsstart_local_review.ps1 -DatabaseName APPROVED_DISPOSABLE_DATABASE
+`./scripts/start_local_review.ps1 -DatabaseName APPROVED_DISPOSABLE_DATABASE`
 from the repository root. The guarded launcher requires the existing ignored
 root .env, never reads or writes credential values itself, refuses protected
 database names and occupied ports, disables development-only endpoints, and
@@ -90,7 +90,11 @@ The local owner account is configured only through ignored server environment va
 - `HERBWIRE_ADMIN_PASSWORD`
 - `HERBWIRE_SESSION_SECRET`
 
-FastAPI validates the credentials and issues a signed HttpOnly, SameSite session cookie. Editorial endpoints require that session. The frontend does not store credentials or session secrets and does not use a local-editor header bypass. This is a local Milestone 2 authentication boundary, not production user management.
+FastAPI validates the credentials and issues a signed HttpOnly, SameSite session
+cookie. Editorial endpoints require that session. The frontend does not store
+credentials or session secrets and does not use a local-editor header bypass.
+For the PFE/demo deployment, this same protected mechanism is explicitly a
+single-owner Editorial Desk boundary, not multi-user production identity.
 
 ## Verification
 
@@ -141,14 +145,24 @@ Authenticated editorial endpoints include review queue actions, approved-profile
 
 Zyte configuration names exist for a future approved integration, but ordinary Milestone 2B tests and runtime do not call Zyte. No Heroku or Zyte deployment is part of this milestone.
 
-## Heroku staging readiness
+## Heroku deployment readiness
 
 The production container builds React and serves it from the FastAPI process.
 The browser uses same-origin API URLs, the web entry point binds Heroku's
 PORT, and the release phase runs Alembic migrations. The generic 30-profile
 bootstrap remains explicit, import-only, and review-gated. The initial staging
-environment instead uses a one-time sanitized transfer of the already reviewed
-local editorial corpus; it does not create or repeat editorial approvals.
+environment instead uses versioned, auditable transfer artifacts for editorial
+decisions already completed by the owner. Discovery transfer validates all 30
+corpus identities before reproducing only the accepted published state:
+
+```powershell
+python -m backend.app.workers.transfer_accepted_discoveries --dry-run
+python -m backend.app.workers.transfer_accepted_discoveries
+```
+
+The first command is read-only. The live command is atomic and idempotent; it
+refuses unknown content, checksum/version drift, or conflicting editorial state.
+It does not convert arbitrary review records into approvals.
 
 See [Heroku staging deployment](docs/architecture/DEPLOYMENT.md) for the cost
 boundary, required variable names, verification order, proposed Phase 2

@@ -161,7 +161,7 @@ def _source_record(
 
 
 def import_curated_discoveries(
-    session: Session, corpus: CuratedDiscoveryCorpus
+    session: Session, corpus: CuratedDiscoveryCorpus, *, commit: bool = True
 ) -> CuratedImportSummary:
     providers = {
         item.provider for article in corpus.articles for item in article.sources
@@ -380,7 +380,10 @@ def import_curated_discoveries(
             )
             created += 1
             reviews_created += 1
-        session.commit()
+        if commit:
+            session.commit()
+        else:
+            session.flush()
     except Exception:
         session.rollback()
         raise
