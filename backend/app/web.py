@@ -2,6 +2,7 @@ import os
 from collections.abc import Mapping
 
 import uvicorn
+from backend.app.core.settings import get_settings
 
 DEFAULT_PORT = 8000
 
@@ -19,12 +20,15 @@ def runtime_port(environment: Mapping[str, str] | None = None) -> int:
 
 
 def main() -> None:
+    settings = get_settings()
     uvicorn.run(
         "backend.app.main:app",
         host="0.0.0.0",
         port=runtime_port(),
-        proxy_headers=True,
-        forwarded_allow_ips="*",
+        proxy_headers=settings.trust_proxy_headers,
+        # Heroku dynos receive public traffic only through the router. Local runtime
+        # never enables this trust by default.
+        forwarded_allow_ips="*" if settings.trust_proxy_headers else "",
     )
 
 

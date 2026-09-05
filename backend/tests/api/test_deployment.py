@@ -1,6 +1,7 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import backend.app.main as main_module
 import pytest
 from backend.app.api.routes import editorial
 from backend.app.core.auth import (
@@ -23,6 +24,13 @@ def deployed_settings(**overrides) -> Settings:
         "database_url": "postgres://user@db.example.invalid/herbwire",
         "local_database_name": None,
         "frontend_origin": "https://herbwire-staging-hafsa.herokuapp.com",
+        "public_site_url": "https://herbwire-staging-hafsa.herokuapp.com",
+        "allowed_hosts": (
+            "herbwire-staging-hafsa.herokuapp.com,"
+            "www.herbwire-staging-hafsa.herokuapp.com"
+        ),
+        "canonical_host": "herbwire-staging-hafsa.herokuapp.com",
+        "trust_proxy_headers": True,
         "admin_email": "editor@example.invalid",
         "admin_password": "long-staging-password",
         "session_secret": "a" * 32,
@@ -58,6 +66,20 @@ def test_settings_accept_heroku_database_url_variable(
     assert settings.database_url.startswith("postgresql+psycopg://")
 
 
+def domain_settings(**overrides) -> Settings:
+    values = {
+        "frontend_origin": "https://herbwire.dev",
+        "public_site_url": "https://herbwire.dev",
+        "allowed_hosts": (
+            "herbwire.dev,www.herbwire.dev,"
+            "herbwire-staging-hafsa-e3892b1299f5.herokuapp.com"
+        ),
+        "canonical_host": "herbwire.dev",
+    }
+    values.update(overrides)
+    return deployed_settings(**values)
+
+
 @pytest.mark.parametrize(
     ("field", "value"),
     [
@@ -65,6 +87,11 @@ def test_settings_accept_heroku_database_url_variable(
         ("frontend_origin", "http://staging.example.invalid"),
         ("frontend_origin", "https://user@staging.example.invalid"),
         ("frontend_origin", "https://staging.example.invalid/path"),
+        ("public_site_url", "http://herbwire-staging-hafsa.herokuapp.com"),
+        ("canonical_host", "other.example.invalid"),
+        ("allowed_hosts", "*"),
+        ("allowed_hosts", "herbwire-staging-hafsa.herokuapp.com"),
+        ("trust_proxy_headers", False),
         ("admin_password", "short"),
         ("session_secret", "short"),
         ("session_cookie_name", "herbwire_editor_session"),
@@ -110,6 +137,116 @@ def test_compiled_frontend_serves_assets_and_spa_without_intercepting_api() -> N
     assert "console.log" in asset.text
     assert unknown_api.status_code == 404
     assert "HerbWire staging" not in unknown_api.text
+
+
+def test_custom_domain_https_canonicalization_and_recovery_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = domain_settings()
+    monkeypatch.setattr(main_module, "get_settings", lambda: settings)
+    with TemporaryDirectory(prefix=".herbwire-domain-test-", dir=Path.cwd()) as temp:
+        static_dir = Path(temp)
+        (static_dir / "index.html").write_text(
+            "<!doctype html><html><head><title>HerbWire</title></head>"
+            "<body><div id='root'></div></body></html>",
+            encoding="utf-8",
+        )
+        with TestClient(
+            create_app(frontend_dist=static_dir), follow_redirects=False
+        ) as client:
+            apex = client.get(
+                "https://herbwire.dev/discoveries/example?ref=owner",
+                headers={"x-forwarded-proto": "https"},
+            )
+            www = client.get(
+                "https://www.herbwire.dev/materials-and-craft/story?ref=owner",
+                headers={"x-forwarded-proto": "https"},
+            )
+            http_apex = client.get(
+                "http://herbwire.dev/plants/senna?ref=owner",
+                headers={"x-forwarded-proto": "http"},
+            )
+            recovery = client.get(
+                "https://herbwire-staging-hafsa-e3892b1299f5.herokuapp.com/",
+                headers={"x-forwarded-proto": "https"},
+            )
+            untrusted = client.get(
+                "https://attacker.example/", headers={"x-forwarded-proto": "https"}
+            )
+            unknown_api = client.get(
+                "https://herbwire.dev/api/v1/not-a-route",
+                headers={"x-forwarded-proto": "https"},
+            )
+            private = client.get(
+                "https://herbwire.dev/login",
+                headers={"x-forwarded-proto": "https"},
+            )
+
+    assert apex.status_code == 200
+    assert (
+        '<link rel="canonical" href="https://herbwire.dev/discoveries/example" />'
+        in apex.text
+    )
+    assert www.status_code == 308
+    assert www.headers["location"] == (
+        "https://herbwire.dev/materials-and-craft/story?ref=owner"
+    )
+    assert http_apex.status_code == 308
+    assert http_apex.headers["location"] == (
+        "https://herbwire.dev/plants/senna?ref=owner"
+    )
+    assert recovery.status_code == 200
+    assert recovery.headers.get("location") is None
+    assert untrusted.status_code == 400
+    assert unknown_api.status_code == 404
+    assert "<html" not in unknown_api.text.lower()
+    assert private.status_code == 200
+    assert 'name="robots" content="noindex,nofollow"' in private.text
+    assert 'rel="canonical"' not in private.text
+
+
+def test_domain_cors_is_canonical_and_never_wildcarded(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = domain_settings()
+    monkeypatch.setattr(main_module, "get_settings", lambda: settings)
+    with TestClient(create_app()) as client:
+        allowed = client.options(
+            "/api/v1/health",
+            headers={
+                "host": "herbwire.dev",
+                "origin": "https://herbwire.dev",
+                "access-control-request-method": "GET",
+                "x-forwarded-proto": "https",
+            },
+        )
+        denied = client.options(
+            "/api/v1/health",
+            headers={
+                "host": "herbwire.dev",
+                "origin": "https://attacker.example",
+                "access-control-request-method": "GET",
+                "x-forwarded-proto": "https",
+            },
+        )
+
+    assert allowed.status_code == 200
+    assert allowed.headers["access-control-allow-origin"] == "https://herbwire.dev"
+    assert allowed.headers["access-control-allow-credentials"] == "true"
+    assert denied.headers.get("access-control-allow-origin") is None
+    assert allowed.headers["access-control-allow-origin"] != "*"
+
+
+def test_localhost_remains_available_without_proxy_trust(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = Settings(_env_file=None)
+    monkeypatch.setattr(main_module, "get_settings", lambda: settings)
+    with TestClient(create_app(), base_url="http://127.0.0.1") as client:
+        response = client.get("/api/v1/version", headers={"x-forwarded-proto": "http"})
+
+    assert response.status_code == 200
+    assert response.headers.get("location") is None
 
 
 def test_staging_cookie_is_secure_httponly_host_scoped_and_lax() -> None:

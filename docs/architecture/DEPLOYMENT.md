@@ -521,3 +521,96 @@ credit does not roll over, and a payment card is charged for excess use. The
 current offer page still illustrates its allowance with the deprecated Mini
 database name; the current Essential-0 provisioning documentation identifies
 the replacement plan and its $5 maximum. This plan uses no metered add-on.
+
+## PFE/demo production domain and accepted Discovery transfer
+
+The owner explicitly approved retaining the protected single-owner Editorial
+Desk for the PFE/demo deployment. This boundary uses one configured account and
+a signed, Secure, HttpOnly, host-only `__Host-` cookie. It is not a multi-user
+identity, role-management, account-recovery, or general production IAM system.
+Credentials and the session secret remain config-only and must never be printed,
+committed, copied into documentation, or exposed to the frontend.
+
+The following non-secret configuration keys are required before deploying the
+domain-ready release:
+
+- `HERBWIRE_PUBLIC_SITE_URL` identifies the canonical HTTPS origin.
+- `HERBWIRE_CANONICAL_HOST` identifies the apex host.
+- `HERBWIRE_ALLOWED_HOSTS` is the comma-separated exact host allowlist. It must
+  include the apex, `www`, and the verified randomized Heroku hostname.
+- `HERBWIRE_TRUST_PROXY_HEADERS` is enabled only for the Heroku runtime, whose
+  dyno receives public requests through the Heroku router.
+- `HERBWIRE_FRONTEND_ORIGIN` equals the canonical origin. Credentialed CORS
+  remains exact-origin and must never use `*`.
+
+The production policy is `https://herbwire.dev` as canonical. Requests for
+`www.herbwire.dev` redirect once to the equivalent apex path and query. HTTP on
+either custom host redirects directly to the apex HTTPS URL. The randomized
+Heroku hostname remains allowed without canonical redirection for recovery and
+certificate troubleshooting. Localhost and `127.0.0.1` remain local-only
+development hosts. Public SPA responses receive route-specific canonical
+metadata; login and administrative SPA responses receive `noindex,nofollow`.
+Unknown API paths remain API 404 responses.
+
+### Owner-accepted Discovery manifest
+
+`owner_accepted_publication_manifest.json` records the 30 decisions the owner
+previously completed through the local review interface. It contains slugs,
+versions, corpus checksums, PMID/DOI identity, media/source/geography checksums,
+accepted timestamps, expected states, and a manifest checksum. It contains no
+credentials, database URL, local path, raw dump, or named reviewer. The schema
+does not require a reviewer identity; new transferred rows use the existing
+neutral `Local editor` label for the single-owner desk.
+
+The guarded dry run performs no DML:
+
+    heroku run --exit-code "python -m backend.app.workers.transfer_accepted_discoveries --dry-run" --app herbwire-staging-hafsa
+
+After the dry run reports exactly 30 verified records, the authorized atomic
+transfer is:
+
+    heroku run --exit-code "python -m backend.app.workers.transfer_accepted_discoveries" --app herbwire-staging-hafsa
+
+Run the live command twice. A clean first run must report 30 created and 30
+transferred. The second must report zero created/transferred and 30 unchanged.
+Any unknown slug, extra row, missing row, checksum drift, source/media/geography
+mismatch, or non-pending editorial state is a hard stop. Never edit the manifest
+to accommodate an unexpected production row.
+
+### Production execution gates
+
+1. Verify clean merged Git identity, the exact Heroku app/database attachment,
+   stable pre-migration Plant fingerprints, and config-key presence without
+   printing values.
+2. Capture a fresh `DATABASE_URL` Heroku backup, verify its completed identifier,
+   and record the current release.
+3. Set the domain config keys through a secret-safe operator surface. Verify key
+   names only. Do not set a Vite API origin; production API calls are same-origin.
+4. Deploy with the established non-force Git/container workflow. The Heroku
+   release phase runs `alembic upgrade head`; do not run the same migration a
+   second time as a routine step.
+5. Verify Alembic at `20260903_0010` and stable old-content fingerprints. Run the
+   Discovery dry run, the live transfer twice, then the Materials importer twice:
+
+       heroku run --exit-code "python -m backend.app.workers.import_curated_materials" --app herbwire-staging-hafsa
+
+6. Require 30 published Plants, 30 published Discoveries, 7 published Materials,
+   dashboard total 67, working media/detail routes, connected health, protected
+   admin endpoints, and sanitized logs before domain changes.
+7. Add apex and `www` to the verified app and copy each exact Heroku-generated
+   DNS target. Enable ACM. In Name.com, preserve unrelated MX/TXT records, remove
+   only conflicting apex/`www` parking or forwarding records, use an apex
+   ANAME/ALIAS and a `www` CNAME to their respective generated targets, and never
+   use hard-coded Heroku IP addresses.
+8. After propagation, verify DNS, certificate coverage, apex HTTPS, one-hop
+   path/query-preserving `www` redirect, canonical metadata, recovery hostname,
+   authentication, and owner browser acceptance.
+
+Rollback the application to the recorded prior release before considering a
+database restore. Additive schema may remain for an old release. Never downgrade
+`0010` after import without explicit deletion authorization because its downgrade
+drops Material tables. Restore the database only for confirmed data corruption
+after evaluating post-backup writes; never combine release rollback and restore
+blindly. If DNS or ACM fails, keep the Heroku hostname operational and restore
+the recorded Name.com zone state. Do not remove a Heroku domain while DNS still
+targets it and do not disable ACM merely to retry pending issuance.

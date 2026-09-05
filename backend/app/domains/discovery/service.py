@@ -729,6 +729,9 @@ def publish_discovery_article(
     session: Session,
     article_id: uuid.UUID,
     reviewer_name: str,
+    *,
+    commit: bool = True,
+    published_at: datetime | None = None,
 ) -> DiscoveryArticle:
     article = get_discovery_article(session, article_id)
     if article is None:
@@ -808,13 +811,17 @@ def publish_discovery_article(
         raise ValueError("The discovery version is not publication eligible.")
     article.status = "published"
     article.reviewed_at = article.reviewed_at or utc_now()
-    article.published_at = utc_now()
-    article.updated_at = utc_now()
+    publication_time = published_at or utc_now()
+    article.published_at = publication_time
+    article.updated_at = publication_time
     article.reviews[0].reviewer_name = (
         reviewer_name.strip() or article.reviews[0].reviewer_name or "Editor"
     )
     try:
-        session.commit()
+        if commit:
+            session.commit()
+        else:
+            session.flush()
     except Exception:
         session.rollback()
         raise
