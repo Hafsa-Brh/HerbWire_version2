@@ -1,4 +1,221 @@
+# Pipeline corrections and restart recovery (2026-09-08)
+
+Status: Complete and awaiting owner review on `feat/sequential-plant-pipeline`;
+all work remains unstaged and uncommitted.
+
+## Intended outcome
+
+- Make both Pipelines result panels empty in a fresh browser session and show
+  only persisted drafts from the run launched in that session: linked title and
+  compact editorial status, plus a discreet running indicator while active.
+- Centralize botanical identity matching across every Plant, revision,
+  structured Discovery subject, explicit Plant relationship, and both pipeline
+  reservation tables. Incidental prose remains outside the identity rule.
+- Protect ten fully ready candidates per domain. Exact 1-10 launches are atomic
+  and accepted only when the complete requested batch leaves that reserve;
+  `All available` means the eligible surplus, capped at ten. Rejection creates
+  no run or reservation and never exposes capacity or candidate identity.
+- Package at least twenty currently eligible, source-complete candidates per
+  domain so a clean full ten-item demonstration still leaves ten.
+- Add startup recovery within the existing single-web-process modular monolith:
+  claim only queued or lease-expired runs, resume at the first incomplete
+  committed stage, and retain the existing manual retry only as a fallback.
+
+## Expected changes
+
+- Existing pipeline models, one additive Alembic revision after
+  `20260907_0012`, a shared botanical-identity domain service, both bounded
+  orchestrators/routes/schemas, and focused backend tests.
+- The shared Pipelines page hook/result component and focused frontend tests.
+- Both finite catalogue files plus isolated new licensed media files only.
+- This plan and the existing Plant, Discovery, and deployment architecture
+  documents. No unrelated public content or homepage-carousel code changes.
+
+## Risks and assumptions
+
+- Catalogue entries fail closed unless taxonomy, primary evidence, limitations,
+  safety framing, geography, photographic licensing, dimensions, local path,
+  and checksum all validate.
+- A Heroku process cannot survive being killed; correctness comes from durable
+  PostgreSQL stage boundaries and automatic recovery when the replacement web
+  process starts. A fresh unexpired lease is never stolen.
+- The protected owner database is read-only except for the later additive
+  migration/runtime startup explicitly needed for final owner review. Existing
+  drafts and editorial decisions are not altered.
+
+## Verification gate
+
+Focused eligibility/reserve/recovery and UI tests; full backend/frontend suites;
+Ruff, ESLint, TypeScript, production build; fresh/0012/round-trip migrations and
+Alembic drift; disposable ten-item plans and interrupted-process recovery;
+corpus/media/carousel fingerprints; repository hygiene and a final diff review.
+
+## Completion evidence for this correction
+
+- The protected owner database upgraded additively from 0012 to 0013. Existing
+  Plant, Discovery, source-link, review, Material, and pipeline-item counts and
+  fingerprints were unchanged; only the `pipeline_runs` composite-row hash
+  changed because 0013 adds the nullable lease-owner column.
+- Read-only owner-state previews prove 20 eligible Plant candidates and 20
+  eligible Discovery candidates. Each exact ten-item plan is accepted and leaves
+  ten. Focused integration tests prove reserve-crossing rejection writes no run,
+  item, reservation, draft, review, or source relationship.
+- Both stale-boundary replay tests and separate replacement-Python-process tests
+  passed for Plant and Discovery recovery. Replaying a completed recovery claim
+  leaves draft, review, source, event/link, item, and reservation counts unchanged.
+- Backend: Ruff check and format check passed; 171 tests passed (two upstream
+  deprecation warnings). Frontend: ESLint and TypeScript passed, 53 tests passed,
+  and the production build passed. The production Dockerfile built successfully
+  and validated all 25 Plant and 20 Discovery packages from the dist-only image
+  layout.
+- Migration verification passed fresh-to-head, 0012-to-0013,
+  0013-to-0012-to-0013, and Alembic drift check. Disposable databases and the
+  temporary verification image were removed afterward.
+- The carousel component remains byte-identical at SHA-256
+  `af87603285879252a2dbc91c8169858f1ea6613a9e2172b6d456c46c94a69e98`.
+  Browser automation could not start because its Windows sandbox failed before
+  connection, so subjective viewport acceptance remains for the owner.
+# Unified Plant and Discovery Pipelines (2026-09-07)
+Status: Complete and awaiting owner review on `feat/sequential-plant-pipeline`.
+
+
+
+- Preserve the verified dirty Plant milestone and protected owner-review data while replacing the single-purpose desk surface with one canonical authenticated `/admin/pipelines` page. `/admin/plant-pipeline` redirects to it, and detailed run history remains solely on Pipeline Runs.
+- Reuse the existing PubMed collection contracts, normalization/deduplication rules, rich curated Discovery contract, source/event/article/review persistence, and human publication state machine. Add only a bounded version-controlled set of vetted PubMed source packages and a persisted sequential Discovery batch orchestrator.
+- Use the existing one-web-process background model for both domains: one click starts a complete bounded batch, polling is read-only, every stage commits, and PostgreSQL enforces one active editorial generation run across Plant and Discovery domains. The later 2026-09-08 correction adds automatic expired-lease recovery.
+- Keep upcoming Plant and Discovery identities backend-only. The later 2026-09-08 correction also removes exact capacity from frontend responses; generated titles become visible only after persistence.
+- Restore the Plant release-readiness reserve to at least ten eligible packages in the protected owner-review state by adding source-complete Kew/EMA/Commons candidates. The finite catalogue stops honestly when exhausted.
+- Verification covers migrations from `20260907_0011`, cross-pipeline concurrency, sequencing/idempotency/recovery, private Discovery creation, complete backend/frontend suites, unchanged public-content fingerprints, and exact homepage-carousel preservation.
+
+### Expected continuation changes
+
+- `PLANS.md`, `README.md`, `docs/architecture/DISCOVERY_4A.md`,
+  `docs/architecture/SEQUENTIAL_PLANT_PIPELINE.md`, and the affected local-runtime
+  note in `docs/architecture/DEPLOYMENT.md`.
+- One additive Alembic revision after `20260907_0011`, focused shared pipeline
+  item/API/orchestrator code, two fully validated Plant catalogue packages, and
+  their isolated new licensed photographs.
+- A canonical `PipelinesPage` with reusable typed section primitives, admin
+  route/navigation updates, and focused backend/frontend tests.
+
+### Risks and assumptions
+
+- In-process background work is honest but not durable across a web-process
+  restart; persisted stage boundaries and explicit retry are the recovery path.
+- The Discovery automation catalogue is finite and deliberately small. It uses
+  verified PubMed metadata/source extracts and existing licensed Plant media;
+  it does not turn arbitrary live search results into finished articles.
+- Existing owner editorial decisions are authoritative even where they changed
+  after the prompt snapshot; implementation and tests must not rewrite them.
+
+### Completion evidence
+
+- Additive migration `20260907_0012` passed fresh upgrade, 0011 upgrade,
+  downgrade/upgrade round trip, and Alembic drift checks in the disposable
+  database.
+- Backend suite passed 165 tests. Frontend passed 53 tests, ESLint, TypeScript,
+  and the production build.
+- The protected owner database retained 35 published Plants, 30 published
+  Discoveries, seven Materials, and four preserved Plant runs. One new
+  successful Discovery run created one private review draft and no public row.
+- Published-corpus fingerprints and the curated carousel SHA-256 remained
+  unchanged. Browser automation could not connect because the local browser
+  harness was unavailable; owner visual review remains required.
+
+
+# Sequential Plant Pipeline corrections (2026-09-07)
+
+- Proven cause: the only multi-profile owner run requested two after Yarrow and Hop had consumed two of the three vetted candidates. The run truthfully stored one selected candidate but the UI allowed an ambiguous launch. This was catalogue exhaustion plus unclear partial-batch semantics, not a sequential-loop defect.
+- Expand the bounded catalogue with ten Kew/EMA/Commons-verified candidates, expose total vetted and currently eligible capacity, accept 1-10 or all available, and require explicit consent before planning fewer candidates than requested.
+- Reserve the complete batch transactionally, persist requested/available/planned/completed/held/failed/remaining counts, and execute all candidate stages sequentially in one in-process FastAPI background task with fresh database sessions per step. Polling becomes read-only. A process restart may interrupt execution; persisted leases and explicit retry safely resume from the failed boundary.
+- Order public Plant and Discovery archives by `published_at DESC` with stable ID tie-breaking before pagination. Feed the homepage Plant and secondary Discovery sections from that order while pinning the existing three hero-carousel Discovery slugs and order.
+- Add focused backend/frontend regressions for capacity, partial consent, all-available selection, batches through ten, sequential timing, polling independence, recovery/idempotency, newest-first ordering, private exclusion, homepage selection, and exact carousel preservation.
+
 # HerbWire V2 Execution Plans
+
+## Sequential Plant Profile Automation
+
+Status: Complete and awaiting owner review on `feat/sequential-plant-pipeline`
+
+### Intended outcome
+
+Add an authenticated Editorial Desk page named **Plant Pipeline** that creates
+one to ten, or all available, genuinely new source-led Plant drafts in strict sequence.
+Every successful candidate ends as a private `needs_review` Plant and existing
+editorial review item. The pipeline never approves, promotes, publishes, or
+changes existing public content.
+
+### Inspected baseline and design
+
+- Start point: clean `main` at `630f97c137485a310477a16e6b94e66a9634113c`;
+  local `main` and the local `origin/main` tracking ref matched before branching.
+- The existing 30 Plants are validated deterministic corpus imports. A new Plant
+  follows the established canonical private draft plus `EditorialReview` path;
+  `PlantProfileRevision` remains reserved for proposals against an existing Plant.
+- Existing `PipelineRun` storage is reused. An additive migration supplies
+  candidate ordinals, stage timestamps/running state, per-run candidate items,
+  resumable leases, database-enforced single-active-run protection, and final
+  accepted-taxon/scientific-name race protection.
+- The one-web-process deployment starts a bounded in-process background task;
+  read-only polling reports database-persisted progress. No worker, scheduler,
+  queue, paid API, hosted LLM, or new service is introduced.
+- Exact per-candidate order: `Normalization and Deduplication`,
+  `Collector Gateway`, `Botanical Resolver`,
+  `Evidence, Safety, and Provenance`, `Media & Geography Agent`,
+  `Content Composer`, `Editorial QA`, then the persistence stage
+  `Queue editorial review`.
+- Execution is strictly sequential and fail-fast after a recorded failure/hold.
+  Every stage boundary commits. Closing or refreshing the desk does not stop a healthy
+  task. A web-process restart interrupts in-memory execution; persisted leases and the
+  authenticated Resume/Retry action recover the same run at a safe stage boundary.
+
+### Ordered work
+
+1. Add a small candidate-key catalogue, separately validated source packages,
+   and new licensed candidate photographs without changing existing media.
+2. Centralize Unicode/name/synonym/taxon eligibility across Plants, revisions,
+   explicit Discovery botanical subjects and relationships; ignore incidental prose.
+3. Add the additive migration and typed stage/orchestrator contracts.
+4. Add authenticated preview/current/start/advance/retry/read admin endpoints.
+5. Add the responsive **Plant Pipeline** desk page and review quality-gate panel.
+6. Add unit, integration, API, migration, frontend, and corpus regression tests.
+7. Update README/deployment architecture, run safe verification, and review diff.
+
+### Files expected to change
+
+- `PLANS.md`, `README.md`, `docs/architecture/DEPLOYMENT.md`, and one focused
+  pipeline architecture note under `docs/architecture/`.
+- One Alembic revision, `backend/app/models/encyclopedia.py`, focused modules
+  under the existing encyclopedia/pipeline domains, and admin routes/schemas.
+- A small encyclopedia candidate/source-package data set and new files only under
+  `frontend/public/media/plants/` for candidate photos.
+- Existing frontend admin API/routing plus one focused Plant Pipeline page.
+- Focused backend/frontend tests. Homepage carousel implementation is untouched.
+
+### Risks and assumptions
+
+- Deterministic curated source packages are required for a reliable one-web demo;
+  provider failures remain explicit and testable, but no durable unattended work
+  is claimed while the owner is absent.
+- Source, media, safety, and eligibility checks fail closed. Pipeline success
+  means private review readiness only.
+- Activating the previously postponed Media & Geography Agent is within this
+  explicitly approved milestone because it performs genuine validation.
+
+### Verification and recovery
+
+Run backend Ruff/format/tests, frontend lint/typecheck/tests/build, migration
+fresh/upgrade/downgrade/check, disposable pipeline/concurrency/idempotency tests,
+public corpus fingerprints/counts, and responsive local runtime checks. All work
+remains unstaged/uncommitted. The additive downgrade removes only new pipeline
+state and restores the previous stage constraint.
+
+### Best next action
+
+Finish implementation and disposable verification, then leave the safe local
+review runtime running for owner inspection without deploying, committing, or
+pushing.
+
 
 ## Rules
 

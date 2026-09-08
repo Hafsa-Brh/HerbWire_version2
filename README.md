@@ -167,3 +167,27 @@ It does not convert arbitrary review records into approvals.
 See [Heroku staging deployment](docs/architecture/DEPLOYMENT.md) for the cost
 boundary, required variable names, verification order, proposed Phase 2
 commands, and destructive exit plan.
+
+## Unified editorial pipelines
+
+The authenticated Editorial Desk now includes `/admin/pipelines`, with bounded
+Plant and Discovery generation sections. The finite catalogues contain 25 vetted
+Plant packages and 20 unique PubMed Discovery packages; future identities and
+exact capacity remain backend-only. Exact batches contain one to ten private
+review drafts. `All available` means only the runnable surplus above a protected
+ten-candidate reserve and is capped at ten. No workflow uses an LLM or paid API.
+
+One authenticated launch transaction reserves the complete batch and returns
+before a bounded in-process executor advances candidates in strict sequence;
+browser polling only reads persisted progress. PostgreSQL enforces one active
+editorial generation run across both domains, global botanical-identity
+reservations, and source/content uniqueness. A startup supervisor automatically
+reclaims only queued or expired work and resumes at the first incomplete
+committed stage. Work pauses while no web process exists and resumes after its
+replacement starts and the old lease expires; this is restart recovery, not a
+second worker or zero-downtime queue. Human approval and the separate publish
+action remain mandatory.
+
+See [Sequential Plant Profile Automation](docs/architecture/SEQUENTIAL_PLANT_PIPELINE.md)
+and [Discovery pipeline architecture](docs/architecture/DISCOVERY_4A.md) for stage
+responsibilities, source rules, durability limits, and the review boundary.

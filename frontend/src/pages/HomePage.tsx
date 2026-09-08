@@ -12,13 +12,19 @@ import { RouteState } from "../components/site/RouteState"
 import { Footer, SiteShell } from "../components/site/SiteShell"
 import { useAsyncResource } from "../hooks/useAsyncResource"
 
+const HOMEPAGE_HERO_DISCOVERY_SLUGS = [
+  "st-johns-wort-36246064-evidence-interactions-review",
+  "pomegranate-38553998-crp-meta-analysis",
+  "lemon-balm-38868804-neuropathy-trial",
+] as const
 const SUBSCRIBE_DECOR =
   "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9ABW0EekEPGKkE7l42ImkKQOCQPQa0.png"
-const HOMEPAGE_EXCLUDED_DISCOVERY_SLUG = "amla-36934568-cardiometabolic-meta-analysis"
 const HOMEPAGE_LEAD_MATERIAL_SLUG = "wood-grain-carving-hand-tools"
 
 function selectHomepageDiscoveries(items: ApiPublicDiscoveryArticle[]) {
-  return items.filter((article) => article.slug !== HOMEPAGE_EXCLUDED_DISCOVERY_SLUG).slice(0, 3)
+  const bySlug = new Map(items.map((article) => [article.slug, article]))
+  return HOMEPAGE_HERO_DISCOVERY_SLUGS.map((slug) => bySlug.get(slug))
+    .filter((article): article is ApiPublicDiscoveryArticle => Boolean(article))
 }
 
 function selectHomepageMaterials(items: Awaited<ReturnType<typeof fetchMaterials>>["items"]) {
@@ -43,7 +49,7 @@ export function HomePage() {
         {hasError ? <RouteState eyebrow="HerbWire / interrupted" title="The wire paused unexpectedly." description="We could not load the reviewed archive right now. Try the front page again in a moment." primaryAction={{ label: "Try again", onClick: () => { plants.reload(); discoveries.reload() } }} secondaryAction={{ label: "Browse plants", to: "/plants" }} /> : null}
         {!isLoading && !hasError && homepageDiscoveries.length ? <HomeDiscoveryCarousel items={homepageDiscoveries} /> : null}
         {!isLoading && !hasError && !discoveryList.length ? <RouteState eyebrow="HerbWire / discoveries" title="No published discoveries yet." description="Only explicitly published editorial work can appear on the homepage." primaryAction={{ label: "Browse plants", to: "/plants" }} /> : null}
-        {!isLoading && !hasError ? <LatestDiscoveries items={discoveryList.slice(4, 7)} /> : null}
+        {!isLoading && !hasError ? <LatestDiscoveries items={discoveryList.slice(0, 3)} /> : null}
         <HomeMaterialsCarousel
           items={selectHomepageMaterials(materials.data?.items ?? [])}
           isLoading={materials.isLoading}

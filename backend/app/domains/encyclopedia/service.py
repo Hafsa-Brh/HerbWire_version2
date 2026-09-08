@@ -225,6 +225,81 @@ def _replace_profile_sources(
         )
 
 
+def create_automated_profile_draft(
+    session: Session,
+    item: CorpusProfile,
+    sources: list[SourceManifest],
+    quality_gates: dict[str, dict],
+    *,
+    pipeline_run_id: UUID,
+    collected_at: datetime,
+) -> tuple[PlantProfile, EditorialReview]:
+    """Create a new private profile and review without approval or publication."""
+    if session.scalar(
+        select(PlantProfile.id).where(
+            or_(
+                PlantProfile.slug == item.slug,
+                func.lower(PlantProfile.taxon_identifier)
+                == item.taxon_identifier.lower(),
+                func.lower(PlantProfile.accepted_scientific_name)
+                == item.accepted_scientific_name.lower(),
+            )
+        )
+    ):
+        raise ValueError("The Plant candidate is already represented.")
+
+    source_by_id = {source.external_identifier: source for source in sources}
+    records = {
+        source_id: _get_or_create_source_record(session, source_by_id[source_id])
+        for source_id in sorted(source_by_id)
+    }
+    now = utc_now()
+    for record in records.values():
+        record.collected_at = collected_at
+        record.updated_at = now
+        record.parser_version = "plant-pipeline-catalog-v1"
+    profile = PlantProfile(
+        slug=item.slug,
+        status="needs_review",
+        version=item.content_version,
+        approved_at=None,
+        published_at=None,
+        last_reviewed_at=None,
+        created_at=now,
+        updated_at=now,
+        **_profile_values(item),
+    )
+    session.add(profile)
+    session.flush()
+    for reference in item.source_refs:
+        session.add(
+            PlantProfileSource(
+                plant_profile_id=profile.id,
+                source_record_id=records[reference.source_id].id,
+                support_role=reference.support_role,
+                note=reference.provenance_notes,
+            )
+        )
+    review = EditorialReview(
+        plant_profile_id=profile.id,
+        content_type="plant_profile",
+        status="needs_review",
+        review_payload={
+            "pipeline_run_id": str(pipeline_run_id),
+            "quality_gates": quality_gates,
+            "source_count": len(records),
+            "media_review_required": True,
+            "publication_boundary": (
+                "Human approval and a separate explicit publish action are required."
+            ),
+        },
+        created_at=now,
+    )
+    session.add(review)
+    session.flush()
+    return profile, review
+
+
 def seed_curated_profiles(
     session: Session,
     batch: str | None = None,
@@ -417,7 +492,7 @@ def list_published_profiles(
                 PlantProfileSource.source_record
             )
         )
-        .order_by(PlantProfile.display_common_name)
+        .order_by(PlantProfile.published_at.desc(), PlantProfile.id.asc())
         .offset((page - 1) * page_size)
         .limit(page_size)
     )

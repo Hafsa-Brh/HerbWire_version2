@@ -18,6 +18,7 @@ RUN pip install --no-cache-dir .
 COPY --from=frontend-build /build/frontend/dist ./frontend/dist
 
 RUN python -c "from backend.app.domains.materials.corpus import load_curated_material_corpus; from backend.app.domains.materials.curated_import import validate_curated_material_media; validate_curated_material_media(load_curated_material_corpus())"
+RUN python -c "from backend.app.domains.encyclopedia.plant_pipeline_catalog import load_plant_pipeline_catalog; from backend.app.domains.discovery.pipeline_catalog import load_discovery_pipeline_catalog; load_plant_pipeline_catalog(); load_discovery_pipeline_catalog()"
 
 RUN addgroup --system herbwire \
     && adduser --system --ingroup herbwire herbwire \

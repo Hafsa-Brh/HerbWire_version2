@@ -290,7 +290,7 @@ describe("Milestone 4B discovery UI", () => {
     expect(within(workspace).getByText(/final eight/)).toBeInTheDocument()
   })
 
-  it("renders stage failures and submits only bounded PubMed trigger fields", async () => {
+  it("keeps detailed stage failures on Pipeline Runs without a duplicate launch control", async () => {
     const run = {
       id: "run-1",
       pipeline_type: "pubmed_discovery_review",
@@ -329,18 +329,7 @@ describe("Milestone 4B discovery UI", () => {
     renderAt("/admin/runs")
 
     expect(await screen.findByText(/pubmed_transport_error: PubMed timed out safely/)).toBeInTheDocument()
-    fireEvent.change(screen.getByLabelText("Maximum PubMed records"), { target: { value: "3" } })
-    fireEvent.click(screen.getByRole("button", { name: "Run once" }))
-    await waitFor(() => {
-      const call = vi.mocked(fetch).mock.calls.find(([input]) =>
-        String(input).endsWith("/api/v1/admin/discovery/runs"),
-      )
-      expect(JSON.parse(String(call?.[1]?.body))).toMatchObject({
-        source: "pubmed",
-        max_records: 3,
-      })
-      expect(JSON.parse(String(call?.[1]?.body))).not.toHaveProperty("url")
-    })
+    expect(screen.queryByLabelText("Maximum PubMed records")).not.toBeInTheDocument()
   })
 
   it("renders public error recovery and discovery queue pagination", async () => {
