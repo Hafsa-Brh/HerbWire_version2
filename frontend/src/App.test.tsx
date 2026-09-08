@@ -565,4 +565,30 @@ describe("Milestone 2 final UI and functionality", () => {
     await screen.findByRole("heading", { name: "The encyclopedia API is unavailable." })
     fireEvent.click(screen.getByRole("button", { name: "Try again" }))
     await screen.findByRole("heading", { name: "Peppermint" })
-  })})
+  })
+
+  it("renders honest publication dates on Plant archive cards only", async () => {
+    const second = {
+      ...publishedPlant,
+      id: "plant-date-2",
+      slug: "lemon-balm-date",
+      display_common_name: "Lemon balm date",
+      accepted_scientific_name: "Melissa officinalis L.",
+      published_at: "2026-09-08T09:30:00Z",
+    }
+    const missing = {
+      ...publishedPlant,
+      id: "plant-date-missing",
+      slug: "undated-plant",
+      display_common_name: "Undated plant",
+      published_at: null as never,
+    }
+    installMockApi({ plants: [publishedPlant, second, missing] })
+    renderAt("/plants")
+
+    await screen.findByRole("heading", { name: "Peppermint" })
+    expect(screen.getByText(new Date(publishedPlant.published_at).toLocaleDateString())).toBeInTheDocument()
+    expect(screen.getByText(new Date(second.published_at).toLocaleDateString())).toBeInTheDocument()
+    expect(screen.queryByText(/invalid date/i)).not.toBeInTheDocument()
+  })
+})

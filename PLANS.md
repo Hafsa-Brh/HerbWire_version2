@@ -259,6 +259,20 @@ were present under `frontend/dist`. Focused tests, 143 backend tests, 50 fronten
 tests, linting, type checking, production builds, the final-image media gate, and
 disposable 7/0/15/15 then 0/7/0/0 importer runs passed.
 
+## Pipeline publication and newest-first correction
+
+Status: Ready for owner review on fix/pipeline-publication-and-ordering
+
+The pipeline intentionally persists automated Discovery origin while publication
+currently accepts only curated origin. Validate automated origin through persisted
+pipeline ownership and successful quality gates without admitting synthetic or
+unowned content. Show real publication dates on Plant archive cards, preserve
+database-level newest-first ordering, and keep the curated homepage Discovery
+carousel byte-identical.
+
+No schema change is expected. Use disposable PostgreSQL data and preserve all
+owner records and editorial decisions.
+
 ## Demo Materials & Craft curated-domain increment
 
 Status: In progress and awaiting owner visual review

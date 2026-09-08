@@ -93,6 +93,45 @@ def test_requested_count_runs_in_background_and_persists_exact_batch(client, cou
         )
 
 
+def test_pipeline_generated_plant_can_be_approved_then_published(client):
+    with get_session_factory()() as session:
+        run = start_run(session, 1, str(uuid.uuid4()))
+        run_id, owner = run.id, run.lease_owner
+    execute_run_to_terminal(run_id, owner)
+
+    with get_session_factory()() as session:
+        item = session.scalar(
+            select(PlantPipelineItem).where(PlantPipelineItem.pipeline_run_id == run_id)
+        )
+        assert item is not None
+        assert item.plant_profile_id is not None
+        assert item.review_id is not None
+        profile_id, review_id = item.plant_profile_id, item.review_id
+        profile = session.get(PlantProfile, profile_id)
+        assert profile is not None and profile.status == "needs_review"
+        assert profile.published_at is None
+
+    login(client)
+    approved = client.post(
+        f"/api/v1/admin/reviews/{review_id}/approve",
+        json={"reviewer_name": "Pipeline publication test"},
+    )
+    assert approved.status_code == 200
+    assert approved.json()["status"] == "approved"
+    assert (
+        client.get(
+            f"/api/v1/plants/{approved.json()['plant_profile']['slug']}"
+        ).status_code
+        == 404
+    )
+
+    published = client.post(f"/api/v1/admin/plants/{profile_id}/publish")
+    assert published.status_code == 200
+    assert published.json()["status"] == "published"
+    assert published.json()["published_at"] is not None
+    assert client.get(f"/api/v1/plants/{published.json()['slug']}").status_code == 200
+
+
 def test_full_ten_item_batch_leaves_protected_ten_and_rejection_is_zero_write():
     with get_session_factory()() as session:
         first = start_run(session, 5, str(uuid.uuid4()))

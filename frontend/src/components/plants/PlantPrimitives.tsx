@@ -81,7 +81,14 @@ export function BotanicalDistributionMap({ name, distribution, sourceUrl, source
     <figcaption className="mt-3 font-sans text-[10px] leading-relaxed text-muted">Country-level overview aggregated from validated botanical distribution records; subnational botanical regions are not implied to cover an entire country uniformly. Distribution: {sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-leaf hover:text-forest">{sourceLabel || "source record"}</a> : "profile provenance"}. Basemap: <a href="https://github.com/VictorCazanave/svg-maps/tree/master/packages/world" target="_blank" rel="noreferrer" className="font-bold text-leaf hover:text-forest">SVG Maps World</a>, CC BY 4.0.</figcaption>
   </figure>
 }
-export function PlantCard({ plant }: { plant: ApiPlantListItem }) {
+function formatPublishedDate(value: string | null): string | null {
+  if (!value) return null
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? null : date.toLocaleDateString()
+}
+
+export function PlantCard({ plant, showPublishedDate = false }: { plant: ApiPlantListItem; showPublishedDate?: boolean }) {
+  const publishedDate = showPublishedDate ? formatPublishedDate(plant.published_at) : null
   return (
     <article className="group">
       <Link to={"/plants/" + plant.slug} className="block">
@@ -95,7 +102,7 @@ export function PlantCard({ plant }: { plant: ApiPlantListItem }) {
           <p className="mt-2 font-serif text-sm italic text-muted">{plant.accepted_scientific_name}</p>
           <p className="mt-3 font-serif text-[15px] leading-relaxed text-muted">{plant.summary}</p>
           <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-sans text-[11px] text-muted">
-            <span>{plant.source_count} provenance sources</span><span aria-hidden="true">/</span><span className="inline-flex items-center gap-1 font-sans text-xs font-bold text-leaf">Read profile <ArrowUpRight size={14} /></span>
+            {publishedDate ? <><span>{publishedDate}</span><span aria-hidden="true">/</span></> : null}<span>{plant.source_count} provenance sources</span><span aria-hidden="true">/</span><span className="inline-flex items-center gap-1 font-sans text-xs font-bold text-leaf">Read profile <ArrowUpRight size={14} /></span>
           </div>
         </div>
       </Link>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { decideDiscovery, fetchDiscoveryReviews, type ApiDiscoveryArticle } from "../../api/discoveries"
+import { ApiRequestError } from "../../api/plants"
 import { DiscoveryBotanicalDistribution, DiscoveryResearchGeography } from "../../components/discoveries/DiscoveryMaps"
 import { useAsyncResource } from "../../hooks/useAsyncResource"
 import { AdminStateCard, AdminStatusPill, PageHeader, Panel } from "./AdminPrimitives"
@@ -85,7 +86,7 @@ export function DiscoveryReviewQueue() {
     if (!window.confirm(`Confirm: ${targetArticle.headline} version ${targetArticle.version}: ${targetArticle.status} → ${target}?`)) return
     setPending(true); setMessage("")
     try { await decideDiscovery(targetArticle.id, action, action === "approve" || action === "publish" ? undefined : reason); setMessage(action === "publish" ? "Discovery published after its separate approval." : action === "approve" ? "Discovery approved; publication remains a separate action." : action === "hold" ? "Discovery held and remains non-public." : "Discovery rejected and remains non-public."); data.reload() }
-    catch { setMessage("The editorial action was rejected or could not be saved.") }
+    catch (error) { setMessage(error instanceof ApiRequestError ? error.message : "The editorial action was rejected or could not be saved.") }
     finally { setPending(false) }
   }
 
