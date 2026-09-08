@@ -122,7 +122,7 @@ def _revision_subject(revision: PlantProfileRevision) -> BotanicalSubject:
     )
 
 
-def _event_subject(event: DiscoveryEvent) -> BotanicalSubject | None:
+def subject_from_discovery_event(event: DiscoveryEvent) -> BotanicalSubject | None:
     identity = event.evidence_package.get("botanical_identity") or {}
     if not isinstance(identity, dict):
         return None
@@ -162,7 +162,11 @@ def _snapshot_subject(snapshot: dict) -> BotanicalSubject | None:
 
 
 def existing_identity_keys(
-    session: Session, *, exclude_run_id: uuid.UUID | None = None
+    session: Session,
+    *,
+    exclude_run_id: uuid.UUID | None = None,
+    exclude_discovery_article_id: uuid.UUID | None = None,
+    exclude_reservation_owner: tuple[uuid.UUID, str] | None = None,
 ) -> set[str]:
     """Return only structured botanical identities; article prose is never searched."""
     keys: set[str] = set()
@@ -171,25 +175,41 @@ def existing_identity_keys(
     for revision in session.scalars(select(PlantProfileRevision)).all():
         keys.update(subject_identity_keys(_revision_subject(revision)))
     for event in session.scalars(select(DiscoveryEvent)).all():
-        if subject := _event_subject(event):
+        if (
+            exclude_discovery_article_id is not None
+            and event.article is not None
+            and event.article.id == exclude_discovery_article_id
+        ):
+            continue
+        if subject := subject_from_discovery_event(event):
             keys.update(subject_identity_keys(subject))
     for relationship in session.scalars(select(DiscoveryArticlePlant)).all():
+        if relationship.discovery_article_id == exclude_discovery_article_id:
+            continue
         profile = session.get(PlantProfile, relationship.plant_profile_id)
         if profile is not None:
             keys.update(subject_identity_keys(_profile_subject(profile)))
 
-    reservation_query = select(PipelineBotanicalReservation.identity_key)
-    if exclude_run_id is not None:
-        reservation_query = reservation_query.where(
-            PipelineBotanicalReservation.pipeline_run_id != exclude_run_id
-        )
-    keys.update(session.scalars(reservation_query).all())
+    for reservation in session.scalars(select(PipelineBotanicalReservation)).all():
+        if exclude_run_id is not None and reservation.pipeline_run_id == exclude_run_id:
+            continue
+        if exclude_reservation_owner == (
+            reservation.pipeline_run_id,
+            reservation.candidate_key,
+        ):
+            continue
+        keys.add(reservation.identity_key)
 
     for model in (PlantPipelineItem, DiscoveryPipelineItem):
         query = select(model)
         if exclude_run_id is not None:
             query = query.where(model.pipeline_run_id != exclude_run_id)
         for item in session.scalars(query).all():
+            if (
+                isinstance(item, DiscoveryPipelineItem)
+                and item.discovery_article_id == exclude_discovery_article_id
+            ):
+                continue
             if subject := _snapshot_subject(item.candidate_snapshot):
                 keys.update(subject_identity_keys(subject))
     return keys
@@ -200,6 +220,8 @@ def check_subject_eligibility(
     subject: BotanicalSubject,
     *,
     exclude_run_id: uuid.UUID | None = None,
+    exclude_discovery_article_id: uuid.UUID | None = None,
+    exclude_reservation_owner: tuple[uuid.UUID, str] | None = None,
     batch_keys: set[str] | None = None,
 ) -> EligibilityResult:
     candidate_keys = subject_identity_keys(subject)
@@ -218,7 +240,10 @@ def check_subject_eligibility(
             key,
         )
     matched = candidate_keys & existing_identity_keys(
-        session, exclude_run_id=exclude_run_id
+        session,
+        exclude_run_id=exclude_run_id,
+        exclude_discovery_article_id=exclude_discovery_article_id,
+        exclude_reservation_owner=exclude_reservation_owner,
     )
     if matched:
         key = sorted(matched)[0]

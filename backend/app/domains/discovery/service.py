@@ -21,12 +21,19 @@ from backend.app.domains.discovery.normalization import (
 )
 from backend.app.domains.discovery.qa import evaluate_draft
 from backend.app.domains.discovery.relevance import PlantTerm, detect_relevance
+from backend.app.domains.encyclopedia.plant_eligibility import (
+    check_subject_eligibility,
+    subject_from_discovery_event,
+    subject_identity_keys,
+)
 from backend.app.models.encyclopedia import (
     DiscoveryArticle,
     DiscoveryArticlePlant,
     DiscoveryArticleSource,
     DiscoveryEvent,
+    DiscoveryPipelineItem,
     EditorialReview,
+    PipelineBotanicalReservation,
     PipelineRun,
     PipelineStageResult,
     PlantProfile,
@@ -737,8 +744,65 @@ def publish_discovery_article(
         raise LookupError("Discovery article not found.")
     if article.status == "published":
         return article
-    if article.content_origin != "curated":
-        raise ValueError("Only validated curated discoveries can be published.")
+    if article.content_origin == "automated":
+        pipeline_item = session.scalar(
+            select(DiscoveryPipelineItem).where(
+                DiscoveryPipelineItem.discovery_article_id == article.id
+            )
+        )
+        review = article.reviews[0] if article.reviews else None
+        review_payload = review.review_payload if review is not None else {}
+        subject = subject_from_discovery_event(article.event)
+        pipeline_owned = (
+            pipeline_item is not None
+            and pipeline_item.status == "succeeded"
+            and review is not None
+            and pipeline_item.review_id == review.id
+            and pipeline_item.run.pipeline_type == "discovery_article_automation"
+            and review_payload.get("pipeline_run_id")
+            == str(pipeline_item.pipeline_run_id)
+            and review_payload.get("candidate_key") == pipeline_item.candidate_key
+            and subject is not None
+        )
+        if not pipeline_owned:
+            raise ValueError(
+                "Only validated curated or pipeline-generated discoveries "
+                "can be published."
+            )
+        reservation_keys = set(
+            session.scalars(
+                select(PipelineBotanicalReservation.identity_key).where(
+                    PipelineBotanicalReservation.pipeline_run_id
+                    == pipeline_item.pipeline_run_id,
+                    PipelineBotanicalReservation.domain == "discoveries",
+                    PipelineBotanicalReservation.candidate_key
+                    == pipeline_item.candidate_key,
+                )
+            )
+        )
+        if not subject_identity_keys(subject) <= reservation_keys:
+            raise ValueError(
+                "The pipeline botanical reservation is incomplete; publication "
+                "remains blocked."
+            )
+        eligibility = check_subject_eligibility(
+            session,
+            subject,
+            exclude_discovery_article_id=article.id,
+            exclude_reservation_owner=(
+                pipeline_item.pipeline_run_id,
+                pipeline_item.candidate_key,
+            ),
+        )
+        if not eligibility.eligible:
+            raise ValueError(
+                "The botanical subject is already represented or reserved "
+                "by different content."
+            )
+    elif article.content_origin != "curated":
+        raise ValueError(
+            "Only validated curated or pipeline-generated discoveries can be published."
+        )
     if (
         article.status != "approved"
         or not article.reviews

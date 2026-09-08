@@ -373,4 +373,62 @@ describe("Milestone 4B discovery UI", () => {
     expect(within(workspace).getByText("Page 3 of 4")).toBeInTheDocument()
     fireEvent.click(within(workspace).getByRole("button", { name: /Discovery draft 7/i }))
     expect(within(workspace).getByText("Page 1 of 4")).toBeInTheDocument()
-  })})
+  })
+
+  it("approves and publishes a pipeline-generated Discovery through separate actions", async () => {
+    let current = { ...discovery, content_origin: "automated", status: "needs_review", review_status: "needs_review" }
+    vi.mocked(fetch).mockImplementation((input, init) => {
+      const url = String(input)
+      if (url.endsWith("/api/v1/auth/session")) {
+        return response({ authenticated: true, user: { initials: "HB", label: "Editor", role: "Editor" } })
+      }
+      if (url.includes("/api/v1/admin/discovery/reviews/") && init?.method === "POST") {
+        if (url.endsWith("/approve")) {
+          current = { ...current, status: "approved", review_status: "approved" }
+        } else if (url.endsWith("/publish")) {
+          current = { ...current, status: "published", review_status: "approved", published_at: "2026-09-08T15:00:00Z" }
+        }
+        return response(current)
+      }
+      if (url.includes("/api/v1/admin/discovery/reviews")) return response(page([current]))
+      return response({})
+    })
+    renderAt("/admin/discoveries")
+
+    const workspace = await screen.findByRole("region", { name: "Discovery review workspace" })
+    fireEvent.click(within(workspace).getByRole("button", { name: "Approve" }))
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/approve"),
+      expect.objectContaining({ method: "POST" }),
+    ))
+    await waitFor(() => expect(within(workspace).getByRole("button", { name: "Publish approved version" })).toBeEnabled())
+    fireEvent.click(within(workspace).getByRole("button", { name: "Publish approved version" }))
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/publish"),
+      expect.objectContaining({ method: "POST" }),
+    ))
+    expect(await within(workspace).findByRole("alert")).toHaveTextContent("Discovery published")
+  })
+
+  it("shows a safe actionable backend publication message", async () => {
+    const approved = { ...discovery, content_origin: "automated", status: "approved", review_status: "approved" }
+    vi.mocked(fetch).mockImplementation((input, init) => {
+      const url = String(input)
+      if (url.endsWith("/api/v1/auth/session")) {
+        return response({ authenticated: true, user: { initials: "HB", label: "Editor", role: "Editor" } })
+      }
+      if (url.endsWith("/publish") && init?.method === "POST") {
+        return response({ detail: "The botanical subject is already represented by different content." }, 409)
+      }
+      if (url.includes("/api/v1/admin/discovery/reviews")) return response(page([approved]))
+      return response({})
+    })
+    renderAt("/admin/discoveries")
+
+    const workspace = await screen.findByRole("region", { name: "Discovery review workspace" })
+    fireEvent.click(within(workspace).getByRole("button", { name: "Publish approved version" }))
+    expect(await within(workspace).findByRole("alert")).toHaveTextContent(
+      "The botanical subject is already represented by different content.",
+    )
+  })
+})
