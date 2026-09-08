@@ -13,6 +13,7 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -31,7 +32,7 @@ PLANT_STATUSES = (
 REVIEW_STATUSES = ("needs_review", "approved", "rejected", "held")
 REVISION_STATUSES = ("needs_review", "approved", "held", "promoted", "superseded")
 PIPELINE_STATUSES = ("running", "succeeded", "failed", "held", "partial")
-STAGE_STATUSES = ("pending", "succeeded", "failed", "held", "skipped")
+STAGE_STATUSES = ("pending", "running", "succeeded", "failed", "held", "skipped")
 
 
 def utc_now() -> datetime:
@@ -354,6 +355,19 @@ class PlantProfile(Base):
         Index("ix_plant_profiles_status", "status"),
         Index("ix_plant_profiles_common_name", "display_common_name"),
         Index("ix_plant_profiles_scientific_name", "accepted_scientific_name"),
+        Index(
+            "uq_plant_profiles_taxon_identifier_nonempty",
+            text("lower(taxon_identifier)"),
+            unique=True,
+            postgresql_where=text("btrim(taxon_identifier) <> ''"),
+        ),
+        Index(
+            "uq_plant_profiles_scientific_name_normalized",
+            text(
+                "lower(regexp_replace(accepted_scientific_name, '[[:space:][:punct:]]', '', 'g'))"
+            ),
+            unique=True,
+        ),
     )
 
 
@@ -517,17 +531,179 @@ class PipelineRun(Base):
         DateTime(timezone=True), nullable=False, default=utc_now
     )
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    lease_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    lease_owner: Mapped[str | None] = mapped_column(String(64))
 
     stages: Mapped[list["PipelineStageResult"]] = relationship(
-        back_populates="run", cascade="all, delete-orphan"
+        back_populates="run",
+        cascade="all, delete-orphan",
+        order_by="PipelineStageResult.created_at",
     )
 
+    plant_items: Mapped[list["PlantPipelineItem"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan"
+    )
+    discovery_items: Mapped[list["DiscoveryPipelineItem"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan"
+    )
+    botanical_reservations: Mapped[list["PipelineBotanicalReservation"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan"
+    )
     __table_args__ = (
         CheckConstraint(
             "status in ('running','succeeded','failed','held','partial')",
             name="ck_pipeline_runs_status",
         ),
         Index("ix_pipeline_runs_status", "status"),
+        Index(
+            "uq_pipeline_runs_one_active_editorial_generation",
+            text("(1)"),
+            unique=True,
+            postgresql_where=text(
+                "status = 'running' AND pipeline_type IN "
+                "('plant_profile_automation','discovery_article_automation',"
+                "'pubmed_discovery_review')"
+            ),
+        ),
+    )
+
+
+class PlantPipelineItem(Base):
+    __tablename__ = "plant_pipeline_items"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    pipeline_run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("pipeline_runs.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    candidate_key: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+    position: Mapped[int] = mapped_column(nullable=False)
+    status: Mapped[str] = mapped_column(String(50), nullable=False, default="pending")
+    candidate_snapshot: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    work_payload: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    plant_profile_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("plant_profiles.id", ondelete="RESTRICT"),
+        nullable=True,
+        unique=True,
+    )
+    review_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("editorial_reviews.id", ondelete="RESTRICT"),
+        nullable=True,
+        unique=True,
+    )
+    source_count: Mapped[int] = mapped_column(nullable=False, default=0)
+    error_code: Mapped[str | None] = mapped_column(String(100))
+    error_message: Mapped[str | None] = mapped_column(Text)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    run: Mapped[PipelineRun] = relationship(back_populates="plant_items")
+    plant_profile: Mapped[PlantProfile | None] = relationship()
+    review: Mapped[EditorialReview | None] = relationship()
+
+    __table_args__ = (
+        CheckConstraint(
+            "status in ('pending','running','succeeded','failed','held')",
+            name="ck_plant_pipeline_items_status",
+        ),
+        UniqueConstraint(
+            "pipeline_run_id", "position", name="uq_plant_pipeline_items_position"
+        ),
+        Index("ix_plant_pipeline_items_run", "pipeline_run_id"),
+        Index("ix_plant_pipeline_items_status", "status"),
+    )
+
+
+class DiscoveryPipelineItem(Base):
+    __tablename__ = "discovery_pipeline_items"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    pipeline_run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("pipeline_runs.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    candidate_key: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+    position: Mapped[int] = mapped_column(nullable=False)
+    status: Mapped[str] = mapped_column(String(50), nullable=False, default="pending")
+    candidate_snapshot: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    work_payload: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    discovery_article_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("discovery_articles.id", ondelete="RESTRICT"),
+        nullable=True,
+        unique=True,
+    )
+    review_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("editorial_reviews.id", ondelete="RESTRICT"),
+        nullable=True,
+        unique=True,
+    )
+    source_count: Mapped[int] = mapped_column(nullable=False, default=0)
+    error_code: Mapped[str | None] = mapped_column(String(100))
+    error_message: Mapped[str | None] = mapped_column(Text)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    run: Mapped[PipelineRun] = relationship(back_populates="discovery_items")
+    discovery_article: Mapped[DiscoveryArticle | None] = relationship()
+    review: Mapped[EditorialReview | None] = relationship()
+
+    __table_args__ = (
+        CheckConstraint(
+            "status in ('pending','running','succeeded','failed','held')",
+            name="ck_discovery_pipeline_items_status",
+        ),
+        UniqueConstraint(
+            "pipeline_run_id", "position", name="uq_discovery_pipeline_items_position"
+        ),
+        Index("ix_discovery_pipeline_items_run", "pipeline_run_id"),
+        Index("ix_discovery_pipeline_items_status", "status"),
+    )
+
+
+class PipelineBotanicalReservation(Base):
+    __tablename__ = "pipeline_botanical_reservations"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    pipeline_run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("pipeline_runs.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    domain: Mapped[str] = mapped_column(String(32), nullable=False)
+    candidate_key: Mapped[str] = mapped_column(String(100), nullable=False)
+    identity_key: Mapped[str] = mapped_column(String(512), nullable=False, unique=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utc_now
+    )
+
+    run: Mapped[PipelineRun] = relationship(back_populates="botanical_reservations")
+
+    __table_args__ = (
+        CheckConstraint(
+            "domain in ('plants','discoveries')",
+            name="ck_pipeline_botanical_reservations_domain",
+        ),
+        UniqueConstraint(
+            "pipeline_run_id",
+            "domain",
+            "candidate_key",
+            "identity_key",
+            name="uq_pipeline_botanical_reservations_candidate_identity",
+        ),
+        Index("ix_pipeline_botanical_reservations_run", "pipeline_run_id"),
     )
 
 
@@ -544,6 +720,7 @@ class PipelineStageResult(Base):
     )
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     status: Mapped[str] = mapped_column(String(50), nullable=False)
+    candidate_position: Mapped[int | None] = mapped_column(nullable=True)
     attempt: Mapped[int] = mapped_column(nullable=False, default=1)
     duration_ms: Mapped[int] = mapped_column(nullable=False, default=0)
     input_count: Mapped[int] = mapped_column(nullable=False, default=0)
@@ -552,6 +729,8 @@ class PipelineStageResult(Base):
     output_refs: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     error_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utc_now
     )
@@ -560,9 +739,14 @@ class PipelineStageResult(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "status in ('pending','succeeded','failed','held','skipped')",
+            "status in ('pending','running','succeeded','failed','held','skipped')",
             name="ck_pipeline_stage_results_status",
         ),
-        UniqueConstraint("pipeline_run_id", "name", name="uq_pipeline_stage_run_name"),
+        UniqueConstraint(
+            "pipeline_run_id",
+            "name",
+            "candidate_position",
+            name="uq_pipeline_stage_run_name_candidate",
+        ),
         Index("ix_pipeline_stage_results_run", "pipeline_run_id"),
     )

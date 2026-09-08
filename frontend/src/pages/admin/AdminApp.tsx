@@ -1,6 +1,6 @@
 import { Activity, Database, Eye, Filter, GitCompareArrows, LayoutDashboard, LogOut, Menu, Search, ShieldCheck, Sprout, Workflow, X, Zap } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
-import { Link, Navigate, NavLink, Route, Routes, useNavigate } from "react-router-dom"
+import { Link, Navigate, NavLink, Route, Routes, useNavigate, useSearchParams } from "react-router-dom"
 import { fetchSession, logout } from "../../api/auth"
 import { approvePlantRevision, approveReview, fetchPipelineRuns, fetchPlantRevisions, fetchReviews, holdPlantRevision, promotePlantRevision, publishPlant, rejectReview, type ApiPipelineRun, type ApiPlantRevision, type ApiReview } from "../../api/editorial"
 import { ApiRequestError, fetchPlants, type ApiPlantDetail, type ApiPlantListItem } from "../../api/plants"
@@ -9,7 +9,7 @@ import { useAsyncResource } from "../../hooks/useAsyncResource"
 import { AdminStateCard, AdminStatusPill, Metric, PageHeader, Panel } from "./AdminPrimitives"
 import { AgentPerformancePage, OperationsDashboard, SourcesCatalogPage } from "./AdminOperations"
 import { DiscoveryReviewQueue } from "./DiscoveryReviewQueue"
-import { PubMedRunControl } from "./PubMedRunControl"
+import { PipelinesPage } from "./PipelinesPage"
 import { ReviewPagerFooter, ReviewPagerNav, ReviewWorkspaceShell } from "./ReviewWorkspace"
 
 type AdminData = { reviews: ApiReview[]; runs: ApiPipelineRun[] }
@@ -18,6 +18,7 @@ type NavItem = { label: string; path: string; icon: typeof Activity }
 const navItems: readonly NavItem[] = [
   { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { label: "Plants Review", path: "/admin/reviews", icon: ShieldCheck },
+  { label: "Pipelines", path: "/admin/pipelines", icon: Workflow },
   { label: "Profile Revisions", path: "/admin/revisions", icon: GitCompareArrows },
   { label: "Discovery Review", path: "/admin/discoveries", icon: Sprout },
   { label: "Flashes", path: "/admin/flashes", icon: Zap },
@@ -78,6 +79,8 @@ function AdminShell({ user }: { user: { initials: string; label: string; role: s
           <Routes>
             <Route index element={<OperationsDashboard />} />
             <Route path="reviews" element={<ReviewQueue />} />
+            <Route path="pipelines" element={<PipelinesPage />} />
+            <Route path="plant-pipeline" element={<Navigate to="/admin/pipelines" replace />} />
             <Route path="revisions" element={<ProfileRevisions />} />
             <Route path="discoveries" element={<DiscoveryReviewQueue />} />
             <Route path="review" element={<Navigate to="/admin/reviews" replace />} />
@@ -120,7 +123,8 @@ type ReviewablePlant = ApiPlantDetail | ApiPlantRevision["proposed_content"]
 
 function ReviewPanel({ data }: { data: AdminData }) {
   const pageSize = 6
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [searchParams] = useSearchParams()
+  const [selectedId, setSelectedId] = useState<string | null>(() => searchParams.get("review"))
   const [reason, setReason] = useState("Needs additional source review.")
   const [message, setMessage] = useState("")
   const [filter, setFilter] = useState("all")
@@ -140,7 +144,7 @@ function ReviewPanel({ data }: { data: AdminData }) {
   const pageCount = Math.max(1, Math.ceil(filteredReviews.length / pageSize))
   const safePage = Math.min(page, pageCount)
   const pageReviews = useMemo(() => filteredReviews.slice((safePage - 1) * pageSize, safePage * pageSize), [filteredReviews, safePage])
-  const selected = useMemo(() => pageReviews.find((review) => review.id === selectedId) ?? pageReviews[0] ?? null, [pageReviews, selectedId])
+  const selected = useMemo(() => data.reviews.find((review) => review.id === selectedId) ?? pageReviews[0] ?? null, [data.reviews, pageReviews, selectedId])
 
   function approveSelected() { if (selected) approveReview(selected.id).then(() => setMessage("Review approved. Refresh to see updated state.")).catch(() => setMessage("Approval failed.")) }
   function holdSelected() { if (selected) rejectReview(selected.id, reason).then(() => setMessage("Review placed on hold. Refresh to see updated state.")).catch(() => setMessage("Hold failed.")) }
@@ -160,6 +164,7 @@ function ReviewPanel({ data }: { data: AdminData }) {
       {filteredReviews.length ? <QueuePagination page={safePage} pageCount={pageCount} onPrevious={() => setPage((current) => Math.max(1, current - 1))} onNext={() => setPage((current) => Math.min(pageCount, current + 1))} /> : null}
     </Panel>
     <Panel eyebrow="Article review" title={selected?.plant_profile?.display_common_name ?? "Select a review item"} className="flex h-full min-w-0 flex-col">
+      {selected ? <QualityGatePanel payload={selected.review_payload} /> : null}
       {selected?.plant_profile ? <PlantReviewPreview plant={selected.plant_profile} selectionKey={selected.id} /> : <p className="font-sans text-sm text-muted">No profile selected.</p>}
       {message ? <p role="alert" className="mt-4 border border-gold/40 bg-gold/10 p-3 font-sans text-sm text-deep">{message}</p> : null}
       <div data-review-action-footer="shared" className="sticky bottom-0 mt-auto flex flex-wrap items-end gap-3 border-t-2 border-forest bg-paper/95 py-5 backdrop-blur"><button type="button" onClick={approveSelected} disabled={!selected || selected.status === "approved" || selected.plant_profile?.readiness_status !== "ready_for_review"} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-leaf disabled:opacity-50">Approve</button><button type="button" onClick={publishSelected} disabled={!selected?.plant_profile || selected.status !== "approved" || selected.plant_profile.status === "published"} className="bg-leaf px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream hover:bg-forest disabled:opacity-50">Publish</button><label className="grid gap-2 font-sans text-xs font-bold uppercase tracking-[.1em] text-forest">Hold reason<input value={reason} onChange={(event) => setReason(event.target.value)} className="min-h-11 w-[min(25rem,70vw)] border border-line bg-paper px-3 font-sans text-sm font-normal normal-case tracking-normal text-deep outline-none focus:border-leaf" /></label><button type="button" onClick={holdSelected} disabled={!selected || selected.status === "approved"} className="border border-rust px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-rust hover:bg-rust hover:text-cream disabled:opacity-50">Hold / reject</button></div>
@@ -169,6 +174,21 @@ function ReviewPanel({ data }: { data: AdminData }) {
 
 function QueuePagination({ page, pageCount, onPrevious, onNext }: { page: number; pageCount: number; onPrevious: () => void; onNext: () => void }) {
   return <div className="mt-5 flex items-center justify-between border-t border-line pt-4"><button type="button" aria-label="Previous queue page" onClick={onPrevious} disabled={page === 1} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Previous</button><span className="font-sans text-xs text-muted">Page {page} of {pageCount}</span><button type="button" aria-label="Next queue page" onClick={onNext} disabled={page === pageCount} className="border border-line px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[.1em] text-forest disabled:opacity-35">Next</button></div>
+}
+
+function QualityGatePanel({ payload }: { payload: Record<string, unknown> }) {
+  const gates = payload.quality_gates as Record<string, { status: string; detail: string }> | undefined
+  if (!gates || !Object.keys(gates).length) return null
+  return <section aria-labelledby="review-quality-gates" className="mb-4 border border-line bg-sage/10 p-4">
+    <h3 id="review-quality-gates" className="font-serif text-xl font-semibold text-deep">Evidence readiness / quality gates</h3>
+    <dl className="mt-3 grid gap-2 sm:grid-cols-2">{Object.entries(gates).map(([name, gate]) =>
+      <div key={name} className="min-w-0 border border-line bg-paper p-3">
+        <dt className="break-words font-sans text-xs font-bold uppercase text-deep">{name.replaceAll("_", " ")}</dt>
+        <dd className="mt-1 break-words font-sans text-xs leading-relaxed text-muted">{gate.status}: {gate.detail}</dd>
+      </div>
+    )}</dl>
+    <p className="mt-3 font-sans text-xs text-rust">Deterministic checks do not replace human review of the photograph, attribution, claims, or safety wording.</p>
+  </section>
 }
 
 function ReviewSectionPager({ selectionKey, renderSection }: { selectionKey: string; renderSection: (section: ReviewSectionId) => ReactNode }) {
@@ -380,7 +400,7 @@ function RevisionComparison({ revision }: { revision: ApiPlantRevision }) {
 function RevisionColumn({ label, plant, sources, section, status, version }: { label: string; plant: ReviewablePlant; sources: ApiPlantDetail["sources"]; section: ReviewSectionId; status: string; version: number }) {
   return <article className="min-w-0 border border-line bg-paper p-4"><p className="hw-eyebrow mb-3">{label}</p><PlantReviewSection plant={plant} sources={sources} section={section} status={status} version={version} /></article>
 }
-function PipelineRuns() { const runs = useAsyncResource(useCallback((signal: AbortSignal) => fetchPipelineRuns(signal), [])); return <><PageHeader eyebrow="Operations / monitoring" title="Pipeline Runs" description="A clear record of every persisted HerbWire pipeline run and stage result." /><div className="mb-5"><PubMedRunControl onCreated={runs.reload} /></div>{runs.isLoading ? <AdminStateCard title="Loading pipeline dashboard" description="Gathering run activity and stage history." /> : null}{runs.error ? <AdminStateCard title="Pipeline runs unavailable" description="The pipeline monitoring view could not be loaded." action={<button type="button" onClick={runs.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{runs.data ? <PipelinePanel runs={runs.data} /> : null}</> }
+function PipelineRuns() { const runs = useAsyncResource(useCallback((signal: AbortSignal) => fetchPipelineRuns(signal), [])); return <><PageHeader eyebrow="Operations / monitoring" title="Pipeline Runs" description="A clear record of every persisted HerbWire pipeline run and stage result." />{runs.isLoading ? <AdminStateCard title="Loading pipeline dashboard" description="Gathering run activity and stage history." /> : null}{runs.error ? <AdminStateCard title="Pipeline runs unavailable" description="The pipeline monitoring view could not be loaded." action={<button type="button" onClick={runs.reload} className="bg-forest px-4 py-3 font-sans text-xs font-bold uppercase tracking-[.1em] text-cream">Try again</button>} /> : null}{runs.data ? <PipelinePanel runs={runs.data} /> : null}</> }
 
 function PipelinePanel({ runs }: { runs: ApiPipelineRun[] }) { return <Panel eyebrow="Recent activity" title="Pipeline runs"><div className="grid gap-4">{runs.length ? runs.map((run) => <article key={run.id} className="border-t border-line pt-4 first:border-t-0 first:pt-0"><div className="flex flex-wrap items-center justify-between gap-3"><div><AdminStatusPill>{run.status}</AdminStatusPill><h3 className="mt-3 font-serif text-xl font-semibold text-deep">{run.pipeline_type}</h3><p className="mt-1 font-sans text-xs text-muted">{run.trigger} / {run.current_stage} / {new Date(run.started_at).toLocaleString()}</p></div></div><ol className="mt-3 list-decimal pl-5 font-sans text-xs leading-relaxed text-muted">{run.stages.map((stage) => <li key={`${run.id}-${stage.name}`}>{stage.name}: {stage.status} / {stage.input_count} in / {stage.output_count} out / {stage.duration_ms}ms{stage.error_code ? ` / ${stage.error_code}: ${stage.error_message}` : ""}</li>)}</ol></article>) : <p className="font-sans text-sm text-muted">No pipeline runs recorded.</p>}</div></Panel> }
 

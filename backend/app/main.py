@@ -1,3 +1,5 @@
+import asyncio
+from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 
 from backend.app.api.routes.admin_catalog import router as admin_catalog_router
@@ -6,14 +8,19 @@ from backend.app.api.routes.discoveries import router as discoveries_router
 from backend.app.api.routes.discovery_editorial import (
     router as discovery_editorial_router,
 )
+from backend.app.api.routes.discovery_pipeline import (
+    router as discovery_pipeline_router,
+)
 from backend.app.api.routes.editorial import router as editorial_router
 from backend.app.api.routes.health import router as health_router
 from backend.app.api.routes.materials import router as materials_router
 from backend.app.api.routes.newsletter import router as newsletter_router
+from backend.app.api.routes.plant_pipeline import router as plant_pipeline_router
 from backend.app.api.routes.plants import router as plants_router
 from backend.app.api.routes.version import router as version_router
 from backend.app.core.http import CanonicalOriginMiddleware
 from backend.app.core.settings import get_settings
+from backend.app.domains.pipeline.recovery import recovery_supervisor
 from backend.app.frontend import mount_frontend
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,9 +29,29 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 DEFAULT_FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
 
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    stop = asyncio.Event()
+    task = asyncio.create_task(
+        recovery_supervisor(stop), name="editorial-pipeline-recovery"
+    )
+    application.state.pipeline_recovery_task = task
+    try:
+        yield
+    finally:
+        stop.set()
+        task.cancel()
+        with suppress(asyncio.CancelledError):
+            await task
+
+
 def create_app(frontend_dist: Path | None = None) -> FastAPI:
     settings = get_settings()
-    application = FastAPI(title="HerbWire API", version=settings.service_version)
+    application = FastAPI(
+        title="HerbWire API",
+        version=settings.service_version,
+        lifespan=lifespan,
+    )
     application.add_middleware(
         CORSMiddleware,
         allow_origins=settings.allowed_frontend_origins,
@@ -51,6 +78,12 @@ def create_app(frontend_dist: Path | None = None) -> FastAPI:
     )
     application.include_router(
         discovery_editorial_router, prefix="/api/v1", tags=["editorial"]
+    )
+    application.include_router(
+        discovery_pipeline_router, prefix="/api/v1", tags=["editorial"]
+    )
+    application.include_router(
+        plant_pipeline_router, prefix="/api/v1", tags=["editorial"]
     )
     mount_frontend(
         application,

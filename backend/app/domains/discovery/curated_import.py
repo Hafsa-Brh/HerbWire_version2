@@ -393,3 +393,186 @@ def import_curated_discoveries(
         reviews_created=reviews_created,
         source_records_created=sources_created,
     )
+
+
+@dataclass(frozen=True)
+class PipelineDiscoveryDraft:
+    article: DiscoveryArticle
+    review: EditorialReview
+    source_count: int
+
+
+def create_pipeline_discovery_draft(
+    session: Session,
+    item,
+    *,
+    candidate_key: str,
+    pipeline_run_id,
+    quality_gates: dict,
+) -> PipelineDiscoveryDraft:
+    """Persist one validated private Discovery and review at the final stage."""
+    providers = {source.provider for source in item.sources}
+    registry_sources = {
+        source.identifier: source
+        for source in session.scalars(
+            select(Source).where(Source.identifier.in_(providers))
+        ).all()
+    }
+    if missing := sorted(providers - registry_sources.keys()):
+        raise ValueError(f"Required source providers are missing: {', '.join(missing)}")
+
+    profile = (
+        session.scalar(select(PlantProfile).where(PlantProfile.slug == item.plant_slug))
+        if item.plant_slug
+        else None
+    )
+    if item.plant_slug and (profile is None or profile.status != "published"):
+        raise ValueError("The linked reviewed Plant profile is unavailable.")
+    media = _validated_media(item, profile)
+    if session.scalar(
+        select(DiscoveryArticle.id).where(
+            (DiscoveryArticle.slug == item.slug)
+            | (DiscoveryArticle.content_checksum == item.content_checksum)
+        )
+    ):
+        raise ValueError("The Discovery candidate is already represented.")
+
+    now = _now()
+    source_records = []
+    for source_item in item.sources:
+        source_record, _ = _source_record(
+            session, registry_sources[source_item.provider], source_item, now
+        )
+        source_records.append((source_item, source_record))
+    primary_source = next(
+        record
+        for source_item, record in source_records
+        if source_item.support_role == "primary_evidence"
+    )
+    event = DiscoveryEvent(
+        source_record_id=primary_source.id,
+        status="enriched",
+        category=item.article_type,
+        relevance_confidence=1.0,
+        reasons=["pipeline_source_verified", "structured_botanical_subject"],
+        evidence_signals=[
+            "pubmed_identifier",
+            "section_level_traceability",
+            "licensed_botanical_media",
+        ],
+        detected_entities=[
+            {
+                "common_name": item.common_name,
+                "scientific_name": item.scientific_name,
+                "plant_slug": item.plant_slug,
+                "ambiguous": False,
+            }
+        ],
+        evidence_package={
+            "origin": "automated",
+            "candidate_key": candidate_key,
+            "source_ids": [source.source_id for source in item.sources],
+            "section_sources": {
+                key: trace.model_dump() for key, trace in item.section_sources.items()
+            },
+            "quality_gates": quality_gates,
+            "botanical_identity": (
+                item.botanical_identity.model_dump(mode="json")
+                if item.botanical_identity is not None
+                else None
+            ),
+        },
+        created_at=now,
+        updated_at=now,
+    )
+    session.add(event)
+    session.flush()
+    article = DiscoveryArticle(
+        event_id=event.id,
+        slug=item.slug,
+        status="needs_review",
+        headline=item.headline,
+        standfirst=item.standfirst,
+        body_blocks=_body_blocks(item),
+        limitations=item.limitations,
+        safety_context=item.safety_context,
+        cannot_conclude=item.cannot_conclude,
+        qa_payload={
+            "provider": "discovery-pipeline-schema-v1",
+            "passed": True,
+            "reason_codes": [],
+            "checks": quality_gates,
+            "human_review_required": True,
+        },
+        content_checksum=item.content_checksum,
+        version=item.content_version,
+        content_origin="automated",
+        article_type=item.article_type,
+        research_date=item.research_date,
+        research_question=item.research_question,
+        research_context=item.research_context,
+        study_design=item.study_design,
+        evidence_base=item.evidence_base,
+        intervention=item.intervention,
+        comparator=item.comparator,
+        main_findings=item.main_findings,
+        evidence_strength=item.evidence_strength,
+        evidence_strength_rationale=item.evidence_strength_rationale,
+        why_matters=item.why_matters,
+        practical_interpretation=item.practical_interpretation,
+        section_sources={
+            key: trace.model_dump() for key, trace in item.section_sources.items()
+        },
+        hero_image=media,
+        geography=[value.model_dump(mode="json") for value in item.geography],
+        created_at=now,
+        updated_at=now,
+    )
+    session.add(article)
+    session.flush()
+    if profile is not None:
+        session.add(
+            DiscoveryArticlePlant(
+                discovery_article_id=article.id, plant_profile_id=profile.id
+            )
+        )
+    for source_item, source_record in source_records:
+        evidence_locations = [
+            {"section": key, "locations": trace.evidence_locations}
+            for key, trace in item.section_sources.items()
+            if source_item.source_id in trace.source_ids
+        ]
+        session.add(
+            DiscoveryArticleSource(
+                discovery_article_id=article.id,
+                source_record_id=source_record.id,
+                support_role=source_item.support_role,
+                evidence_locations=evidence_locations,
+            )
+        )
+    review = EditorialReview(
+        plant_profile_id=None,
+        discovery_article_id=article.id,
+        content_type="discovery_article",
+        status="needs_review",
+        review_payload={
+            "origin": "automated",
+            "pipeline_run_id": str(pipeline_run_id),
+            "candidate_key": candidate_key,
+            "version": item.content_version,
+            "content_checksum": item.content_checksum,
+            "source_ids": [source.source_id for source in item.sources],
+            "quality_gates": quality_gates,
+            "publication_boundary": (
+                "Human approval and a separate explicit publish action are required."
+            ),
+        },
+        created_at=now,
+    )
+    session.add(review)
+    session.flush()
+    return PipelineDiscoveryDraft(
+        article=article,
+        review=review,
+        source_count=len(source_records),
+    )

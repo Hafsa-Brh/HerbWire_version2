@@ -1,5 +1,5 @@
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from backend.app.db.session import get_engine, get_session_factory
@@ -187,6 +187,7 @@ def test_public_archive_filters_paginates_and_reuses_plant_distribution(client) 
             article.published_at = published_at
             article.reviews[0].status = "approved"
             article.event.source_record.source_publication_date = "2026-08-15"
+        articles[2].published_at = published_at + timedelta(minutes=1)
         articles[0].geography = [
             {
                 "geography_kind": "research_geography",
@@ -203,7 +204,9 @@ def test_public_archive_filters_paginates_and_reuses_plant_distribution(client) 
             }
         ]
         session.commit()
-        expected_ids = [str(article.id) for article in articles[:3]]
+        expected_ids = [str(articles[2].id)] + sorted(
+            str(article.id) for article in articles[:2]
+        )
 
     page_one = client.get("/api/v1/discoveries?page=1&page_size=2")
     assert page_one.status_code == 200

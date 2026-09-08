@@ -620,3 +620,36 @@ after evaluating post-backup writes; never combine release rollback and restore
 blindly. If DNS or ACM fails, keep the Heroku hostname operational and restore
 the recorded Name.com zone state. Do not remove a Heroku domain while DNS still
 targets it and do not disable ACM merely to retry pending issuance.
+
+## Unified editorial pipeline runtime
+
+Plant and Discovery automation run entirely inside the deployed modular-monolith
+web image with PostgreSQL. Candidate JSON and every required photograph are
+version-controlled build inputs; execution never depends on the owner's browser,
+computer, editor, Docker Desktop, a runtime catalogue download, or a hosted LLM.
+No worker dyno, scheduler, broker, or additional paid service is required.
+
+An authenticated launch transaction validates exact capacity, inserts the run and
+ordered items, reserves every botanical identity, and commits a 120-second lease
+before responding. Starlette starts the synchronous bounded executor after the
+HTTP response. It opens a fresh database session for every stage, commits the
+stage boundary, and processes only one candidate at a time. Browser polling is
+read-only and closing the client has no effect on healthy execution.
+
+Migration `20260908_0013` adds lease ownership plus globally unique normalized
+botanical reservations. The existing partial unique index continues to permit
+only one running Plant, Discovery, or retained PubMed editorial run. The FastAPI
+lifespan starts one recovery supervisor per web process. It selects queued or
+expired Plant/Discovery runs with `FOR UPDATE SKIP LOCKED`, replaces the lease
+owner, resets only the interrupted running stage, and resumes the first incomplete
+safe boundary. A still-fresh lease is never stolen, and an obsolete executor is
+unable to persist after ownership changes. Stage output and success commit in the
+same transaction, so interruption creates neither a committed partial result nor
+a duplicate result on recovery.
+
+The single-web-process limitation is honest: work pauses while no dyno is alive,
+and recovery waits for the replacement process to start (and for a prior lease to
+expire). It does not provide zero-downtime execution or worker-grade scheduling.
+It does provide automatic restart recovery without browser action. Held and failed
+runs are not silently resumed, approved, or published; authenticated manual retry
+remains the fallback for a genuinely retryable terminal failure.

@@ -674,7 +674,6 @@ def list_published_discovery_articles(
             .options(*discovery_article_load_options())
             .order_by(
                 DiscoveryArticle.published_at.desc(),
-                primary_source.source_publication_date.desc().nullslast(),
                 DiscoveryArticle.id.asc(),
             )
             .offset((normalized_page - 1) * page_size)

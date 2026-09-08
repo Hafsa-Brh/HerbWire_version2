@@ -10,11 +10,15 @@ const plant = (index: number) => ({ id: `plant-${index}`, slug: `plant-${index}`
 const discovery = (index: number) => ({ id: `discovery-${index}`, slug: `discovery-${index}`, headline: `Discovery headline ${index}`, standfirst: `Evidence-qualified deck ${index}.`, body_blocks: [], limitations: [], safety_context: "Safety context.", cannot_conclude: [], version: 1, article_type: "Systematic review", research_date: "2026-09-02", research_question: null, research_context: null, study_design: null, evidence_base: null, intervention: null, comparator: null, main_findings: [], evidence_strength: "moderate", evidence_strength_rationale: null, why_matters: null, practical_interpretation: null, section_sources: {}, hero_image: { local_path: `/media/discoveries/discovery-${index}.jpg`, alt_text: `Discovery ${index}` }, geography: [], linked_plants: [], botanical_identity: { common_name: `Discovery plant ${index}`, accepted_scientific_name: `Discoveria ${index}`, family: "Testaceae", authority_source_id: "powo", authority_taxon_id: String(index), authority_url: "https://powo.science.kew.org/", accepted: true }, category: "research", sources: [{ id: `source-${index}`, provider: "pubmed", support_role: "primary_research", external_identifier: String(10000000 + index), pmid: String(10000000 + index), doi: `10.1000/${index}`, canonical_url: `https://pubmed.ncbi.nlm.nih.gov/${10000000 + index}/`, title: `Source ${index}`, authors: [], journal: "Journal", publication_date: `2026-0${Math.min(index, 9)}-01` }], created_at: "2026-09-02T12:00:00Z", published_at: `2026-09-0${Math.min(index, 9)}T12:00:00Z` })
 
 const discoveries = [
-  { ...discovery(1), slug: "amla-36934568-cardiometabolic-meta-analysis", headline: "Amla review reports cardiometabolic marker changes from only five small trials" },
+  discovery(7),
+  discovery(6),
+  discovery(5),
+  { ...discovery(4), slug: "lemon-balm-38868804-neuropathy-trial" },
+  { ...discovery(3), slug: "pomegranate-38553998-crp-meta-analysis" },
   { ...discovery(2), slug: "st-johns-wort-36246064-evidence-interactions-review", headline: "St John's wort review places clinical evidence beside consequential interaction risk" },
-  ...Array.from({ length: 5 }, (_, index) => discovery(index + 3)),
+  { ...discovery(1), slug: "amla-36934568-cardiometabolic-meta-analysis", headline: "Amla review reports cardiometabolic marker changes from only five small trials" },
 ]
-const plants = Array.from({ length: 3 }, (_, index) => plant(index + 1))
+const plants = [plant(3), plant(2), plant(1)]
 const contentPage = { summary: { total_content: 67, published_plants: 30, published_discoveries: 30, published_materials: 7, source_records: 150, provenance_relationships: 245, needs_review: 0 }, items: [{ id: "plant-1", title: "Plant 1", content_type: "plant_profile", content_type_label: "Plant Profile", status: "published", timestamp: "2026-09-02T12:00:00Z", plant_identity: "Planta test 1", source_count: 3, origin: "curated corpus", public_path: "/plants/plant-1", editorial_path: "/admin/reviews", pmid: null }], total: 67, page: 1, page_size: 10, total_pages: 7, statuses: ["published"] }
 const materialRecords = [
   ["palm-fibre-basketry-morocco", "Palm fibres, coiled form: reading Moroccan basketry closely", "Fibres", "Morocco", "/media/materials/moroccan-basketry.jpg", "Colourful handmade palm-fibre baskets displayed in a market in Marrakesh, Morocco"],
@@ -60,18 +64,18 @@ describe("demo frontend enhancement", () => {
 
   it("renders the filtered three-slide hero, homepage sections in order, plants, and navigation", async () => {
     renderAt("/")
-    expect(
-      await screen.findByRole(
-        "heading",
-        { name: "St John's wort review places clinical evidence beside consequential interaction risk" },
-        { timeout: 5000 },
-      ),
-    ).toBeInTheDocument()
-    const carousel = screen.getByRole("region", { name: "Latest published discoveries" })
+    const carousel = await screen.findByRole("region", { name: "Latest published discoveries" }, { timeout: 5000 })
+    expect(within(carousel).getByRole("heading", {
+      name: "St John's wort review places clinical evidence beside consequential interaction risk",
+    })).toBeInTheDocument()
     expect(within(carousel).getByRole("button", { name: "Show previous discovery" })).toBeInTheDocument()
     expect(within(carousel).getByText("01 / 03")).toBeInTheDocument()
     expect(within(carousel).queryByText(/Amla review reports/i)).not.toBeInTheDocument()
-    for (const index of [5, 6, 7]) expect(screen.getByRole("link", { name: new RegExp(`Discovery headline ${index}`) })).toHaveAttribute("href", `/discoveries/discovery-${index}`)
+    const latestSection = screen.getByRole("heading", { name: "New evidence, carefully read" }).closest("section")!
+    const latestLinks = within(latestSection).getAllByRole("link").filter((link) => link.getAttribute("href")?.startsWith("/discoveries/"))
+    expect(latestLinks.map((link) => link.getAttribute("href"))).toEqual([
+      "/discoveries/discovery-7", "/discoveries/discovery-6", "/discoveries/discovery-5",
+    ])
     const materialsHeading = screen.getByRole("heading", { name: "Materials shaped by patient hands" })
     expect(screen.getByRole("link", { name: /Explore Materials & Craft/i })).toHaveAttribute("href", "/materials-and-craft")
     expect(screen.getByRole("heading", { name: homepageMaterial.title })).toBeInTheDocument()
@@ -83,6 +87,9 @@ describe("demo frontend enhancement", () => {
     expect(screen.getByRole("link", { name: /More discoveries/i })).toHaveAttribute("href", "/discoveries")
     expect(screen.getByRole("link", { name: /More medicinal plants/i })).toHaveAttribute("href", "/plants")
     expect(screen.getAllByText(/Plant [123]/).length).toBeGreaterThanOrEqual(3)
+    const plantSection = plantsHeading.closest("section")!
+    const plantLinks = within(plantSection).getAllByRole("link").filter((link) => link.getAttribute("href")?.startsWith("/plants/"))
+    expect(plantLinks.map((link) => link.getAttribute("href"))).toEqual(["/plants/plant-3", "/plants/plant-2", "/plants/plant-1"])
     expect(screen.queryByText("Medicinal knowledge is a world story.")).not.toBeInTheDocument()
     const nav = screen.getByRole("navigation", { name: "Primary navigation" })
     expect(within(nav).getByRole("link", { name: "Materials & Craft" })).toHaveAttribute("href", "/materials-and-craft")
@@ -93,14 +100,15 @@ describe("demo frontend enhancement", () => {
     vi.useFakeTimers()
     renderAt("/")
     await act(async () => { await vi.advanceTimersByTimeAsync(1) })
-    expect(screen.getByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
+    const carousel = screen.getByRole("region", { name: "Latest published discoveries" })
+    expect(within(carousel).getByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
     await act(async () => { await vi.advanceTimersByTimeAsync(6000) })
-    expect(screen.getByRole("heading", { name: "Discovery headline 3" })).toBeInTheDocument()
+    expect(within(carousel).getByRole("heading", { name: "Discovery headline 3" })).toBeInTheDocument()
     fireEvent.click(screen.getByRole("button", { name: "Show next discovery" }))
-    expect(screen.getByRole("heading", { name: "Discovery headline 4" })).toBeInTheDocument()
+    expect(within(carousel).getByRole("heading", { name: "Discovery headline 4" })).toBeInTheDocument()
     screen.getByRole("link", { name: "Discovery headline 4" }).focus()
     await act(async () => { await vi.advanceTimersByTimeAsync(6000) })
-    expect(screen.getByRole("heading", { name: "Discovery headline 4" })).toBeInTheDocument()
+    expect(within(carousel).getByRole("heading", { name: "Discovery headline 4" })).toBeInTheDocument()
   })
 
   it("disables forced carousel advancement for reduced-motion users", async () => {
@@ -112,9 +120,10 @@ describe("demo frontend enhancement", () => {
     } as unknown as MediaQueryList)
     renderAt("/")
     await act(async () => { await vi.advanceTimersByTimeAsync(1) })
-    expect(screen.getByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
+    const carousel = screen.getByRole("region", { name: "Latest published discoveries" })
+    expect(within(carousel).getByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
     await act(async () => { await vi.advanceTimersByTimeAsync(6000) })
-    expect(screen.getByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
+    expect(within(carousel).getByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
   })
 
   it("keeps the homepage-excluded Amla article available in the Discovery archive", async () => {
@@ -125,7 +134,8 @@ describe("demo frontend enhancement", () => {
   it("keeps the rest of the homepage available when the Materials API fails", async () => {
     installApi(503)
     renderAt("/")
-    expect(await screen.findByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
+    const carousel = await screen.findByRole("region", { name: "Latest published discoveries" })
+    expect(within(carousel).getByRole("heading", { name: /St John's wort review places/ })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "New evidence, carefully read" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Reviewed medicinal plants" })).toBeInTheDocument()
     expect(screen.getByRole("status")).toHaveTextContent("material stories are temporarily unavailable")

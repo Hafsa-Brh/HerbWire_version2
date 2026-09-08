@@ -70,9 +70,10 @@ specification-aligned Publisher increment.
 
 ## Execution
 
-The editorial desk exposes a bounded manual trigger at **Pipeline Runs** and a
-private queue at **Discovery Review**. Both require the existing backend
-editorial session.
+The current editorial desk exposes bounded generation at **Pipelines**, keeps
+detailed persisted history at **Pipeline Runs**, and retains the private queue
+at **Discovery Review**. All three require the existing backend editorial
+session. The historical bounded PubMed API and CLI remain available.
 
 The CLI calls the same orchestrator. Fixture execution is explicit and offline:
 
@@ -88,7 +89,57 @@ canonical local development database for testing:
 python -m backend.app.workers.run_pubmed_discovery --start-date YYYY-MM-DD --end-date YYYY-MM-DD --max-records 5 --live
 ~~~
 
-No scheduler, worker process, bootstrap, or web-startup hook invokes this
-pipeline. Repeating the same provider/window/limit returns the persisted run;
-reprocessing the same PubMed material under another window reuses its source,
-event, draft, and review identities.
+## Unified sequential Discovery generation
+
+The canonical Editorial Desk route is `/admin/pipelines`. Its Discoveries section
+reuses official PubMed metadata/normalization, PMID/DOI/URL/content deduplication,
+the rich curated article contract, source/event/article/review persistence,
+Kew botanical identity and distribution records, and the existing human review
+and publication state machine. Candidate identities, study titles, identifiers,
+and capacity counts remain server-only until a private draft is persisted.
+
+The finite version-controlled catalogue contains twenty unique PubMed source
+packages. Each declares exactly one accepted primary botanical subject, stable
+Kew IPNI identifier, source-specific evidence and limitations, conservative
+safety context, geography, and a checksum-verified licensed Commons photograph.
+A release-ready full ten-item run is accepted only while all ten can be reserved
+atomically and at least ten eligible packages remain. `All available` means the
+safe surplus above that protected reserve and is capped at ten. An unavailable
+request writes nothing and discloses no count or identity.
+
+The strictly sequential order is:
+
+1. Collector Gateway
+2. Normalization and Deduplication
+3. Relevance and Classification
+4. Language, Translation, and Entity Enrichment
+5. Botanical Resolver
+6. Evidence, Safety, and Provenance
+7. Media & Geography Agent
+8. Content Composer
+9. Editorial QA
+10. Private review creation
+
+The last item is a persistence stage, not an autonomous agent. Publisher remains
+outside execution. Relevance may begin with an unambiguous scientific name or a
+source-present common name only when the separate structured Kew authority record
+resolves the exact taxon. Missing provenance, evidence limitations, safety
+framing, geography, or photographic licensing holds the candidate. Successful
+output remains `needs_review` and unpublished.
+
+Plant automation, Discovery automation, and the retained PubMed runner share the
+PostgreSQL partial unique active-run invariant. Each launch commits its run,
+items, botanical identity reservations, and lease before returning; a server-side
+background task advances stages without polling. On web-process startup, a
+supervisor uses row locking and lease ownership to reclaim only queued or expired
+Plant/Discovery work. It resets only an interrupted running stage, resumes the
+same run, and cannot persist under an obsolete lease. Committed stages, sources,
+articles, reviews, media, relationships, and reservations remain idempotent.
+Manual retry is retained for genuine terminal failures. No stage approves or
+publishes.
+
+Detailed history remains on `/admin/runs`. The Pipelines page uses session storage
+only for the current tab's launched run ID: a fresh session has empty result
+panels; an active run shows only `Running`; persisted results show only linked
+headlines and compact editorial status. No scheduler, second dyno, queue service,
+hosted model, runtime download, or TTS is introduced.

@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from backend.app.db.session import get_engine, get_session_factory
@@ -34,6 +34,10 @@ def clean_milestone2_tables():
         connection.execute(text("DELETE FROM plant_profile_revisions"))
         connection.execute(text("DELETE FROM plant_profile_sources"))
         connection.execute(text("DELETE FROM plant_profiles"))
+        connection.execute(text("DELETE FROM discovery_article_plants"))
+        connection.execute(text("DELETE FROM discovery_article_sources"))
+        connection.execute(text("DELETE FROM discovery_events"))
+        connection.execute(text("DELETE FROM discovery_articles"))
         connection.execute(text("DELETE FROM source_records"))
         connection.execute(
             text(
@@ -55,6 +59,10 @@ def clean_milestone2_tables():
         connection.execute(text("DELETE FROM plant_profile_revisions"))
         connection.execute(text("DELETE FROM plant_profile_sources"))
         connection.execute(text("DELETE FROM plant_profiles"))
+        connection.execute(text("DELETE FROM discovery_article_plants"))
+        connection.execute(text("DELETE FROM discovery_article_sources"))
+        connection.execute(text("DELETE FROM discovery_events"))
+        connection.execute(text("DELETE FROM discovery_articles"))
         connection.execute(text("DELETE FROM source_records"))
         connection.execute(
             text(
@@ -264,11 +272,17 @@ def test_public_plant_paging_search_and_filters(client) -> None:
                 select(PlantProfile).order_by(PlantProfile.display_common_name)
             ).all()
         )
-        for profile in profiles[:13]:
+        published_at = datetime(2026, 9, 7, 12, tzinfo=timezone.utc)
+        selected = profiles[:13]
+        for profile in selected:
             profile.status = "published"
-            profile.approved_at = datetime.now(timezone.utc)
-            profile.published_at = datetime.now(timezone.utc)
+            profile.approved_at = published_at
+            profile.published_at = published_at
+        selected[-1].published_at = published_at + timedelta(minutes=1)
         session.commit()
+        expected_ids = [str(selected[-1].id)] + sorted(
+            str(item.id) for item in selected[:-1]
+        )
 
     first_page = client.get("/api/v1/plants?page=1&page_size=12")
     second_page = client.get("/api/v1/plants?page=2&page_size=12")
@@ -279,6 +293,16 @@ def test_public_plant_paging_search_and_filters(client) -> None:
     assert first_page.status_code == 200
     assert first_page.json()["total"] == 13
     assert len(first_page.json()["items"]) == 12
+    assert [item["id"] for item in first_page.json()["items"]] == expected_ids[:12]
+    assert [item["id"] for item in second_page.json()["items"]] == expected_ids[12:]
+    assert all(item["status"] == "published" for item in first_page.json()["items"])
+    assert search.json()["items"] == sorted(
+        search.json()["items"],
+        key=lambda item: (
+            -datetime.fromisoformat(item["published_at"]).timestamp(),
+            item["id"],
+        ),
+    )
     assert len(second_page.json()["items"]) == 1
     assert all(
         "ginseng" in item["display_common_name"].lower()
