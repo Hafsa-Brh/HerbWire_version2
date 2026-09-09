@@ -1,3 +1,31 @@
+# Professor-facing README refresh (2026-09-09)
+
+Status: Complete; documentation-only change prepared on `main`.
+
+## Intended outcome
+
+Replace the milestone-centric README with a polished project overview that
+explains HerbWire's public products, provenance and safety model, twelve logical
+agents, keyword-based retrieval approach, Zyte collection boundary, Heroku
+deployment architecture, local setup, verification commands, and key docs.
+
+## Files expected to change
+
+- `README.md`
+- `PLANS.md`
+
+## Risks and assumptions
+
+- Product language describes the complete HerbWire architecture while retaining
+  the mandatory human-publication and medical-safety boundaries.
+- No application code, dependency, database state, credentials, or deployment
+  resources change in this documentation-only task.
+
+## Verification
+
+Review Markdown structure, internal links, documented commands, repository diff,
+and staged file scope before committing and pushing `main`.
+
 # Pipeline corrections and restart recovery (2026-09-08)
 
 Status: Complete and awaiting owner review on `feat/sequential-plant-pipeline`;

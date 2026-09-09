@@ -1,104 +1,235 @@
 # HerbWire V2
 
-HerbWire V2 is an English-only medicinal-plant encyclopedia and traditional-medicine editorial platform. It preserves source provenance, keeps traditional-use documentation distinct from clinical efficacy, surfaces safety information, and requires explicit human approval before publication.
+<div align="center">
 
-HerbWire does not diagnose, prescribe, recommend personalized treatment, provide dosage guidance, or present traditional use as proven clinical efficacy.
+### A provenance-first medicinal-plant encyclopedia and traditional-medicine discovery platform
 
-## Milestone 2 and 2B scope
+[![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0B1F2A)](https://react.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Zyte](https://img.shields.io/badge/Collection-Zyte-5B2EFF)](https://www.zyte.com/)
+[![Heroku](https://img.shields.io/badge/Deployment-Heroku-430098?logo=heroku&logoColor=white)](https://www.heroku.com/)
 
-Milestone 2 and 2B provide:
+**Explore medicinal plants. Follow emerging research. See the evidence behind every claim.**
 
-- PostgreSQL-backed plant profiles, provenance records, editorial reviews, pipeline runs, and pipeline stage results.
-- Public homepage, paged plant index, published plant articles, and an honest New Discoveries empty state.
-- A backend-authenticated local editorial desk with review, approval, hold/reject, and publication gating.
-- Published-article Flashes and persisted pipeline-stage performance views.
-- An idempotent newsletter subscription endpoint and database table. No external email provider is connected.
-- A deterministic, schema-validated 30-profile encyclopedia corpus importer that preserves human editorial state and never auto-publishes.
+</div>
 
-RAG, multi-user identity management, and live Zyte collection are not included.
-The deployed PFE/demo keeps a protected single-owner Editorial Desk. It is not
-a general-purpose production identity system.
+---
 
-## Local setup
+## About HerbWire
 
-Run commands from the repository root unless a command says otherwise.
+HerbWire V2 is an English-language knowledge and editorial platform dedicated to medicinal plants and traditional systems of medicine around the world. It brings together a curated encyclopedia, research and cultural discovery briefs, and stories about natural materials and craft—all within a traceable, safety-conscious publishing workflow.
 
-Create an ignored `.env` from `.env.example` and replace the placeholder database and local editorial authentication values. Never commit `.env`.
+The platform collects material from approved international sources, preserves original-language provenance, resolves botanical identity, evaluates evidence and safety, creates structured English drafts, and routes every publishable item through human editorial approval.
 
-Start PostgreSQL and apply forward migrations:
+HerbWire is designed around one central principle: **knowledge should remain connected to its source**. Public content can be traced through structured claims, source records, evidence excerpts, editorial decisions, and immutable publication versions.
+
+> **Editorial and safety position:** HerbWire documents traditional use and scientific research; it does not diagnose, prescribe, recommend personalized treatment or dosage, or present traditional practice as proven clinical efficacy.
+
+## What the platform offers
+
+### Medicinal Plant Encyclopedia
+
+Structured, reviewed plant profiles combine accepted scientific names, synonyms, botanical identity, documented traditional uses, plant parts and preparation contexts, geographic distribution, conservation, evidence limitations, safety information, licensed media, and complete source attribution.
+
+### Traditional Medicine Discoveries
+
+Evidence-qualified briefs make new research and developments easier to explore across areas such as medicinal-plant science, pharmacopoeias, cultivation, conservation, authentication, regulation, cultural heritage, and knowledge digitization.
+
+### Materials & Craft
+
+A distinct non-medical collection explores natural materials, making traditions, tools, vessels, and the botanical and cultural knowledge carried by responsibly sourced craft practices.
+
+### Editorial Desk & Pipeline Monitor
+
+The protected editorial workspace brings source evidence, claim coverage, safety checks, review decisions, pipeline stages, retries, run history, and publication controls into one operational surface.
+
+## Highlights
+
+- **International source discovery** across authoritative botanical databases, research indexes, institutions, and approved web sources.
+- **Full provenance** from the collected record to the published claim and editorial decision.
+- **Twelve-agent editorial architecture** with explicit responsibilities and persisted stage results.
+- **Keyword-based RAG** grounded in reviewed HerbWire records, normalized plant names, source metadata, and structured filters—without embeddings or a vector database.
+- **Botanical identity protection** using accepted taxa, verified synonyms, stable identifiers, and ambiguity holds.
+- **Evidence-aware writing** that keeps traditional knowledge, preclinical findings, clinical research, and editorial interpretation distinct.
+- **Safety-first publication gates** for contraindications, interactions, vulnerable populations, unsupported claims, and missing evidence.
+- **Multilingual provenance with English output**, preserving original language, translation metadata, and reviewer visibility.
+- **Licensed media and map-ready geography** with creator, source, license, checksum, and relevance validation.
+- **Zyte-powered collection support** for approved institutional websites when native APIs or feeds are not suitable.
+- **Heroku container deployment** with a combined React/FastAPI runtime, PostgreSQL, and release-phase Alembic migrations.
+- **Human approval before publication** with auditable approve, hold, reject, correction, unpublish, and rollback paths.
+
+## The twelve logical agents
+
+HerbWire uses logical agents as bounded modules inside a modular monolith. They are coordinated by a Pipeline Orchestrator, share explicit contracts, and persist their outputs in PostgreSQL.
+
+| # | Agent | Responsibility |
+|---:|---|---|
+| 1 | **Source Registry & Schedule Manager** | Maintains approved sources, collection policies, schedules, rate limits, and deterministic job keys. |
+| 2 | **Collector Gateway** | Collects source material through provider adapters including PubMed, native HTTP/XML feeds, and Zyte. |
+| 3 | **Normalization & Deduplication** | Converts provider payloads into canonical records and prevents duplicate processing by stable IDs, DOI, PMID, canonical URL, and content hash. |
+| 4 | **Language, Translation & Entity Enrichment** | Detects language, preserves original text, prepares English working content, and extracts plants, regions, traditions, institutions, and safety terms. |
+| 5 | **Botanical Resolver** | Resolves plant mentions to accepted taxa and holds ambiguous identities for review. |
+| 6 | **Relevance & Classification** | Determines whether a record belongs in HerbWire and selects its editorial route. |
+| 7 | **Evidence, Safety & Provenance** | Builds claim-support packages, evidence labels, risk flags, and source-coverage data. |
+| 8 | **Content Composer** | Produces structured English Plant Profiles and Discovery Briefs from approved evidence packages. |
+| 9 | **Media & Geography** | Validates licensed imagery, builds attribution, normalizes distribution data, and prepares map-ready geography. |
+| 10 | **Related Content** | Connects plants and articles through explainable botanical, geographic, cultural, and editorial relationships. |
+| 11 | **Editorial QA** | Checks completeness, citation integrity, safety language, translation provenance, licensing, readability, and publication eligibility. |
+| 12 | **Serialization & Publisher** | Publishes an approved immutable version atomically and records its checksum, URL, timestamp, and audit event. |
+
+The **Pipeline Orchestrator** is the coordinating platform component. It owns state transitions, retries, leases, timeouts, concurrency, recovery, and stage versions; it never changes editorial meaning or grants publication approval.
+
+## How content moves through HerbWire
+
+```mermaid
+flowchart LR
+    A[Approved sources] --> B[Collect]
+    B --> C[Normalize & deduplicate]
+    C --> D[Translate & enrich]
+    D --> E[Resolve botanical identity]
+    E --> F[Classify relevance]
+    F --> G[Assess evidence, safety & provenance]
+    G --> H[Keyword-based retrieval augmentation]
+    H --> I[Compose structured draft]
+    I --> J[Add licensed media, maps & relations]
+    J --> K[Editorial QA]
+    K --> L{Human review}
+    L -->|Changes requested| I
+    L -->|Held or rejected| M[Private editorial record]
+    L -->|Approved| N[Atomic publication]
+```
+
+Every stage is persisted and reviewable. A successful automated run creates an editorially reviewable result—not an automatic medical conclusion and not an automatic publication.
+
+## Transparent, keyword-based RAG
+
+HerbWire uses a deterministic retrieval-augmented approach built around **keywords and structured metadata rather than embeddings**. Retrieval uses normalized scientific and common names, synonyms, source identifiers, taxonomy, regions, traditional systems, categories, and PostgreSQL text matching to locate relevant reviewed material.
+
+The retrieved records remain connected to source excerpts and claim identifiers as they enter the content workflow. This makes the grounding path inspectable, supports deterministic fallbacks, and avoids introducing a separate vector database into a provenance-sensitive editorial system.
+
+## Architecture
+
+HerbWire is a **modular monolith**: one repository and one deployable application, with clear boundaries between the frontend, API, persistence, collectors, domain logic, orchestration, editorial review, and publishing.
+
+```text
+Browser
+  └── React + TypeScript + Vite
+        └── FastAPI REST API
+              ├── Public encyclopedia, discoveries and materials
+              ├── Authenticated Editorial Desk
+              ├── Pipeline Orchestrator + logical agents
+              ├── Provider adapters: PubMed, Zyte and curated sources
+              └── SQLAlchemy + Alembic
+                    └── PostgreSQL (canonical system of record)
+```
+
+This structure keeps deployment straightforward while preserving strong domain ownership. The frontend never connects directly to PostgreSQL, collectors never publish content, the composer never establishes botanical or safety truth, and only the Publisher can expose a version after explicit human approval.
+
+## Technology stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS, React Router |
+| Backend API | Python 3.13, FastAPI, Pydantic |
+| Persistence | PostgreSQL 17, SQLAlchemy 2, Psycopg, Alembic |
+| Collection | PubMed E-utilities, provider adapters, Zyte/Scrapy Cloud integration |
+| Retrieval | PostgreSQL keyword/text matching, normalized names, metadata and structured filters |
+| Testing | Pytest, Vitest, Testing Library, Ruff, ESLint, TypeScript |
+| Packaging | Multi-stage Docker build |
+| Deployment | Heroku Container Registry/runtime with Heroku Postgres |
+
+## Public and editorial experiences
+
+Public readers can:
+
+- browse and search reviewed plant profiles;
+- filter plants by family and editorial tags;
+- explore discovery briefs by plant, study type, evidence strength, year, and research geography;
+- read Materials & Craft stories;
+- inspect citations, attribution, evidence limitations, safety notes, and maps.
+
+Authenticated editors can:
+
+- launch bounded Plant and Discovery pipeline runs;
+- follow persisted stages and recovery state;
+- compare drafts with their sources and claim coverage;
+- inspect botanical, evidence, safety, translation, media, and geography checks;
+- approve, request changes, hold, reject, publish, correct, or unpublish content;
+- review source records, audit history, and per-agent operational results.
+
+## Data integrity and safety
+
+HerbWire treats provenance and editorial safety as core data, not decorative text:
+
+- PostgreSQL is the canonical store for sources, pipeline state, content versions, reviews, and publications.
+- Stable identifiers and database constraints enforce idempotency and prevent duplicate content.
+- Source records and published versions preserve history rather than being silently overwritten.
+- Traditional-use claims must name their tradition, region, or source and remain explicitly qualified.
+- Unresolved botanical identity, unsupported factual claims, missing safety context, and high-risk flags block publication.
+- Public content requires a separate, explicit human approval decision.
+
+## Local development
+
+### Prerequisites
+
+- Python 3.13+
+- Node.js 22+
+- Docker Desktop with Docker Compose
+- Git
+
+### 1. Configure the environment
+
+From the repository root in PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+```
+
+Replace the safe placeholders in `.env` with local-only values. Never commit `.env` or credentials.
+
+### 2. Start PostgreSQL and migrate
 
 ```powershell
 docker compose config
 docker compose up -d postgres
-docker compose ps
 .\.venv\Scripts\python.exe -m alembic -c backend\alembic.ini upgrade head
 ```
 
-Seed the original curated review profiles only when a pre-Milestone 2B local database is missing them:
+### 3. Install and start the frontend
 
 ```powershell
-.\.venv\Scripts\python.exe -m backend.app.workers.seed_curated_plants
+Set-Location frontend
+npm ci
+npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-Validate and import the Milestone 2B encyclopedia corpus in deterministic batches. Importing it again is idempotent and preserves approved/published article content and editorial status:
+### 4. Start the API
 
-```powershell
-.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --validate-only
-.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --batch A
-.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --batch B
-.\.venv\Scripts\python.exe -m scripts.import_encyclopedia_corpus --batch C
-```
-
-See [Encyclopedia corpus operations](docs/encyclopedia-corpus.md) before adding or updating a profile.
-
-Start FastAPI:
+Open a second PowerShell terminal at the repository root:
 
 ```powershell
 .\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Start Vite from `frontend/`:
+### Local URLs
 
-```powershell
-npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
-```
-
-The API client aligns local loopback hostnames, so both `http://127.0.0.1:5173` and `http://localhost:5173` can use the HttpOnly editorial session correctly.
-
-For a disposable editorial-review database, run
-`./scripts/start_local_review.ps1 -DatabaseName APPROVED_DISPOSABLE_DATABASE`
-from the repository root. The guarded launcher requires the existing ignored
-root .env, never reads or writes credential values itself, refuses protected
-database names and occupied ports, disables development-only endpoints, and
-pins the browser API origin to http://127.0.0.1:8000.
-
-## Local URLs
-
-- Homepage: `http://127.0.0.1:5173/`
-- Plants: `http://127.0.0.1:5173/plants`
-- Peppermint article: `http://127.0.0.1:5173/plants/peppermint`
-- New Discoveries: `http://127.0.0.1:5173/discoveries`
-- Login: `http://127.0.0.1:5173/login`
-- Editorial dashboard: `http://127.0.0.1:5173/admin`
-- API documentation: `http://127.0.0.1:8000/docs`
-
-## Local editorial authentication
-
-The local owner account is configured only through ignored server environment variables:
-
-- `HERBWIRE_ADMIN_EMAIL`
-- `HERBWIRE_ADMIN_PASSWORD`
-- `HERBWIRE_SESSION_SECRET`
-
-FastAPI validates the credentials and issues a signed HttpOnly, SameSite session
-cookie. Editorial endpoints require that session. The frontend does not store
-credentials or session secrets and does not use a local-editor header bypass.
-For the PFE/demo deployment, this same protected mechanism is explicitly a
-single-owner Editorial Desk boundary, not multi-user production identity.
+| Surface | URL |
+|---|---|
+| Public homepage | `http://127.0.0.1:5173/` |
+| Plant encyclopedia | `http://127.0.0.1:5173/plants` |
+| Discovery archive | `http://127.0.0.1:5173/discoveries` |
+| Materials & Craft | `http://127.0.0.1:5173/materials-and-craft` |
+| Editorial login | `http://127.0.0.1:5173/login` |
+| Editorial Desk | `http://127.0.0.1:5173/admin` |
+| Interactive API docs | `http://127.0.0.1:8000/docs` |
 
 ## Verification
 
-Backend checks:
+Run backend checks from the repository root:
 
 ```powershell
 .\.venv\Scripts\python.exe -m ruff check backend
@@ -106,17 +237,16 @@ Backend checks:
 .\.venv\Scripts\python.exe -m pytest backend\tests -q
 ```
 
-Frontend checks from `frontend/`:
+Run frontend checks from `frontend/`:
 
 ```powershell
-npm ci
 npm run lint
 npm run test
 npm run typecheck
 npm run build
 ```
 
-The repository verification wrappers use only the disposable `herbwire_m2_migration_verify` database for destructive migration checks:
+The repository also includes end-to-end verification wrappers:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
@@ -126,68 +256,77 @@ powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
 ./scripts/verify.sh
 ```
 
-## API surface
+## Deployment
 
-Public and authentication endpoints:
+HerbWire is packaged as a multi-stage Docker application and deployed through Heroku. The frontend is compiled into static assets and served by the FastAPI process, giving the browser same-origin access to the API. Heroku’s release phase runs forward-only Alembic migrations before the web process starts, and the runtime binds to the platform-provided `PORT`.
 
-- `GET /api/v1/health`
-- `GET /api/v1/version`
-- `GET /api/v1/plants` (published-only paging, search, family, and diversity-tag filters)
-- `GET /api/v1/plants/{slug}`
-- `POST /api/v1/newsletter/subscriptions`
-- `POST /api/v1/auth/login`
-- `POST /api/v1/auth/logout`
-- `GET /api/v1/auth/session`
+Deployment configuration lives in [`heroku.yml`](heroku.yml), [`Dockerfile`](Dockerfile), and the detailed [`Heroku deployment runbook`](docs/architecture/DEPLOYMENT.md).
 
-Authenticated editorial endpoints include review queue actions, approved-profile publication, pipeline runs, and agent-performance aggregation under `/api/v1/admin/`.
+Zyte is integrated behind the Collector Gateway for source-specific, policy-approved web collection. HerbWire retains the canonical records, pipeline state, editorial decisions, and long-term provenance in PostgreSQL.
 
-## External services
+## API overview
 
-Zyte configuration names exist for a future approved integration, but ordinary Milestone 2B tests and runtime do not call Zyte. No Heroku or Zyte deployment is part of this milestone.
+Core public and authentication routes include:
 
-## Heroku deployment readiness
-
-The production container builds React and serves it from the FastAPI process.
-The browser uses same-origin API URLs, the web entry point binds Heroku's
-PORT, and the release phase runs Alembic migrations. The generic 30-profile
-bootstrap remains explicit, import-only, and review-gated. The initial staging
-environment instead uses versioned, auditable transfer artifacts for editorial
-decisions already completed by the owner. Discovery transfer validates all 30
-corpus identities before reproducing only the accepted published state:
-
-```powershell
-python -m backend.app.workers.transfer_accepted_discoveries --dry-run
-python -m backend.app.workers.transfer_accepted_discoveries
+```text
+GET  /api/v1/health
+GET  /api/v1/version
+GET  /api/v1/plants
+GET  /api/v1/plants/{slug}
+GET  /api/v1/discoveries
+GET  /api/v1/discoveries/{slug}
+GET  /api/v1/materials
+GET  /api/v1/materials/{slug}
+POST /api/v1/newsletter/subscriptions
+POST /api/v1/auth/login
+POST /api/v1/auth/logout
+GET  /api/v1/auth/session
 ```
 
-The first command is read-only. The live command is atomic and idempotent; it
-refuses unknown content, checksum/version drift, or conflicting editorial state.
-It does not convert arbitrary review records into approvals.
+Authenticated routes under `/api/v1/admin/` provide review queues, source catalogues, pipeline controls, persisted run state, approval actions, and publication operations.
 
-See [Heroku staging deployment](docs/architecture/DEPLOYMENT.md) for the cost
-boundary, required variable names, verification order, proposed Phase 2
-commands, and destructive exit plan.
+## Repository map
 
-## Unified editorial pipelines
+```text
+HerbWire_version2/
+├── backend/
+│   ├── alembic/          # Database migrations
+│   ├── app/
+│   │   ├── api/          # FastAPI routes and schemas
+│   │   ├── collectors/   # PubMed, Zyte and provider contracts
+│   │   ├── domains/      # Encyclopedia, discovery, materials and pipelines
+│   │   └── workers/      # Invocable operational entry points
+│   └── tests/            # Unit, API and integration tests
+├── frontend/
+│   ├── public/media/     # Licensed, validated local media
+│   └── src/              # React application
+├── docs/
+│   ├── architecture/     # Operational architecture notes
+│   ├── decisions/        # Architecture Decision Records
+│   └── specs/            # Authoritative product specification
+├── scripts/              # Import and verification commands
+├── compose.yaml          # Local PostgreSQL
+├── Dockerfile            # Production container
+└── heroku.yml            # Heroku build, release and runtime definition
+```
 
-The authenticated Editorial Desk now includes `/admin/pipelines`, with bounded
-Plant and Discovery generation sections. The finite catalogues contain 25 vetted
-Plant packages and 20 unique PubMed Discovery packages; future identities and
-exact capacity remain backend-only. Exact batches contain one to ten private
-review drafts. `All available` means only the runnable surplus above a protected
-ten-candidate reserve and is capped at ten. No workflow uses an LLM or paid API.
+## Documentation
 
-One authenticated launch transaction reserves the complete batch and returns
-before a bounded in-process executor advances candidates in strict sequence;
-browser polling only reads persisted progress. PostgreSQL enforces one active
-editorial generation run across both domains, global botanical-identity
-reservations, and source/content uniqueness. A startup supervisor automatically
-reclaims only queued or expired work and resumes at the first incomplete
-committed stage. Work pauses while no web process exists and resumes after its
-replacement starts and the old lease expires; this is restart recovery, not a
-second worker or zero-downtime queue. Human approval and the separate publish
-action remain mandatory.
+- [Authoritative HerbWire specification](docs/specs/HERBWIRE_SPEC.md)
+- [Sequential Plant Pipeline](docs/architecture/SEQUENTIAL_PLANT_PIPELINE.md)
+- [Discovery Pipeline](docs/architecture/DISCOVERY_4A.md)
+- [Heroku deployment](docs/architecture/DEPLOYMENT.md)
+- [Architecture decisions](docs/decisions/)
+- [Encyclopedia corpus operations](docs/encyclopedia-corpus.md)
 
-See [Sequential Plant Profile Automation](docs/architecture/SEQUENTIAL_PLANT_PIPELINE.md)
-and [Discovery pipeline architecture](docs/architecture/DISCOVERY_4A.md) for stage
-responsibilities, source rules, durability limits, and the review boundary.
+## Responsible use
+
+HerbWire is an educational and editorial information platform. Its content is not medical advice and is not a substitute for advice, diagnosis, or treatment from a qualified healthcare professional. Traditional knowledge is presented with attribution and context; research findings are presented with their evidence level and limitations.
+
+---
+
+<div align="center">
+
+**HerbWire V2 — botanical knowledge with evidence, provenance, and human judgment.**
+
+</div>
